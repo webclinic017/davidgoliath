@@ -1,0 +1,5 @@
+['argentina', 'australia', 'austria', 'bahrain', 'bangladesh', 'belgium', 'bosnia', 'botswana', 'brazil', 'bulgaria', 'canada', 'chile', 'china', 'colombia', 'costa rica', 'ivory coast', 'croatia', 'cyprus', 'czech republic', 'denmark', 'ecuador',
+ 'egypt', 'estonia', 'finland', 'france', 'germany', 'greece', 'hong kong', 'hungary', 'iceland', 'india', 'indonesia', 'iraq', 'ireland', 'israel', 'italy', 'jamaica', 'japan', 'jordan', 'kazakhstan', 'kenya', 'kuwait', 'latvia', 'lebanon', 'lithuania', 
+ 'luxembourg', 'malawi', 'malaysia', 'malta', 'mauritius', 'mexico', 'mongolia', 'montenegro', 'morocco', 'namibia', 'netherlands', 'new zealand', 'nigeria', 'norway', 'oman', 'pakistan', 'palestinian territory', 'peru', 'philippines', 'poland', 'portugal', 
+ 'qatar', 'romania', 'russia', 'rwanda', 'saudi arabia', 'serbia', 'singapore', 'slovakia', 'slovenia', 'south africa', 'south korea', 'spain', 'sri lanka', 'sweden', 'switzerland', 'taiwan', 'tanzania', 'thailand', 'tunisia', 'turkey', 'uganda', 'ukraine', 
+ 'dubai', 'united kingdom', 'united states', 'venezuela', 'vietnam', 'world', 'zambia', 'zimbabwe']
