@@ -8,6 +8,8 @@ pd.options.mode.chained_assignment = None
 # no need to scrape data if you can list it through investing.com
 # neu ma doc ten quotes tu file thi sao???
 
+# https://www.investing.com/indices/indices-futures
+stock_indices = []
 # need save to pickle
 bonds = ['Canada 10Y', 'U.S. 10Y', 'U.K. 10Y', 'Switzerland 10Y',
          'New Zealand 10Y', 'Australia 10Y', 'Japan 10Y', 'Germany 10Y']
@@ -19,6 +21,10 @@ pairs = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
          'NZD/USD', 'USD/JPY', 'USD/CHF', 'USD/CAD']
 commodities = ['Gold', 'Copper', 'Silver', 'Crude Oil WTI',
                'Brent Oil', 'Natural Gas', 'Platinum']
+softs = []
+meats = []
+grains = []
+
 bonds_path = 'Data/bond_dfs'
 pairs_path = 'Data/fx_dfs'
 commodities_path = 'Data/commo_dfs'
@@ -191,4 +197,11 @@ def combine_data(value):
 
 # for itemlist in checklist:
 #     combine_data(itemlist)
-# ###################-----Crypto------#########################
+# ############## -----get_bond_spreads------ #################
+# https://www.investing.com/rates-bonds/government-bond-spreads
+
+
+
+# ############## -----trade balance------ #################
+
+

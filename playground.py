@@ -16,13 +16,13 @@
 # end = time.time()
 # print(end - start)
 
-from urllib.request import Request, urlopen
+# from urllib.request import Request, urlopen
 
-req = Request('https://www.investing.com/crypto/currencies',
-              headers={'User-Agent': 'Mozilla/5.0'})
-webpage = urlopen(req).read()
-content = webpage.decode('utf-8')
-print(type(content))
+# req = Request('https://www.investing.com/crypto/currencies',
+#               headers={'User-Agent': 'Mozilla/5.0'})
+# webpage = urlopen(req).read()
+# content = webpage.decode('utf-8')
+# print(type(content))
 
 
 # graph and tree
@@ -44,3 +44,5 @@ print(type(content))
 # greed
 
 # ....
+
+import tradingeconomics

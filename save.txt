@@ -1,0 +1,5 @@
+https://www.quandl.com/data/FRED/BOPGSTB-Trade-Balance-Goods-and-Services-Balance-of-Payments-Basis
+
+https://www.quandl.com/data/RBA/I01-International-Trade-And-Balance-Of-Payments
+
+https://www.quandl.com/data/BDM/SE29227-Trade-Balance-Trade-Balance-includes-maquiladora-industry-Total-Europe-European-Union-EU-2-Germany-Available-Period-Jan-1993-Nov-2020

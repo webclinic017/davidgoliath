@@ -4,6 +4,9 @@ Nhieen
 QUANDL
 	quandl.ApiConfig.api_key = 'isu4pbfFzpfUnowC-k-R'
 
+FED API
+	fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
+
 alphavantage
 	api_key = '0OUZO4245CQ647P8'
 
