@@ -1,0 +1,4 @@
+country	name	full_name	tag	id	symbol	currency	class	market
+
+united states	PHLX Euro	PHLX Euro	phlx-euro	101840	XDE	USD	other_indices	world_indices
+united states	PHLX New Zealand Dollar	PHLX New Zealand Dollar	phlx-new-zealand-dollar	958105	XDZ	USD	other_indices	world_indices	

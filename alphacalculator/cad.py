@@ -5,6 +5,10 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'cad'
+
 
 # -------------------------------------------------------
 # #######################################################
@@ -23,7 +27,12 @@
 # -------------------------------------------------------
 # Cxy: maybe using this for convesion
 # https://pypi.org/project/forex-python/
+def get_cxy():
+    get_indices('PHLX Canadian Dollar', 'united states')
+    pass
 
+
+get_cxy()
 # https://www.investing.com/indices/phlx-canadian-dollar
 # CAD thường chạy song song vs USD (so với những cặp tiền khác)
 
@@ -40,7 +49,6 @@
 # -------------------------------------------------------
 # ----------------------------IMPORTANT
 # Gold price: https://www.investing.com/commodities/gold
-# Iron ore : https://www.investing.com/commodities/iron-ore-62-cfr-futures-streaming-chart
 # Copper: https://www.investing.com/commodities/copper
 
 # -------------------------------------------------------

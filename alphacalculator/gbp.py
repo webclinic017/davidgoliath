@@ -11,8 +11,16 @@
 
 # -------------------------------------------------------
 # #######################################################
+from alphautils import *
+
+currency = 'gbp'
+
+
 # 10Y treasury bond yeild
 # https://www.investing.com/rates-bonds/uk-10-year-bond-yield
+# https://www.quandl.com/data/BOE-Bank-of-England-Official-Statistics
+
+# compare
 # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
 
 # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
@@ -25,8 +33,12 @@
 
 # -------------------------------------------------------
 # Bxy
-# https://www.investing.com/indices/phlx-british-pound-components
+def get_bxy():
+    get_indices('PHLX British Pound', 'united states')
+    pass
 
+
+get_bxy()
 # -------------------------------------------------------
 # BOE repo rate: (LIBOR rate relate CHF rate)
 # https://www.quandl.com/data/FRED/LIOR3M-3-month-London-Interbank-Offered-Rate-LIBOR
@@ -58,4 +70,3 @@
 # Unemployment Rate:
 # https://www.quandl.com/data/ODA/GBR_LUR-United-Kingdom-Unemployment-Rate-of-Total-Labor-Force
 # -------------------------------------------------------
-

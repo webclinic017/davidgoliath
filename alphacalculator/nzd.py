@@ -5,24 +5,41 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'nzd'
+
 
 # -------------------------------------------------------
 # #######################################################
 # 10Y treasury bond yeild
+def calculate_nzbond():
+    pass
 # https://www.investing.com/rates-bonds/new-zealand-10-years-bond-yield
 # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
 
 # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
 # https://pypi.org/project/yield-curve-dynamics/
 
+
 # -------------------------------------------------------
 # stock indices: https://www.investing.com/indices/major-indices
 # ----------------------------
 # NZX 50: https://www.investing.com/indices/nzx-50
+def get_nzx50():
+    pass
+
 
 # -------------------------------------------------------
 # Zxy
 # https://www.investing.com/indices/phlx-new-zealand-dollar
+def get_zxy():
+    get_indices('PHLX New Zealand Dollar', 'united states')
+    pass
+
+
+get_zxy()
+
 
 # -------------------------------------------------------
 # Compare with another interest rate:
@@ -32,20 +49,38 @@
 # -------------------------------------------------------
 # (carry trade) AUD/NZD rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500
+def get_carrytradeindex():
+    get_volatility()
+    # combine data -> calculate spread ...
+    pass
 
+
+# -------------------------------------------------------
+# https://commodity.com/data/new-zealand/
+# project to get data from macrotrends
+# https://pypi.org/project/finpie/
 # -------------------------------------------------------
 # ----------------------------IMPORTANT- Nông sản---
 # https://www.investing.com/commodities/grains
 # https://www.investing.com/commodities/softs
 # https://www.investing.com/commodities/meats
-
+# Milk
+# butter
+# https://futures.tradingcharts.com/chart/BD_/W
 # ----------------------------OPTIONAL 1
-# Gold price: https://www.investing.com/commodities/gold
-# Iron ore : https://www.investing.com/commodities/iron-ore-62-cfr-futures-streaming-chart
-# Copper: https://www.investing.com/commodities/copper
+# Gold price:
+def gold_corr():
+    pass
+
 
 # -------------------------------------------------------
-# xti oil price: https://www.investing.com/commodities/crude-oil
+def estimate_oil_corr():
+    get_wti()
+    get_brent()
+    # combine data
+    # predict
+    pass
+
 
 # -------------------------------------------------------
 # AUD vs NZD cùng chạy (correlation)
@@ -71,4 +106,3 @@
 # GDT
 # https://www.quandl.com/data/GDT/GDT_IND-Dairy-Price-Indices
 # -------------------------------------------------------
-

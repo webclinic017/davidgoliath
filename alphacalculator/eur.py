@@ -5,6 +5,10 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'eur'
+
 
 # -------------------------------------------------------
 # #######################################################
@@ -23,7 +27,14 @@
 # DAX: https://www.investing.com/indices/germany-30
 # -------------------------------------------------------
 # Exy : prefer Weekly, Monthly data
-# https://www.investing.com/indices/phlx-euro
+def get_exy():
+    get_indices('PHLX Euro', 'united states')
+    pass
+
+
+get_exy()
+
+
 # -------------------------------------------------------
 # ECB bid rate:
 # taylor equation

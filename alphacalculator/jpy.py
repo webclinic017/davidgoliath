@@ -5,6 +5,10 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'jpy'
+
 
 # -------------------------------------------------------
 # #######################################################
@@ -23,8 +27,12 @@
 # Nikkei 225: https://www.investing.com/indices/japan-ni225
 # -------------------------------------------------------
 # Jxy
-# https://www.investing.com/indices/phlx-yen
+def get_jxy():
+    get_indices('PHLX Yen', 'united states')
+    pass
 
+
+get_jxy()
 # -------------------------------------------------------
 # (carry trade) AUD/NZD rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500

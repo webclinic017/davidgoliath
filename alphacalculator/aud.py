@@ -5,6 +5,10 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'cad'
+
 
 # -------------------------------------------------------
 # #######################################################
@@ -22,7 +26,12 @@
 
 # -------------------------------------------------------
 # Axy
-# https://www.investing.com/indices/phlx-australian-dollar
+def get_axy():
+    get_indices('PHLX Australian Dollar', 'united states')
+    pass
+
+
+get_axy()
 # -------------------------------------------------------
 # Compare:
 # Cash rate: already have ---- MOST IMPORTANT ----
@@ -35,7 +44,6 @@
 # -------------------------------------------------------
 # ----------------------------IMPORTANT
 # Gold price: https://www.investing.com/commodities/gold
-# Iron ore : https://www.investing.com/commodities/iron-ore-62-cfr-futures-streaming-chart
 # Copper: https://www.investing.com/commodities/copper
 
 # ----------------------------OPTIONAL 1
@@ -61,4 +69,3 @@
 # Employment Change:
 # https://www.quandl.com/data/RBA/H05-Labour-Force
 # -------------------------------------------------------
-

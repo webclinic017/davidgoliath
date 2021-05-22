@@ -5,6 +5,10 @@
 
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
+from alphautils import *
+
+currency = 'chf'
+
 
 # -------------------------------------------------------
 # #######################################################
@@ -23,7 +27,12 @@
 # Nikkei 225: https://www.investing.com/indices/switzerland-20
 # -------------------------------------------------------
 # Sxy
-# https://www.investing.com/indices/phlx-swiss-franc
+def get_sxy():
+    get_indices('PHLX Swiss Franc', 'united states')
+    pass
+
+
+get_sxy()
 
 # -------------------------------------------------------
 # (carry trade) AUD/NZD rate: already code vs Volatility Index
@@ -40,7 +49,8 @@
 
 # -------------------------------------------------------
 # Economic calendar and predict index:
-# GDP: https://www.quandl.com/data/ODA/CHE_NGDPDPC-Switzerland-GDP-per-Capita-at-Current-Prices-USD
+# GDP:
+# https://www.quandl.com/data/ODA/CHE_NGDPDPC-Switzerland-GDP-per-Capita-at-Current-Prices-USD
 # ----------------------------
 # CPI: already code
 # ----------------------------
