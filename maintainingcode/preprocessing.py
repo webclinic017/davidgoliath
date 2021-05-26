@@ -82,11 +82,14 @@ def get_pair_historical_data():
         if not os.path.exists(pairs_path + '/{}.csv'.format(pair_name)):
             df = investpy.get_currency_cross_historical_data(
                 currency_cross=pair,
-                from_date='01/01/2010', to_date='15/05/2021')
+                from_date='23/05/2020', to_date='23/05/2021',
+                interval='Daily')
             df.to_csv(pairs_path + '/{}.csv'.format(pair_name))
         else:
             print('Already have {}'.format(pair_name))
 
+
+get_pair_historical_data()
 # ################ get_commodity_historical_data ##################
 
 
@@ -211,5 +214,3 @@ def combine_data(value):
 # print(df.head())
 
 # ############## -----trade balance------ #################
-
-

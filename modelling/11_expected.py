@@ -1,0 +1,2 @@
+# expected value calculator
+# https://www.google.com/search?q=expected+value+calculator+probability+python+numpy&sxsrf=ALeKk00GFwY68lWZuvrZjUtFhbfa3qwbDQ%3A1621249001306&ei=6UuiYJqbEv-Sr7wPidubwAc&oq=expected+value+calculator+probability+python+numpy&gs_lcp=Cgdnd3Mtd2l6EAMyBwghEAoQoAE6BwgAEEcQsAM6CAghEBYQHRAeOgUIIRCgAVCvjQFYv5cBYMmYAWgBcAJ4AIAB2QGIAf4HkgEFMC41LjGYAQCgAQGqAQdnd3Mtd2l6yAEIwAEB&sclient=gws-wiz&ved=0ahUKEwjas8KWx9DwAhV_yYsBHYntBngQ4dUDCA4&uact=5
