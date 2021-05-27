@@ -87,22 +87,40 @@ def estimate_oil_corr():
 
 # -------------------------------------------------------
 # Economic calendar and predict index:
-# GDP:
+# GDP: predict, not real time
 # https://www.quandl.com/data/ODA/NZL_NGDPRPC-New-Zealand-GDP-per-Capita-at-Constant-Prices-LCU
+def get_gdp():
+    get_economic_quandl(currency, 'ODA', 'NZL_NGDPRPC')
+
+
 # ----------------------------
 # Unemployment Rate:
 # https://www.quandl.com/data/ODA/NZL_LUR-New-Zealand-Unemployment-Rate-of-Total-Labor-Force
+def get_unemploymentrate():
+    get_economic_quandl(currency, 'ODA', 'NZL_LUR')
+
+
 # ----------------------------
 # CPI: already code
+# ngược với stock/ bond và yeild
+def get_cpi():
+    get_economic_quandl(currency, 'RATEINF', 'CPI_NZL')
+
+
 # ----------------------------
-# inflation: already code
+# inflation: already code - cùng chiều với yeild
+# cùng chiều với lãi suất
+def get_inflation():
+    get_economic_quandl(currency, 'RATEINF', 'INFLATION_NZL')
+
+
 # ----------------------------
 # Employment Change:
 # https://fred.stlouisfed.org/series/LREM64TTNZQ156S
+
 # ----------------------------
 # Retail sales:
 # https://fred.stlouisfed.org/series/SLRTTO01NZQ189N
 # ----------------------------
 # GDT
-# https://www.quandl.com/data/GDT/GDT_IND-Dairy-Price-Indices
 # -------------------------------------------------------

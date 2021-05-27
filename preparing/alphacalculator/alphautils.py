@@ -2,25 +2,29 @@ import os
 import quandl
 import pandas as pd
 import investpy as iv
-import fredapi as fa
+
+from fredapi import Fred
 from datetime import date
+from alphasecrets import IEX_CLOUD_API_TOKEN
 
 quandl.ApiConfig.api_key = 'isu4pbfFzpfUnowC-k-R'
+# fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
+
 # ---------- investpy items -----------
 markets = ['indices', 'currencies', 'commodities',
            'rates-bonds', 'equities', 'etfs', 'crypto']
 starttime = '01/01/2010'
 today = date.today().strftime("%d/%m/%Y")
 
-# --------- market folder path
-index_path = f'{markets[0]}data/'
-currency_path = f'{markets[1]}data/'
-commodity_path = f'{markets[2]}data/'
-bond_path = f'{markets[3]}data/'
-equity_path = f'{markets[4]}data/'
-etf_path = f'{markets[5]}data/'
-crypto_path = f'{markets[6]}data/'
-# --------- end market folder path
+# --------- investpy market folder path
+index_path = f'investpy/{markets[0]}data/'
+currency_path = f'investpy/{markets[1]}data/'
+commodity_path = f'investpy/{markets[2]}data/'
+bond_path = f'investpy/{markets[3]}data/'
+equity_path = f'investpy/{markets[4]}data/'
+etf_path = f'investpy/{markets[5]}data/'
+crypto_path = f'investpy/{markets[6]}data/'
+# --------- end investpy market folder path
 
 # ---------- end investpy items -------
 # ----------------------------------------------------------
@@ -40,13 +44,22 @@ def replace_specchar(obj, char, newchar):
     return tmp
 
 
-def get_quandl_data(field, currency, item):
+# quandl part --------------------------------
+def get_economic_quandl(currency, field, item):
+    economic_path = f'quandl/{currency}/'
+    check_folder(economic_path)
+    df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
+    df.to_csv(economic_path + f'{item}.csv')
+    pass
+
+
+def get_quandl_data(market, field, currency, item):
     # need optimize folder name
-    quandl_part = f'{markets[1]}data/{currency}/quandl/'
+    quandl_part = f'quandl/{market}data/{currency}/'
     # create folder
     check_folder(quandl_part)
-    # request data then save to file
-    df = quandl.get(f'{field}/{item}')
+    # request data then save to file, start_date, end_date
+    df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
     df.to_csv(quandl_part + f'{item}.csv')
     # return quandl_part + f'{item}.csv'
     pass
@@ -73,41 +86,42 @@ def read_data(file):
 # -------------------------------------------------------
 # get last row date, check if is up to date-> read data, not write
 # -------------------------------------------------------
-def get_yeild(params):
+def get_bondyeild_quandl(currency, data, key):
     # ------------- quandl part-----------
-    useQuandl, isReload, currency, data, key = params
-    if useQuandl:
-        # get data and save, LACK Datetime range for data
-        if isReload:
-            for value in data[key]:
-                get_quandl_data(key, currency, value)
-        # read saved data then analysis or return
-        else:
-            # need loop
-            item = data[key][0]
-            part = f'{currency_path}{currency}/{item}.csv'
-            # ----------------------
-            # read_data(part)
+    # get data and save, LACK Datetime range for data
+    for value in data[key]:
+        get_quandl_data(markets[3], key, currency, value)
 
-            # ----------------------
-            # plot
 
-            # ----------------------
-            # predict
+def analysis_bondyeild_quandl(params):
+    # read saved data then analysis or return
+    # need loop
+    item = data[key][0]
+    part = f'{currency_path}{currency}/{item}.csv'
+    # ----------------------
+    # read_data(part)
 
-            # ----------------------
-            # corr
+    # ----------------------
+    # plot
 
-            # ----------------------
-    # ------------- investpy part-----------
-    else:
-        if isReload:
-            params = [f'{currency_path}{currency}/investpy/', 'U.S. 10Y']
-            get_bonds(params)
-        else:
-            print('not reload, process next')
-        pass
+    # ----------------------
+    # predict
 
+    # ----------------------
+    # corr
+
+    # ----------------------
+    pass
+
+
+# ------------- investpy part-----------
+# def get_bondyeild_investpy(currency, quote):
+#     get_bonds(quote)
+#     pass
+
+
+def analysis_bondyeild_investpy(params):
+    print('not reload, process next')
     pass
 
 
@@ -140,7 +154,18 @@ def get_bonds(bond):
 
 
 # -------------------------------------------------------
-# wti oil price: https://www.investing.com/commodities/crude-oil
+def get_currency_cross(quote):
+    check_folder(currency_path)
+    df = iv.currency_crosses.get_currency_cross_historical_data(
+        currency_cross=quote, from_date=starttime, to_date=today)
+    df = df.iloc[:, :-1]
+    # can we add pct change column
+    quote = replace_specchar(quote, '/', '')
+    df.to_csv(currency_path + f'/{quote}.csv')
+    pass
+
+
+# -------------------------------------------------------
 # COMMON--------------------------------
 def get_wti():
     get_commodities('Crude Oil WTI')
@@ -154,7 +179,6 @@ def get_brent():
 
 
 # -------------------------------------------------------
-# Gold price: https://www.investing.com/commodities/gold
 # COMMON--------------------------------
 def get_goldprice():
     get_commodities('Gold')
@@ -165,7 +189,6 @@ def get_goldprice():
 # Chỉ số sợ hãi Volatility Index: JPY, CHF tăng giá
 # dùng trong carry trade và stock predict
 # < 20 -> ít sợ, > 40 -> sợ nhiều + các mô hình giá
-# https://www.investing.com/indices/volatility-s-p-500
 # COMMON--------------------------------
 def get_volatility():
     get_indices('S&P 500 VIX', 'united states')
@@ -203,7 +226,7 @@ def get_platinum():
     pass
 
 
-# ----------------Iron ore: not support ---------------
+# ----------------Iron ore ---------------
 #  https://www.investing.com/commodities/iron-ore-62-cfr-futures-streaming-chart
 def get_ironore():
     # get_commodities('Iron ore')

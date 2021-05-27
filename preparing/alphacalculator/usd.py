@@ -1,67 +1,3 @@
-# #######################################################
-# -------------------------------------------------------
-# get params then calculate corr
-# muon lay param nao de so sanh cung dc
-
-# Documentation of Fred api
-# https://pypi.org/project/fredapi/
-# https://github.com/MicroPyramid/forex-python
-# https://pypi.org/project/datamine/
-
-# chu kì kinh tế: 6 phần
-# https://www.pringturner.com/business-cycle-stage-3-which-market-bullish-for/
-# Giai đoạn 1: Trái phiếu tăng (lợi tức, cổ phiếu, hàng hóa giảm)
-# Giai đoạn 2: Cổ phiếu tăng (trái phiếu tăng trong khi hàng hóa vẫn giảm)
-# Giai đoạn 3: Hàng hóa tăng ( bond, stock và commondity cùng tăng)
-# Giai đoạn 4: Trái phiếu giảm (lợi tức, cổ phiếu và hàng hóa vẫn tăng)
-# Giai đoạn 5: Cổ phiếu giảm (trái phiếu giảm và hàng hóa tăng)
-# Giai đoạn 6: Bond, stock và commondity cùng giảm
-
-# 5 Nguyên tắc:
-
-# 1. Dollar đang rớt giá, thì mua hàng hóa.
-
-# 2. Mua hàng hóa khi cổ phiếu tăng, đặc biệt là Đồng hay Dầu
-
-# 3. Mua cổ phiếu khi trái phiếu giảm
-
-# 4. Sử dụng tỷ số Cổ phiếu/ Trái phiếu khi “dịch chuyển”ngành
-# cổ phiếu có 10 ngành
-# tỉ số tăng -> chú ý ngành tăng trưởng
-# tỉ số tăng -> chú ý ngành phòng vệ
-
-# 5. Chú ý đến thị trƣờng chứng khoán nƣớc ngoài
-# thị trƣờng mới nổi quan hệ rất mật thiết với thị trƣờng hàng hóa.
-# chứng khoán châu Âu thước đo nợ xấu
-# chú ý các quỹ ETFs
-
-# -------------------------------------------------------
-
-# Mô hình nến + mô hình giá
-
-# -------------------------------------------------------
-
-
-# #######################################################
-
-# --------------- THE MOST IMPORTANT THINGS ------------------
-# 10Y treasury bond yeild (5Y, 2Y)
-# how calculate bond spread (có thể cùng 1 QG hoặc khác) and yeild curve
-# bond spread thu hẹp -> yeild curve phẳng hơn và có khả năng đảo ngược
-# yield cao, đô và giá hàng hóa tăng lên và ngược lại
-# bond kì hạn càng cao, rủi ro càng lớn, nên lợi tức càng phải cao
-# nếu bond spread bất thường phải xem xét ngay
-
-# giá bond đi ngược với yeild và thị trường vốn (stock)
-# Khi yield tăng cao thì ngƣời ta tìm về các món hàng hóa như GOLD,
-#  OIL, COPPER or bộ ba đồng tiền hàng hóa để go long ????
-
-
-# Flatten yield curve
-
-# Inverted yield curve
-
-# so sánh với EU, GU
 # ------------- import part ------------------------------
 from alphautils import *
 
@@ -69,25 +5,31 @@ currency = 'usd'
 # ------------------------------
 
 
-def calculate_usbond(useQuandl=True, isReload=True):
+def calculate_usbond(isReload=True, useQuandl=True):
     # https://www.quandl.com/data/USTREASURY-US-Treasury
-    # dict of all treasury params
-    ustreasury = {'USTREASURY': ['YIELD', 'REALYIELD',
-                                 'BILLRATES', 'HQMYC',
-                                 'MATDIS', 'AVMAT',
-                                 'TNMBOR', 'TMBOR',
-                                 'MKTDM', 'BRDNM']}
-    main_key = list(ustreasury.keys())[0]
-    # params = [useQuandl, isReload, currency, data, key]
-    params = [useQuandl, isReload, 'usd', ustreasury, main_key]
-    get_yeild(params)
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-    # https://pypi.org/project/yield-curve-dynamics/
+    if isReload:
+        if useQuandl:
+            ustreasury = {'USTREASURY': ['YIELD', 'REALYIELD',
+                                         'BILLRATES', 'HQMYC',
+                                         'MATDIS', 'AVMAT',
+                                         'TNMBOR', 'TMBOR',
+                                         'MKTDM', 'BRDNM']}
+            main_key = list(ustreasury.keys())[0]
+            get_bondyeild_quandl(currency, ustreasury, main_key)
+        else:
+            # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
+            get_bonds('U.S. 10Y')
+            pass
+    else:
+        # processing data
+        # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
+        # https://pypi.org/project/yield-curve-dynamics/
+
+        pass
     pass
 
 
-# calculate_bond(useQuandl=True, isReload=True)
+calculate_usbond(isReload=True, useQuandl=True)
 
 
 # ---------------------------------------------------------------
@@ -125,49 +67,97 @@ def get_nasdaq_composite():
 def get_dxy():
     get_indices('US Dollar Index', 'united states')
     pass
-# so sánh với EU, GU
 
 
+# major cross
+def compare_major(isReload=True):
+    forward_quotes = ['EUR', 'GBP', 'AUD', 'NZD']
+    backward_quotes = ['CHF', 'JPY', 'CAD']
+    if isReload:
+        for quote in forward_quotes:
+            get_currency_cross(f"{quote}/USD")
+        for quote in backward_quotes:
+            get_currency_cross(f"USD/{quote}")
+
+
+# compare_major(isReload=True)
 # https://www.cmegroup.com/trading/why-futures/welcome-to-cme-fx-futures.html#
 # cme_calling()
 
 
 # -------------------------------------------------------
 # Economic calendar and predict index:
-# GDP: https://www.quandl.com/data/FRED/GDP-Gross-Domestic-Product
+# https://www.quandl.com/data/FRED-Federal-Reserve-Economic-Data/documentation
+def get_gdp():
+    get_economic_quandl(currency, 'FRED', 'GDP')
+    pass
+
+
 # ----------------------------
 # NFP: same direction Stock/ USD
-# https://www.quandl.com/data/ACC/NFP-Non-Farm-Payrolls
+def get_nfp():
+    get_economic_quandl(currency, 'ACC', 'NFP')
+    pass
 
 
 # --------THE MOST IMPORTANT THINGS--------------------------------------
+# FED fund rate:
+def get_ffr():
+    get_economic_quandl(currency, 'FRED', 'FEDFUNDS')
 
-# FED fund rate: https://fred.stlouisfed.org/series/DFF
+
 # ----------------------------
-
 # CPI: already code
 # ngược với stock/ bond và yeild
+def get_cpi():
+    get_economic_quandl(currency, 'RATEINF', 'CPI_USA')
+
 
 # ----------------------------
 # inflation: already code - cùng chiều với yeild
 # cùng chiều với lãi suất
+def get_inflation():
+    get_economic_quandl(currency, 'RATEINF', 'INFLATION_USA')
+
 
 # ----------------------------------------------------------------------
-
-
 # Retail sales:
-# https://www.quandl.com/data/FRED/RSXFS-Retail-Sales-Total-Excluding-Food-Services
+def get_retailsales():
+    get_economic_quandl(currency, 'FRED', 'RSXFS')
+
+
 # ----------------------------
 # PMI: same direction Stock/ USD
-# https://www.quandl.com/data/FRED/NAPM-ISM-Manufacturing-PMI-Composite-Index
+def get_pmi():
+    get_economic_quandl(currency, 'FRED', 'NAPM')
+
+
 # ----------------------------
 # PPI:
-# https://www.quandl.com/data/FRED/PPIACO-Producer-Price-Index-for-All-Commodities
+def get_ppi():
+    get_economic_quandl(currency, 'FRED', 'PPIACO')
+
 
 # ----------------------------
 # Unemployment rate ngược với lãi suất...
+def get_unemploymentrate():
+    get_economic_quandl(currency, 'FRED', 'UNRATE')
+
+
 # ----------------------------
 # Trade Balance ngược với lãi suất...
+def get_tradebalance():
+    get_economic_quandl(currency, 'FRED', 'BOPGSTB')
+
+
 # ----------------------------
-# Retail Sales cùng chiều với lãi suất
+# Industrial Production Index
+def get_industrial():
+    get_economic_quandl(currency, 'FRED', 'INDPRO')
+
+
 # -------------------------------------------------------
+# Housing Starts
+def get_housing():
+    get_economic_quandl(currency, 'FRED', 'HOUST')
+# # -------------------------------------------------------
