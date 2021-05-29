@@ -151,3 +151,48 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 """
+# ------------------------------------------------------------------
+'''
+# remember: Bayesian confidence intervals for the mean, var, and std
+# Input data Requires data points and Probability
+
+# mean, var, and std : mean, variance, and standard deviation
+# mean of pdf: Probability distribution function,
+
+# mvsdist: mean, var, and std distribution
+from scipy import stats
+from randintpr import *
+import matplotlib.pyplot as plt
+
+
+data = generate_intlist(7, 20)
+mean, var, std = stats.bayes_mvs(data)
+# a tuple
+# print(stats.bayes_mvs(data))
+
+# generate new input data
+n_samples = 100000
+data = stats.norm.rvs(size=n_samples)
+# print(len(data))
+
+res_mean, res_var, res_std = stats.bayes_mvs(data, alpha=0.95)
+# print(stats.bayes_mvs(data, alpha=0.95))
+fig = plt.figure()
+ax = fig.add_subplot(111)
+# bins càng lớn histogram càng dày, density -> phải có, label dành cho legend
+ax.hist(data, bins=100, density=True, label='Histogram of data')
+# Plot vertical lines: (0, 0.5) len from ... to
+ax.vlines(res_mean.statistic, 0, 0.5, color='r', label='Estimated mean')
+ax.axvspan(res_mean.minmax[0], res_mean.minmax[1], facecolor='r',
+           alpha=0.2, label=r'Estimated mean (95% limits)')
+ax.vlines(res_std.statistic, 0, 0.5, colors='g', label='Estimated scale')
+ax.axvspan(res_std.minmax[0], res_std.minmax[1], facecolor='g',
+           alpha=0.2, label=r'Estimated scale (95% limits)')
+ax.legend(fontsize=10)
+ax.set_xlim([-4, 4])
+ax.set_ylim([0, 0.5])
+plt.show()
+'''
+# ------------------------------------------------------------------
+# Coin-Flipping Example ...
+# prior. posterior. likelihood. evidence.

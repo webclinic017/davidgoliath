@@ -1,3 +1,4 @@
+"""
 # matrix in python
 # https://www.google.com/search?q=matrix+in+python&oq=matrix&aqs=chrome.2.69i57j46i275i433j35i39l2j0i131i433l2j46j0j46i175i199j0.3453j0j9&sourceid=chrome&ie=UTF-8
 
@@ -93,3 +94,5 @@ m = np.reshape(tmp, (7, 5))
 # # Update a column
 # m[:, 1] = [1, 2, 3, 4, 5, 6, 7]
 # print(m)
+"""
+# -----------------------------------------------------------------

@@ -70,7 +70,7 @@ if __name__ == "__main__":
     # ???
     sns.set_palette("deep", desat=.6)
     sns.set_context(rc={"figure.figsize": (8, 4)})
-
+    # len = 100
     x = np.linspace(0, 1, 100)
 
     # P(o|a, b) = (o^(a-1))((1 - o)^(b-1))/B(a, b)
@@ -87,3 +87,7 @@ if __name__ == "__main__":
     plt.ylabel("Density")
     plt.legend(title="Parameters")
     plt.show()
+
+# -------------------------------------------------------------------------
+# prior. posterior. likelihood. evidence.
+# https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval
