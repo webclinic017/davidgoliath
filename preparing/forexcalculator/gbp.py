@@ -9,53 +9,49 @@ import usd as king
 currency = 'gbp'
 
 
-# 10Y treasury bond yeild
+# -------------------------------------------------------
+# bonds:
+# ----------------------------
 # https://www.investing.com/rates-bonds/uk-10-year-bond-yield
 def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('U.K. 2Y')
-        get_bonds('U.K. 5Y')
-        get_bonds('U.K. 10Y')
-    else:
-        pass
-
-
-# compare
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    king.calculate_bond()
-    pass
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
+    data = ['U.K. 2Y', 'U.K. 5Y', 'U.K. 10Y']
+    info = [[markets[3], 'united kingdom', get_bonds]]*len(data)
+    params = ['ukbond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # stock indices:
 # ----------------------------
 # FTSE 100 : https://www.investing.com/indices/uk-100
-def get_ftse100(isReload=True):
-    get_indices('FTSE 100', 'united kingdom')
+def get_ftse(isReload=True):
+    data = ['FTSE 100', 'FTSE 250', 'FTSE 350', 'UK 100']
+    info = [[markets[0], 'united kingdom', get_indices]]*len(data)
+    params = ['ukindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Bxy
-def get_bxy():
-    get_indices('PHLX British Pound', 'united states')
-    pass
-
-
+# currencies:
+# ----------------------------
 # gbp major cross
 def compare_major(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR']
-        backward_quotes = ['CHF', 'JPY', 'CAD', 'USD', 'AUD', 'NZD']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/GBP")
-            for quote in backward_quotes:
-                get_currency_cross(f"GBP/{quote}")
-    else:
-        pass
+    data = ['XAU/GBP', 'EUR/GBP', 'GBP/JPY', 'GBP/CAD',
+            'GBP/USD', 'GBP/AUD', 'GBP/NZD', 'GBP/CHF']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['gbpmajor', data, info, analysis_currency]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# Brent Oil corr ----- MOST IMPORTANT THINGS -----
+# https://www.investing.com/commodities/brent-oil
+def corr_ukoil(isReload=True):
+    data = ['GBP/USD', 'GBP/CHF', 'GBP/JPY', 'EUR/GBP', 'Brent Oil']
+    info = [[markets[1], 'united states', get_forex]] * \
+        4 + [[markets[2], 'united kingdom', get_commodities]]
+    params = ['corr_ukoil', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -66,14 +62,6 @@ def get_boe_rate(isReload=True):
         get_economic_quandl(currency, 'BOE', 'IUDBEDR')
         # # CHF/USD rate (optional)
         # get_economic_quandl(currency, 'FED', 'RXI_N_A_SZ')
-
-
-# -------------------------------------------------------
-# brent oil price: (read data)
-# https://www.investing.com/commodities/brent-oil
-def get_brent():
-    # read data
-    pass
 
 
 # -------------------------------------------------------

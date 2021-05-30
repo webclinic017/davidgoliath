@@ -11,55 +11,78 @@ currency = 'nzd'
 
 
 # -------------------------------------------------------
-# #######################################################
-# 10Y treasury bond yeild
+# bonds:
+# ----------------------------
 # https://www.investing.com/rates-bonds/new-zealand-10-years-bond-yield
 def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('New Zealand 2Y')
-        get_bonds('New Zealand 5Y')
-        get_bonds('New Zealand 10Y')
-    else:
-        pass
-
-
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    pass
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
+    # for investpy
+    data = ['New Zealand 2Y', 'New Zealand 5Y', 'New Zealand 10Y']
+    info = [[markets[3], 'new zealand', get_bonds]]*len(data)
+    params = ['nzbond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# stock indices:
 # ----------------------------
 # NZX 50: https://www.investing.com/indices/nzx-50
-def get_nzx50(isReload=True):
-    if isReload:
-        get_indices('NZX 50', 'new zealand')
-    pass
+def get_nzx(isReload=True):
+    data = ['NZX 50', 'NZX MidCap']
+    info = [[markets[0], 'new zealand', get_indices]]*len(data)
+    params = ['nzindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Zxy
-# https://www.investing.com/indices/phlx-new-zealand-dollar
-def get_zxy(isReload=True):
-    # read data instead then analysis
-    pass
-
-
+# currencies:
+# ----------------------------
 # nzd pair ------------------------------
 def compare_minor(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR', 'GBP', 'AUD']
-        backward_quotes = ['CHF', 'JPY', 'CAD', 'USD']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/NZD")
-            for quote in backward_quotes:
-                get_currency_cross(f"NZD/{quote}")
-    else:
-        pass
+    data = ['XAU/NZD', 'EUR/NZD', 'GBP/NZD', 'AUD/NZD',
+            'NZD/JPY', 'NZD/CAD', 'NZD/USD', 'NZD/CHF']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['nzdmajor', data, info, analysis_currency]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# (carry trade) JPY/CHF rate: already code vs Volatility Index
+# https://www.investing.com/indices/volatility-s-p-500
+def corr_nzvolatility(isReload=True):
+    # more detail with rate diff
+    data = ['NZD/JPY', 'NZD/CHF', 'S&P 500 VIX']
+    info = [[markets[1], 'united states', get_forex]] * \
+        2 + [[markets[0], 'united states', get_indices]]
+    params = ['nzpair_vix', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# https://commodity.com/data/new-zealand/
+# -------------------------------------------------------
+def cor_nzagri(isReload=True):
+    # need define priority for each param
+    data = ['Rough Rice', 'US Soybean Oil',
+            'US Soybean Meal', 'US Soybeans',
+            'US Wheat', 'US Corn', 'Oats', 'London Wheat',
+            'US Coffee C', 'US Cotton #2',
+            'US Sugar #11', 'Orange Juice',
+            'US Cocoa', 'Lumber', 'London Cocoa',
+            'London Coffee', 'London Sugar',
+            'Live Cattle', 'Lean Hogs', 'Feeder Cattle']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['cor_nzagri', data, info, analysis_commodity]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# Oil correlation
+def cor_nzoil(isReload=True):
+    data = ['NZD/CHF', 'NZD/USD', 'NZD/JPY', 'EUR/NZD', 'Crude Oil WTI']
+    info = [[markets[1], 'united states', get_forex]] * \
+        4 + [[markets[2], 'united states', get_commodities]]
+    params = ['cor_nzoil', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -71,39 +94,6 @@ def get_cashrate(isReload=True):
         get_economic_quandl(currency, 'OECD', 'KEI_IR3TIB01_NZL_ST_Q')
     # get_ffr()
 
-
-# -------------------------------------------------------
-# (carry trade) AUD/NZD rate: already code vs Volatility Index
-# https://www.investing.com/indices/volatility-s-p-500
-def get_carrytradeindex(isReload=True):
-    if isReload:
-        get_volatility()
-    # combine data -> calculate spread ...
-    pass
-
-
-# -------------------------------------------------------
-# https://commodity.com/data/new-zealand/
-# project to get data from macrotrends
-# https://pypi.org/project/finpie/
-# -------------------------------------------------------
-def cor_agris():
-    calculate_agri()
-# Milk
-# butter
-# https://futures.tradingcharts.com/chart/BD_/W
-
-
-# -------------------------------------------------------
-def estimate_oil_corr(isReload=True):
-    if isReload:
-        # combine data
-        # predict
-        pass
-
-
-# -------------------------------------------------------
-# AUD vs NZD cùng chạy (correlation)
 
 # -------------------------------------------------------
 # Economic calendar and predict index:

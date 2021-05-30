@@ -9,47 +9,28 @@ country = 'euro zone'
 
 
 # -------------------------------------------------------
-# #######################################################
-# https://www.investing.com/rates-bonds/germany-10-year-bond-yield
+# bonds:
+# ----------------------------
 def calculate_bond(isReload=True):
-    # DE bond yeild for investpy
-    bonds = {'Germany 2Y': 'rates-bonds',
-             'Germany 5Y': 'rates-bonds', 'Germany 10Y': 'rates-bonds'}
-    intervals = ['Daily', 'Weekly', 'Monthly']
-    if isReload:
-        dump_things('debondyeild', bonds, country, get_bonds)
-    else:
-        pass
-
-
-# calculate_bond(isReload=True)
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
-
-
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    # read data not reload
-    if isReload:
-        king.calculate_bond()
-    pass
+    # for investpy
+    data = ['Germany 2Y', 'Germany 5Y', 'Germany 10Y']
+    info = [[markets[3], 'germany', get_bonds]]*len(data)
+    params = ['eubond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# ---------------------------- stock indices:
-# Euro Stoxx 50: https://www.investing.com/indices/eu-stoxx50
+# stock indices
+# ----------------------------
 def get_estoxx(isReload=True):
-    if isReload:
-        get_indices('Euro Stoxx 50', 'germany')
-    # # optional
-    # get_indices('EURO STOXX 50 Daily Short', 'euro zone')
-    # get_indices('EURO STOXX 50 Daily Leverage', 'euro zone')
-
-
-# DAX: https://www.investing.com/indices/germany-30
-def get_dax(isReload=True):
-    if isReload:
-        get_indices('DAX', 'germany')
+    data = ['Euro Stoxx 50', 'DAX', 'TecDAX',
+            'CAC 40', 'IBEX 35', 'Italy 40']
+    info = [[markets[0], 'germany', get_indices]]\
+        * 3 + [[markets[0], 'france', get_indices]]\
+        + [[markets[0], 'spain', get_indices]]\
+        + [[markets[0], 'italy', get_indices]]
+    params = ['euindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -59,18 +40,24 @@ def get_exy(isReload=True):
     pass
 
 
+# -------------------------------------------------------
+# currencies:
+# ----------------------------
 # eur major cross: (EURUSD vs Gold)
 def compare_major(isReload=True):
-    intervals = ['Daily', 'Weekly', 'Monthly']
-    quotes = ['XAU/EUR', 'EUR/USD', 'EUR/JPY',
-              'EUR/CAD', 'EUR/GBP', 'EUR/AUD', 'EUR/NZD', 'EUR/CHF']
-    market = [markets[1]]*len(quotes)
-    pairs = dict(zip(quotes, market))
-    if isReload:
-        dump_things('eurmajor', pairs, country, get_currency_cross)
-    else:
-        analysis_currency_cross(filename)
-        pass
+    data = ['XAU/EUR', 'EUR/USD', 'EUR/JPY',
+            'EUR/CAD', 'EUR/GBP', 'EUR/AUD', 'EUR/NZD', 'EUR/CHF']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['eurmajor', data, info, analysis_currency]
+    make_market(params, isReload)
+
+
+def compare_eugold(isReload=True):
+    data = ['EUR/USD', 'Gold']
+    info = [[markets[1], 'united states', get_forex],
+            [markets[2], 'united states', get_commodities]]
+    params = ['eugold', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------

@@ -33,20 +33,57 @@ combine_path = 'investpy/combinedata/'
 # ----------------------------------------------------------
 
 
-# HUng refactor
+# Currencies Heat Map
+# https://www.investing.com/tools/currency-heatmap
+def currenciesheatmap():
+    pass
+
+
+# Forex Volatility:
+# https://www.investing.com/tools/forex-volatility-calculator
+def forexvolatility():
+    pass
+
+
+# Fibonacci Calculator:
+# https://www.investing.com/tools/fibonacci-calculator
+def fibocalculator():
+    pass
+
+
+# Pivot Point Calculator
+# https://www.investing.com/tools/pivot-point-calculator
+def pivotpointcalculator():
+    pass
+
+
+# financial-calendars
+# https://www.investing.com/tools/financial-calendars
+# ----------------------------------
+# https://www.investing.com/tools/market-hours
+def markethours():
+    # Overlaps time: Overlapping trading hours contain
+    # the highest volume of traders.
+    pass
+
+
+# ----------------------------------
+# https://www.investing.com/economic-calendar/
+def economiccalendar():
+    pass
+
+
 def analysis_currency(filename):
     pass
 
 
-# HUng refactor
 def analysis_bond(filename):
-    # processing data
+    # processing data: bond spread
     # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
     # https://pypi.org/project/yield-curve-dynamics/
     pass
 
 
-# HUng refactor
 def analysis_index(filename):
     pass
 
@@ -55,12 +92,16 @@ def analysis_commodity(filename):
     pass
 
 
+def analysis_intermarket(filename):
+    pass
+
+
 def combine_params(filename, params, interval):
     check_folder(combine_path)
     main_df = pd.DataFrame()
-    for ticker, market in params.items():
+    for ticker, info in params.items():
         ticker = replace_specchar(ticker, '/', '')
-        df = pd.read_csv(f'investpy/{market}data/{ticker}_{interval}.csv')
+        df = pd.read_csv(f'investpy/{info[0]}data/{ticker}_{interval}.csv')
         df.set_index('Date', inplace=True)
         df.rename(columns={'Close': ticker}, inplace=True)
         df = df.filter([ticker])
@@ -69,32 +110,28 @@ def combine_params(filename, params, interval):
     main_df.to_csv(combine_path + f'{filename}_{interval}.csv')
 
 
-def norm_data():
-    pass
-
-
-def make_market(params, isReload=True):
-    intervals = ['Daily', 'Weekly', 'Monthly']
-    name, market, things, country, inputfunc, outputfunc = params
-    markets = [market]*len(things)
-    thing_pairs = dict(zip(things, markets))
-    if isReload:
-        dump_things(f'{name}{market}', thing_pairs, intervals,
-                    country, inputfunc)
-    else:
-        outputfunc(combine_path + f'{name}{market}_{interval}.csv')
-        pass
-
-
-def dump_things(filename, things, intervals, country, func):
-    for thing in things.keys():
+# dump same thing in an list
+def dump_things(filename, things, intervals):
+    for thing, info in things.items():
+        market, country, infunc = info
         for interval in intervals:
-            func(thing, interval, country)
+            infunc(thing, interval, country)
     for interval in intervals:
         combine_params(filename, things, interval)
 
 
-def lazy_loop():
+def make_market(params, isReload=True):
+    intervals = ['Daily', 'Weekly', 'Monthly']
+    filename, data, info, outfunc = params
+    thing_pairs = dict(zip(data, info))
+    if isReload:
+        dump_things(filename, thing_pairs, intervals)
+    else:
+        outfunc(combine_path + f'{filename}_{interval}.csv')
+        # read data
+
+
+def norm_data():
     pass
 
 
@@ -156,122 +193,134 @@ def read_data(file):
 # --------------------- indices ----------------------------------
 def get_indices(index, interval, country):
     check_folder(index_path)
+    # check latest data
     df = iv.indices.get_index_historical_data(
         index=index, country=country, from_date=starttime, to_date=today,
         order='ascending', interval=interval)
     index = replace_specchar(index, '/', '_')
+    # print(df.tail())
     df.to_csv(index_path + f'/{index}_{interval}.csv')
 
 
 def get_currency_indices(isReload=True):
-    currency_indices = ['US Dollar Index', 'PHLX Euro',
-                        'PHLX Australian Dollar', 'PHLX Canadian Dollar',
-                        'PHLX Swiss Franc', 'PHLX British Pound',
-                        'PHLX Yen', 'US Dollar Index']
-    currency_params = ['currency', markets[0], currency_indices,
-                       'united states', get_indices, analysis_index]
-    make_market(currency_params, isReload)
+    data = ['US Dollar Index', 'PHLX Euro',
+            'PHLX Australian Dollar', 'PHLX Canadian Dollar',
+            'PHLX Swiss Franc', 'PHLX British Pound',
+            'PHLX Yen', 'PHLX New Zealand Dollar']
+    info = [[markets[0], 'united states', get_indices]]*len(data)
+    params = ['currencyindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # ------------------- bonds -----------------------------
 def get_bonds(bond, interval, country):
     check_folder(bond_path)
+    # check latest data
     # ---------- historical_data ------------
     df = iv.bonds.get_bond_historical_data(
         bond=bond, from_date=starttime, to_date=today,
         order='ascending', interval=interval)
+    # print(df.tail())
     df.to_csv(bond_path + f'/{bond}_{interval}.csv')
 
 
-def get_bond_overview(country):
-    df = iv.bonds.get_bonds_overview(country=country)
-    pass
+def cor_bond(isReload=True):
+    data = ['Japan 10Y', 'Switzerland 10Y', 'Australia 10Y',
+            'Canada 10Y', 'U.S. 10Y', 'Germany 10Y',
+            'New Zealand 10Y', 'U.K. 10Y']
+    info = [[markets[3], 'united states', get_bonds]]*len(data)
+    params = ['cor_bond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # ----------- get_currency_cross_historical_data ---------
-def get_currency_cross(quote, interval, country):
+def get_forex(quote, interval, country):
     check_folder(currency_path)
+    # check latest data
     df = iv.currency_crosses.get_currency_cross_historical_data(
         currency_cross=quote, from_date=starttime, to_date=today,
         order='ascending', interval=interval)
     df = df.iloc[:, :-1]
     quote = replace_specchar(quote, '/', '')
+    # print(df.tail())
     df.to_csv(currency_path + f'/{quote}_{interval}.csv')
 
 
 def compare_gold():
-    xaupairs = ['XAU/USD', 'XAU/EUR', 'XAU/GBP', 'XAU/CAD',
-                'XAU/CHF', 'XAU/JPY', 'XAU/AUD', 'XAU/NZD']
-    xaupair_params = ['xaupair', markets[1], xaupairs,
-                      'united states', get_currency_cross, analysis_currency]
-    make_market(xaupair_params, isReload)
+    data = ['XAU/USD', 'XAU/EUR', 'XAU/GBP', 'XAU/CAD',
+            'XAU/CHF', 'XAU/JPY', 'XAU/AUD', 'XAU/NZD']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['xaupair', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
 def compare_silver():
-    xagpairs = ['XAG/USD', 'XAG/EUR', 'XAG/GBP',
-                'XAG/CAD', 'XAG/CHF', 'XAG/AUD']
-    xagpair_params = ['xagpair', markets[1], xagpairs,
-                      'united states', get_currency_cross, analysis_currency]
-    make_market(xagpair_params, isReload)
+    data = ['XAG/USD', 'XAG/EUR', 'XAG/GBP', 'XAG/CAD', 'XAG/CHF', 'XAG/AUD']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['xagpair', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
 # ----------------------------IMPORTANT- commondity---
 # ------------- get_commodity_historical_data ---------------
 def get_commodities(commodity, interval, country):
     check_folder(commodity_path)
+    # check latest data
     df = iv.commodities.get_commodity_historical_data(
         commodity=commodity, from_date=starttime, to_date=today,
         order='ascending', interval=interval)
+    # print(df.tail())
     df.to_csv(commodity_path + f'/{commodity}_{interval}.csv')
 
 
 def calculate_grains(isReload=True):
     # https://www.investing.com/commodities/grains
-    grains = ['Rough Rice', 'US Soybean Oil',
-              'US Soybean Meal', 'US Soybeans',
-              'US Wheat', 'US Corn', 'Oats', 'London Wheat']
-    grain_params = ['grain', markets[2], grains,
-                    'united states', get_commodities, analysis_commodity]
-    make_market(grain_params, isReload)
+    data = ['Rough Rice', 'US Soybean Oil',
+            'US Soybean Meal', 'US Soybeans',
+            'US Wheat', 'US Corn', 'Oats', 'London Wheat']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['grain', data, info, analysis_commodity]
+    make_market(params, isReload)
 
 
 def calculate_softs(isReload=True):
     # https://www.investing.com/commodities/softs
-    softs = ['US Coffee C', 'US Cotton #2',
-             'US Sugar #11', 'Orange Juice',
-             'US Cocoa', 'Lumber', 'London Cocoa',
-             'London Coffee', 'London Sugar']
-    soft_params = ['soft', markets[2], softs,
-                   'united states', get_commodities, analysis_commodity]
-    make_market(soft_params, isReload)
+    data = ['US Coffee C', 'US Cotton #2',
+            'US Sugar #11', 'Orange Juice',
+            'US Cocoa', 'Lumber', 'London Cocoa',
+            'London Coffee', 'London Sugar']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['soft', data, info, analysis_commodity]
+    make_market(params, isReload)
 
 
+# shortcut: filename + dataset
 def calculate_meats(isReload=True):
     # https://www.investing.com/commodities/meats
-    meats = ['Live Cattle', 'Lean Hogs', 'Feeder Cattle']
-    meat_params = ['meat', markets[2], meats,
-                   'united states', get_commodities, analysis_commodity]
-    make_market(meat_params, isReload)
+    data = ['Live Cattle', 'Lean Hogs', 'Feeder Cattle']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['meat', data, info, analysis_commodity]
+    make_market(params, isReload)
 
 
 def calculate_metals(isReload=True):
     # https://www.investing.com/commodities/metals
-    metals = ['Gold', 'Silver', 'Copper', 'Palladium', 'Platinum',
-              'Aluminum', 'Zinc', 'Lead', 'Nickel', 'Tin']
-    metal_params = ['metal', markets[2], metals,
-                    'united states', get_commodities, analysis_commodity]
-    make_market(metal_params, isReload)
+    data = ['Gold', 'Silver', 'Copper', 'Palladium', 'Platinum',
+            'Aluminum', 'Zinc', 'Lead', 'Nickel', 'Tin']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['metal', data, info, analysis_commodity]
+    make_market(params, isReload)
 
 
 def calculate_energies(isReload=True):
     # https://www.investing.com/commodities/energy
-    energies = ['Brent Oil', 'Crude Oil WTI',
-                'London Gas Oil', 'Natural Gas',
-                'Heating Oil', 'Carbon Emissions',
-                'Gasoline RBOB']
-    energy_params = ['energy', markets[2], energies,
-                     'united states', get_commodities, analysis_commodity]
-    make_market(energy_params, isReload)
+    data = ['Brent Oil', 'Crude Oil WTI',
+            'London Gas Oil', 'Natural Gas',
+            'Heating Oil', 'Carbon Emissions',
+            'Gasoline RBOB']
+    info = [[markets[2], 'united states', get_commodities]]*len(data)
+    params = ['energy', data, info, analysis_commodity]
+    make_market(params, isReload)
 
 
 # ----------------Commondity index-------------------------
@@ -280,6 +329,47 @@ def get_crb(isReload=True):
     get_indices('TR/CC CRB', 'world')
 
 
+# ----------------Correlation-------------------------
+# -------------------------------------
+# AUD vs NZD (correlation)
+def cor_aunz(isReload=True):
+    data = ['PHLX Australian Dollar', 'PHLX New Zealand Dollar',
+            'Australia 10Y', 'New Zealand 10Y']
+    info = [[markets[0], 'united states', get_indices]] * \
+        2 + [[markets[3], 'united states', get_bonds]]*2
+    params = ['cor_aunz', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------
+# USD vs CAD (correlation)
+def cor_usca(isReload=True):
+    data = ['US Dollar Index', 'PHLX Canadian Dollar',
+            'U.S. 10Y', 'Canada 10Y']
+    info = [[markets[0], 'united states', get_indices]] * \
+        2 + [[markets[3], 'united states', get_bonds]]*2
+    params = ['cor_usca', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------
+# JPY vs CHF (correlation)
+def cor_jpsw(isReload=True):
+    data = ['PHLX Yen', 'PHLX Swiss Franc', 'Japan 10Y', 'Switzerland 10Y']
+    info = [[markets[0], 'united states', get_indices]] * \
+        2 + [[markets[3], 'united states', get_bonds]]*2
+    params = ['cor_jpsw', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------
+# GBP vs EUR (correlation)
+def cor_ukeu(isReload=True):
+    data = ['PHLX British Pound', 'PHLX Euro', 'U.K. 10Y', 'Germany 10Y']
+    info = [[markets[0], 'united states', get_indices]] * \
+        2 + [[markets[3], 'united states', get_bonds]]*2
+    params = ['cor_ukeu', data, info, analysis_intermarket]
+    make_market(params, isReload)
 # -------------------------------------------------------
 # timeframe and Fibonacci
 # Day? how much
@@ -292,6 +382,8 @@ def get_crb(isReload=True):
 # ----------------- T.B.D -----------------
 # get last row date, check if is up to date-> read data, not write
 # -------------------------------------------------------
+
+
 def get_bond_quandl(currency, data, key):
     # ------------- quandl part-----------
     # get data and save, LACK Datetime range for data

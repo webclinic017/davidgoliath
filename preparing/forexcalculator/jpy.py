@@ -6,84 +6,73 @@ currency = 'jpy'
 
 
 # -------------------------------------------------------
-# #######################################################
-# 10Y treasury bond yeild: tai san tru an cung voi US bond
+# bonds:
+# ----------------------------
 # https://www.investing.com/rates-bonds/japan-10-year-bond-yield
 def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('Japan 2Y')
-        get_bonds('Japan 5Y')
-        get_bonds('Japan 10Y')
-    else:
-        pass
+    data = ['Japan 2Y', 'Japan 5Y', 'Japan 10Y']
+    info = [[markets[3], 'japan', get_bonds]]*len(data)
+    params = ['jpbond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
-# compare
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    if isReload:
-        king.calculate_bond()
-    pass
-
-
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
 # -------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# stock indices:
 # ----------------------------
 # Nikkei 225: https://www.investing.com/indices/japan-ni225
 def get_nikkei225(isReload=True):
-    if isReload:
-        get_indices('Nikkei 225', 'japan')
+    # can get more indices
+    data = ['Nikkei 225', 'Nikkei Volatility']
+    info = [[markets[0], 'japan', get_indices]]*len(data)
+    params = ['jpindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Jxy: đo lƣờng mức độ e ngại rủi ro
-def get_jxy(isReload=True):
-    if isReload:
-        get_indices('PHLX Yen', 'united states')
-    pass
-
-
+# currencies:
+# ----------------------------
 # jpy major cross
 def compare_major(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR', 'CHF',
-                          'GBP', 'CAD', 'USD', 'AUD', 'NZD']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/JPY")
-    else:
-        pass
+    data = ['XAU/JPY', 'EUR/JPY', 'USD/JPY', 'GBP/JPY',
+            'AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'CHF/JPY']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['jpymajor', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# (carry trade) AUD/NZD rate: already code vs Volatility Index
+# (carry trade) AUD/NZD/CAD rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500
-def corr_volatility(isReload=True):
-    # chỉ số VIX luôn nằm dƣới 20%. ???
-    if isReload:
-        get_volatility()
-    pass
+def corr_jpvolatility(isReload=True):
+    # more detail with rate diff
+    data = ['AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'S&P 500 VIX']
+    info = [[markets[1], 'united states', get_forex]] * \
+        3 + [[markets[0], 'united states', get_indices]]
+    params = ['jpypair_vix', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # EURJPY and NASDAQ Composite correlation
 # https://www.investing.com/indices/nasdaq-composite
 def cor_ej_nasdaq(isReload=True):
-    if isReload:
-        get_currency_cross('EUR/JPY')
-        king.get_nasdaq_composite()
-    pass
+    data = ['EUR/JPY', 'Nasdaq']
+    info = [[markets[1], 'united states', get_forex],
+            [markets[0], 'united states', get_indices]]
+    params = ['ej_nasdaq', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # COmpare with :
 # Gold price: https://www.investing.com/commodities/gold
-# Swiss Franc: https://www.investing.com/indices/phlx-swiss-franc
+# Swiss Franc: https://www.investing.com/indices/phlx-yen
 def cor_jpy_gold(isReload=True):
-    if isReload:
-        pass
+    data = ['Gold', 'PHLX Yen']
+    info = [[markets[2], 'united states', get_commodities],
+            [markets[0], 'united states', get_indices]]
+    params = ['gold_jpy', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------

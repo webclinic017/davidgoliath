@@ -7,58 +7,63 @@
 # https://pypi.org/project/fredapi/
 from alphautils import *
 import usd as king
-currency = 'cad'
+currency = 'aud'
 
 
 # -------------------------------------------------------
-# #######################################################
-# 10Y treasury bond yeild
-def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('Australia 2Y')
-        get_bonds('Australia 5Y')
-        get_bonds('Australia 10Y')
-    else:
-        pass
-
-
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    pass
-
-
-# -------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# bonds:
 # ----------------------------
-# ASX 200 Futures: https://au.investing.com/indices/australia-200-futures
-def get_asx200(isReload=True):
-    if isReload:
-        get_indices('S&P/ASX 200', 'australia')
-    pass
+def calculate_bond(isReload=True):
+    # for investpy
+    data = ['Australia 2Y', 'Australia 5Y', 'Australia 10Y']
+    info = [[markets[3], 'australia', get_bonds]]*len(data)
+    params = ['aubond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Axy
-def get_axy(isReload=True):
-    if isReload:
-        get_indices('PHLX Australian Dollar', 'united states')
-    pass
+# stock indices:
+# ----------------------------
+# ASX 200 Futures: https://investing.com/indices/australia-200-futures
+def get_asx200(isReload=True):
+    data = ['S&P/ASX 200', 'S&P/ASX Midcap 50']
+    info = [[markets[0], 'australia', get_indices]]*len(data)
+    params = ['auindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
+# -------------------------------------------------------
+# currencies:
+# ----------------------------
 # aud pair ------------------------------
 def compare_minor(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR', 'GBP']
-        backward_quotes = ['CHF', 'JPY', 'CAD', 'USD', 'NZD']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/AUD")
-            for quote in backward_quotes:
-                get_currency_cross(f"AUD/{quote}")
-    else:
-        pass
+    data = ['XAU/AUD', 'EUR/AUD', 'GBP/AUD', 'AUD/NZD',
+            'AUD/JPY', 'AUD/CAD', 'AUD/USD', 'AUD/CHF']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['audmajor', data, info, analysis_currency]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# (carry trade) JPY/CHF rate: already code vs Volatility Index
+# https://www.investing.com/indices/volatility-s-p-500
+def corr_nzvolatility(isReload=True):
+    # more detail with rate diff
+    data = ['AUD/JPY', 'AUD/CHF', 'S&P 500 VIX']
+    info = [[markets[1], 'united states', get_forex]] * \
+        2 + [[markets[0], 'united states', get_indices]]
+    params = ['aupair_vix', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# ----------------------------IMPORTANT
+def cor_audcomodity(isReload=True):
+    data = ['AUD/USD', 'USD/CNH', 'CNH/JPY', 'Crude Oil WTI', 'Gold', 'Copper']
+    info = [[markets[1], 'united states', get_forex]] * \
+        3 + [[markets[2], 'united states', get_commodities]] * 3
+    params = ['cor_audcomodity', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -69,32 +74,6 @@ def get_cashrate(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'RBA', 'F13_FOOIRATCR')
     # get_ffr()
-
-
-# -------------------------------------------------------
-# (carry trade) AUD/NZD rate: already code vs Volatility Index
-# https://www.investing.com/indices/volatility-s-p-500
-def get_carrytradeindex(isReload=True):
-    if isReload:
-        get_volatility()
-    # combine data -> calculate spread ...
-    pass
-
-
-# -------------------------------------------------------
-# ----------------------------IMPORTANT
-def cor_metals(isReload=True):
-    if isReload:
-        # cor_audusd_gold
-
-        # Gold price: https://www.investing.com/commodities/gold
-        get_gold()
-        # Copper: https://www.investing.com/commodities/copper
-        get_copper()
-        # others
-        calculate_metals()
-        # china policy
-    pass
 
 
 # -------------------------------------------------------

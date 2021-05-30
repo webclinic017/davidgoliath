@@ -5,38 +5,45 @@ country = 'united states'
 # ------------------------------
 
 
+# -------------------------------------------------------
+# bonds:
+# ----------------------------
 def calculate_bond(isReload=True):
     # for investpy
-    bonds = ['U.S. 2Y', 'U.S. 5Y', 'U.S. 10Y']
-    bond_params = ['usbond', markets[3], bonds,
-                   'united states', get_bonds, analysis_bond]
-    make_market(bond_params, isReload)
-    pass
+    data = ['U.S. 2Y', 'U.S. 5Y', 'U.S. 10Y']
+    info = [[markets[3], 'united states', get_bonds]]*len(data)
+    params = ['usbond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
-# ---------------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# -------------------------------------------------------
+# stock indices
+# ----------------------------
 def get_stock_indices(isReload=True):
-    indices = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq']
-    index_params = ['usindex', markets[0], indices,
-                    'united states', get_indices, analysis_index]
-    make_market(index_params, isReload)
+    # f(o): priority number list -> 1 main index
+    data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq']
+    info = [[markets[0], 'united states', get_indices]]*len(data)
+    params = ['usindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # Dxy: update tick data for this
-def get_dxy(isReload=True):
+def cor_dxygold(isReload=True):
     # update real time from DXY_M1 ICmarkets
     pass
 
 
+# -------------------------------------------------------
+# currencies:
+# ----------------------------
 # usd major cross
-def compare_major(isReload=True):
-    quotes = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
-              'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD']
-    quote_params = ['quote', markets[1], quotes,
-                    'united states', get_currency_cross, analysis_currency]
-    make_market(quote_params, isReload)
+def compare_usmajor(isReload=True):
+    data = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
+            'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['usdmajor', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -44,9 +51,23 @@ def compare_major(isReload=True):
 # dùng trong carry trade và stock predict
 # < 20 -> ít sợ, > 40 -> sợ nhiều + các mô hình giá
 # COMMON--------------------------------
-def get_volatility(isReload=True):
-    if isReload:
-        get_indices('S&P 500 VIX', country)
+def cor_usmain(isReload=True):
+    data = ['S&P 500 VIX', 'US Dollar Index',
+            'U.S. 10Y', 'Gold', 'Crude Oil WTI']
+    info = [[markets[0], 'united states', get_indices]] \
+        * 2 + [[markets[3], 'united states', get_bonds]] \
+            + [[markets[2], 'united states', get_commodities]] * 2
+    params = ['cor_usmain', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# Oil corr --------------------------------
+def corr_usoil(isReload=True):
+    data = ['AUD/USD', 'NZD/USD', 'GBP/USD', 'USD/CAD', 'Crude Oil WTI']
+    info = [[markets[1], 'united states', get_forex]] * \
+        4 + [[markets[2], 'united states', get_commodities]]
+    params = ['corr_usoil', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # ---------------- Important gold index -------------------------

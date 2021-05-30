@@ -12,60 +12,60 @@ currency = 'cad'
 
 # -------------------------------------------------------
 # #######################################################
-# 10Y treasury bond yeild
+# -------------------------------------------------------
+# bonds:
+# ----------------------------
 def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('Canada 2Y')
-        get_bonds('Canada 5Y')
-        get_bonds('Canada 10Y')
-    else:
-        pass
-
-
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    if isReload:
-        king.calculate_bond()
-    pass
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
+    data = ['Canada 2Y', 'Canada 5Y', 'Canada 10Y']
+    info = [[markets[3], 'canada', get_bonds]]*len(data)
+    params = ['cabond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# stock indices:
 # ----------------------------
 # CA60: https://www.investing.com/indices/s-p-tsx-60
-def get_tsx60(isReload=True):
-    if isReload:
-        get_indices('S&P/TSX 60', 'canada')
+def get_tsx(isReload=True):
+    data = ['S&P/TSX 60', 'S&P/TSX MidCap', 'S&P/TSX Small Cap', 'S&P/TSX']
+    info = [[markets[0], 'canada', get_indices]]*len(data)
+    params = ['caindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Cxy: https://www.investing.com/indices/phlx-canadian-dollar
-def get_cxy(isReload=True):
-    if isReload:
-        get_indices('PHLX Canadian Dollar', 'united states')
-    pass
-
-
+# currencies:
+# ----------------------------
 # cad major cross:
 def compare_major(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR', 'USD', 'GBP', 'AUD', 'NZD']
-        backward_quotes = ['JPY', 'CHF']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/CAD")
-            for quote in backward_quotes:
-                get_currency_cross(f"CAD/{quote}")
-    else:
-        pass
+    data = ['XAU/CAD', 'EUR/CAD', 'USD/CAD', 'GBP/CAD',
+            'AUD/CAD', 'NZD/CAD', 'CAD/JPY', 'CAD/CHF']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['camajor', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
-# CAD thường chạy song song vs USD (so với những cặp tiền khác)
-def cor_cxy_dxy(isReload=True):
-    if isReload:
-        pass
+# -------------------------------------------------------
+# (carry trade)-JPY/CHF rate: nếu volatility nhỏ, CAD strong
+# https://www.investing.com/indices/volatility-s-p-500
+def corr_cavolatility(isReload=True):
+    # more detail with rate diff
+    data = ['CAD/JPY', 'CAD/CHF', 'S&P 500 VIX']
+    info = [[markets[1], 'united states', get_forex]] * \
+        2 + [[markets[0], 'united states', get_indices]]
+    params = ['capair_vix', data, info, analysis_intermarket]
+    make_market(params, isReload)
+
+
+# -------------------------------------------------------
+# ----------------------------IMPORTANT
+# Oil corr : https://www.investing.com/commodities/crude-oil
+def cor_uc_xti(isReload=True):
+    data = ['USD/CAD', 'Crude Oil WTI']
+    info = [[markets[1], 'united states', get_forex],
+            [markets[2], 'united states', get_commodities]]
+    params = ['corr_caoil', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -76,49 +76,12 @@ def get_cashrate(isReload=True):
         get_economic_quandl(currency, 'BOC', 'CORRA')
 
 
-# ----------------------------
-# (carry trade) - nếu volatility nhỏ, CAD -> diễn viên chính
-# https://www.investing.com/indices/volatility-s-p-500
-def get_carrytradeindex(isReload=True):
-    if isReload:
-        get_volatility()
-    # combine data -> calculate spread ...
-    pass
-
-
 # -------------------------------------------------------
 # Motor vehicle (optional)
 # https://www.quandl.com/data/FRED/DAUTONSA-Motor-Vehicle-Retail-Sales-Domestic-Autos
-def get_gdp(isReload=True):
+def get_motor(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'FRED', 'DAUTONSA')
-
-
-# -------------------------------------------------------
-# ----------------------------IMPORTANT
-def cor_metals(isReload=True):
-    if isReload:
-        # cor_audusd_gold
-
-        # Gold price: https://www.investing.com/commodities/gold
-        get_gold()
-        # Copper: https://www.investing.com/commodities/copper
-        get_copper()
-        # others
-        calculate_metals()
-        # china policy
-    pass
-
-
-# -------------------------------------------------------
-# ----------------------------IMPORTANT
-# compare USDCAD vs
-# xti oil price: https://www.investing.com/commodities/crude-oil
-def cor_uc_xti(isReload=True):
-    if isReload:
-        get_currency_cross('USD/CAD')
-        get_commodities('Crude Oil WTI')
-        pass
 
 
 # -------------------------------------------------------

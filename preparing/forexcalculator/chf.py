@@ -1,96 +1,76 @@
 # #######################################################
-# -------------------------------------------------------
-# get params then calculate corr
-# muon lay param nao de so sanh cung dc
-
-# Documentation of Fred api
-# https://pypi.org/project/fredapi/
 from alphautils import *
 import usd as king
 currency = 'chf'
 
 
 # -------------------------------------------------------
-# #######################################################
-# 10Y treasury bond yeild
+# bonds:
+# ----------------------------
 # https://www.investing.com/rates-bonds/switzerland-10-year-bond-yield
 def calculate_bond(isReload=True):
-    if isReload:
-        get_bonds('Switzerland 2Y')
-        get_bonds('Switzerland 5Y')
-        get_bonds('Switzerland 10Y')
-    else:
-        pass
-
-
-# https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-# https://pypi.org/project/yield-curve-dynamics/
-# compare
-def calculate_bondspread(isReload=True):
-    # https://www.investing.com/rates-bonds/u.s.-10-year-bond-yield
-    if isReload:
-        king.calculate_bond()
-    pass
+    data = ['Switzerland 2Y', 'Switzerland 5Y', 'Switzerland 10Y']
+    info = [[markets[3], 'switzerland', get_bonds]]*len(data)
+    params = ['swbond', data, info, analysis_bond]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# stock indices: https://www.investing.com/indices/major-indices
+# stock indices
 # ----------------------------
 # Switzerland 20: https://www.investing.com/indices/switzerland-20
 def get_smi20(isReload=True):
-    if isReload:
-        get_indices('SMI', 'switzerland')
+    data = ['SMI', 'FTSE Switzerland', 'Swiss Mid Price']
+    info = [[markets[0], 'switzerland', get_indices]]*len(data)
+    params = ['swindex', data, info, analysis_index]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# Sxy
-def get_sxy(isReload=True):
-    get_indices('PHLX Swiss Franc', 'united states')
-    pass
-
-
-# jpy major cross
+# currencies:
+# ----------------------------
+# chf major cross:
 def compare_major(isReload=True):
-    if isReload:
-        forward_quotes = ['XAU', 'EUR', 'GBP',
-                          'CAD', 'USD', 'AUD', 'NZD']
-        backward_quotes = ['JPY']
-        if isReload:
-            for quote in forward_quotes:
-                get_currency_cross(f"{quote}/CHF")
-            for quote in backward_quotes:
-                get_currency_cross(f"CHF/{quote}")
-    else:
-        pass
+    data = ['XAU/CHF', 'EUR/CHF', 'USD/CHF', 'GBP/CHF',
+            'AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'CHF/JPY']
+    info = [[markets[1], 'united states', get_forex]]*len(data)
+    params = ['chfmajor', data, info, analysis_currency]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
-# (carry trade) AUD/NZD rate: already code vs Volatility Index
+# (carry trade) AUD/NZD/CAD rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500
-def corr_volatility(isReload=True):
-    # chỉ số VIX luôn nằm dƣới 20%. ???
-    if isReload:
-        get_volatility()
-    pass
+def corr_swvolatility(isReload=True):
+    # more detail with rate diff
+    data = ['AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'S&P 500 VIX']
+    info = [[markets[1], 'united states', get_forex]] * \
+        3 + [[markets[0], 'united states', get_indices]]
+    params = ['chfpair_vix', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # EURCHF and NASDAQ Composite correlation
 # https://www.investing.com/indices/nasdaq-composite
 def cor_echf_nasdaq(isReload=True):
-    if isReload:
-        get_currency_cross('EUR/CHF')
-        king.get_nasdaq_composite()
-    pass
+    data = ['EUR/CHF', 'Nasdaq']
+    info = [[markets[1], 'united states', get_forex],
+            [markets[0], 'united states', get_indices]]
+    params = ['echf_nasdaq', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # COmpare with :
 # Gold price: https://www.investing.com/commodities/gold
-# Yen: https://www.investing.com/indices/phlx-yen
+# Swiss Franc: https://www.investing.com/indices/phlx-swiss-franc
 def cor_chf_gold(isReload=True):
-    if isReload:
-        pass
+    data = ['Gold', 'PHLX Swiss Franc']
+    info = [[markets[2], 'united states', get_commodities],
+            [markets[0], 'united states', get_indices]]
+    params = ['gold_chf', data, info, analysis_intermarket]
+    make_market(params, isReload)
 
 
 # -------------------------------------------------------
