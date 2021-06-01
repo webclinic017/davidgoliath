@@ -7,6 +7,9 @@ import datamine as cme
 from fredapi import Fred
 from datetime import date
 from forexflag import *
+import numpy as np
+import datetime
+import pandas_ta
 
 quandl.ApiConfig.api_key = 'isu4pbfFzpfUnowC-k-R'
 fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
@@ -31,69 +34,6 @@ combine_path = 'investpy/combinedata/'
 # ----------------------------------------------------------
 # common function
 # ----------------------------------------------------------
-
-
-# Currencies Heat Map
-# https://www.investing.com/tools/currency-heatmap
-def currenciesheatmap():
-    pass
-
-
-# Forex Volatility:
-# https://www.investing.com/tools/forex-volatility-calculator
-def forexvolatility():
-    pass
-
-
-# Fibonacci Calculator:
-# https://www.investing.com/tools/fibonacci-calculator
-def fibocalculator():
-    pass
-
-
-# Pivot Point Calculator
-# https://www.investing.com/tools/pivot-point-calculator
-def pivotpointcalculator():
-    pass
-
-
-# financial-calendars
-# https://www.investing.com/tools/financial-calendars
-# ----------------------------------
-# https://www.investing.com/tools/market-hours
-def markethours():
-    # Overlaps time: Overlapping trading hours contain
-    # the highest volume of traders.
-    pass
-
-
-# ----------------------------------
-# https://www.investing.com/economic-calendar/
-def economiccalendar():
-    pass
-
-
-def analysis_currency(filename):
-    pass
-
-
-def analysis_bond(filename):
-    # processing data: bond spread
-    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-    # https://pypi.org/project/yield-curve-dynamics/
-    pass
-
-
-def analysis_index(filename):
-    pass
-
-
-def analysis_commodity(filename):
-    pass
-
-
-def analysis_intermarket(filename):
-    pass
 
 
 def combine_params(filename, params, interval):
@@ -409,3 +349,110 @@ def analysis_bond_quandl(params):
     # corr
 
     # ----------------------
+
+
+# Currencies Heat Map
+# https://www.investing.com/tools/currency-heatmap
+def currenciesheatmap():
+    pass
+
+
+# Forex Volatility:
+# https://www.investing.com/tools/forex-volatility-calculator
+def forexvolatility(numofweeks):
+
+    pass
+
+
+# Fibonacci Calculator:
+# https://www.investing.com/tools/fibonacci-calculator
+def fibocalculator(start, end):
+    # lack of interval
+    start = datetime.datetime.strptime(start, "%d/%m/%Y")
+    end = datetime.datetime.strptime(end, "%d/%m/%Y")
+    # read data
+    df = pd.read_csv('investpy/currenciesdata/EURGBP_Daily.csv')
+    # convert date
+    df['Date'] = pd.to_datetime(df['Date'])
+    # get data range
+    df = df[(df['Date'] >= start) & (df['Date'] <= end)]
+    # define High/ Low/ Custom
+    low = df['Low'].min()
+    high = df['High'].max()
+    isUptrend = True if (df.loc[df['High'] == high].index -
+                         df.loc[df['Low'] == low].index > 0) else False
+    inner_start = df.loc[df['High'] == high]['Date'].tolist()[0]
+    inner_df = df[(df['Date'] > inner_start) & (df['Date'] <= end)]
+    custom = inner_df['Low'].min()
+    # print(low, high, custom)
+    fiboret_level = (0.236, 0.382, 0.5,
+                     0.618, 0.707, 0.786, 0.887)
+    # T.B.D
+    fiboexp_level = (-0.382, -0.236, 0, 0.236, 0.5,
+                     0.618, 0.786, 1, 1.272, 1.618)
+    print(isUptrend)
+    if isUptrend:
+        price_ret = [round((1-level)*(high-low) + low, 4)
+                     for level in fiboret_level]
+        price_ret.reverse()
+    else:
+        price_ret = [round(level*(high-low) + low, 4)
+                     for level in fiboret_level]
+    price_ret.append(high)
+    price_ret.insert(0, low)
+    # print(price_ret)
+    return (price_ret)
+
+
+fibocalculator('07/05/2021', '12/05/2021')
+# fibocalculator('05/04/2021', '14/04/2021')
+
+
+# Pivot Point Calculator
+# https://www.investing.com/tools/pivot-point-calculator
+def pivotpointcalculator(pivottype, ohlc):
+    # Classic
+    # Fibonacci
+    # Camarilla
+    # Woodie's
+    # DeMark's
+    pass
+
+
+# financial-calendars
+# https://www.investing.com/tools/financial-calendars
+# ----------------------------------
+# https://www.investing.com/tools/market-hours
+def markethours():
+    # Overlaps time: Overlapping trading hours contain
+    # the highest volume of traders.
+    pass
+
+
+# ----------------------------------
+# https://www.investing.com/economic-calendar/
+def economiccalendar():
+    pass
+
+
+def analysis_currency(filename):
+    pass
+
+
+def analysis_bond(filename):
+    # processing data: bond spread
+    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
+    # https://pypi.org/project/yield-curve-dynamics/
+    pass
+
+
+def analysis_index(filename):
+    pass
+
+
+def analysis_commodity(filename):
+    pass
+
+
+def analysis_intermarket(filename):
+    pass
