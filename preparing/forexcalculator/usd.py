@@ -29,7 +29,7 @@ def get_stock_indices(isReload=True):
 
 # -------------------------------------------------------
 # Dxy: update tick data for this
-def cor_dxygold(isReload=True):
+def cor_dxygo(isReload=True):
     # update real time from DXY_M1 ICmarkets
     pass
 

@@ -10,6 +10,8 @@ from forexflag import *
 import numpy as np
 import datetime
 import pandas_ta
+import re
+from pathlib import Path
 
 quandl.ApiConfig.api_key = 'isu4pbfFzpfUnowC-k-R'
 fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
@@ -17,6 +19,7 @@ fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
 # ---------- investpy items -----------
 markets = ['indices', 'currencies', 'commodities',
            'rates-bonds', 'equities', 'etfs', 'crypto']
+# global starttime
 starttime = '01/01/2010'
 today = date.today().strftime("%d/%m/%Y")
 
@@ -354,12 +357,58 @@ def analysis_bond_quandl(params):
 # Currencies Heat Map
 # https://www.investing.com/tools/currency-heatmap
 def currenciesheatmap():
+    # use Xy or smt???
+    # output or ... bổ trợ cho cái khác ???
     pass
 
 
-# Forex Volatility:
+# Forex Volatility: -> calculte expected pips and most suitable pair
 # https://www.investing.com/tools/forex-volatility-calculator
-def forexvolatility(numofweeks):
+def forexvolatility(numofweeks, timeframe):
+    # timeframe: x months after today time
+    # numofweeks: slice of time in last timeframe
+    # numofweeks càng nhỏ thì biến động càng lớn, ??? chọn bnhieu để
+    # hợp vs day trading
+
+    # definition:
+    # volatility of a pair: standard deviation from the mean
+    # higher volatility/ higher riskier
+    # optimize trading strategy
+    # which most volatile "pairs/ HOURS/ days/" week
+
+    # Economic/ markets events
+    markethours()
+    economiccalendar()
+
+    # rate
+
+    # khác biệt cố hữu trong các động lực kinh tế của mỗi quốc gia
+    # -> xu hướng biến động nhiều hơn
+    # get_commodities / services (majors)
+    # Most agricultural and commodities such as oil are priced in U.S. dollars
+    # Try to draw a chart like this for 8 currencies
+    # anti-U.S. dollar or pro-U.S. dollar (kháng/ hỗ Dollar)
+    # https://www.babypips.com/learn/forex/crosses-present-more-trading-opportunities
+    majors = ['GBP/USD', 'EUR/USD', 'USD/CHF', 'USD/JPY']
+    commodity_pairs = ['AUD/USD', 'USD/CAD', 'NZD/USD']
+
+    # cặp chéo
+    # https://www.babypips.com/learn/forex/cleaner-trends-and-ranges
+    # sometime it's more smoother, easier for trade
+    majorcrosses = ['EUR/CHF', 'EUR/GBP', 'EUR/JPY', 'GBP/JPY']
+    minorcrosses = ['AUD/CHF', 'AUD/JPY', 'CAD/CHF', 'CAD/JPY',
+                    'CHF/JPY', 'EUR/AUD', 'EUR/CAD', 'EUR/NZD',
+                    'GBP/AUD', 'GBP/CAD', 'GBP/CHF', 'GBP/NZD',
+                    'NZD/CHF', 'NZD/JPY']
+    # Hourly Volatility Pips/GMT Hours
+
+    # Daily Volatility In Pips
+
+    # Weekday Volatility In Pips
+
+    # Monthweek Volatility In Pips
+
+    # Yearmonth Volatility In Pips
 
     pass
 
@@ -390,7 +439,6 @@ def fibocalculator(start, end):
     # T.B.D
     fiboexp_level = (-0.382, -0.236, 0, 0.236, 0.5,
                      0.618, 0.786, 1, 1.272, 1.618)
-    print(isUptrend)
     if isUptrend:
         price_ret = [round((1-level)*(high-low) + low, 4)
                      for level in fiboret_level]
@@ -400,23 +448,111 @@ def fibocalculator(start, end):
                      for level in fiboret_level]
     price_ret.append(high)
     price_ret.insert(0, low)
-    # print(price_ret)
-    return (price_ret)
+    return (price_ret, isUptrend)
 
 
-fibocalculator('07/05/2021', '12/05/2021')
+# fibocalculator('07/05/2021', '12/05/2021')
 # fibocalculator('05/04/2021', '14/04/2021')
 
 
 # Pivot Point Calculator
 # https://www.investing.com/tools/pivot-point-calculator
-def pivotpointcalculator(pivottype, ohlc):
+def pivotpointcalculator(pivotType, ohlc):
+    pOpen, pHigh, pLow, pClose = ohlc
     # Classic
+    if pivotType is 'Classic':
+        pp = (pHigh + pLow + pClose) / 3
+        S1 = pp*2 - pHigh
+        S2 = pp - (pHigh-pLow)
+        R1 = pp*2 - pLow
+        R2 = pp + (pHigh-pLow)
+        return [round(num, 2) for num in [pp, R1, R2, S1, S2]]
     # Fibonacci
+    if pivotType is 'Fibonacci':
+        pp = (pHigh + pLow + pClose) / 3
+
+        R1 = pp + ((pHigh-pLow)*0.382)
+        R2 = pp + ((pHigh-pLow)*0.618)
+        R3 = pp + ((pHigh-pLow)*1)
+
+        S1 = pp - ((pHigh-pLow)*0.382)
+        S2 = pp - ((pHigh-pLow)*0.618)
+        S3 = pp - ((pHigh-pLow)*1)
+        return [round(num, 2) for num in [pp, R1, R2, R3, S1, S2, S3]]
     # Camarilla
+    if pivotType is 'Camarilla':
+        pp = (pHigh + pLow + pClose) / 3
+
+        S1 = pClose - ((pHigh-pLow) * 1.0833)
+        S2 = pClose - ((pHigh-pLow) * 1.1666)
+        S3 = pClose - ((pHigh-pLow) * 1.25)
+        S4 = pClose - ((pHigh-pLow) * 1.5)
+
+        R1 = pClose + ((pHigh-pLow) * 1.0833)
+        R2 = pClose + ((pHigh-pLow) * 1.1666)
+        R3 = pClose + ((pHigh-pLow) * 1.25)
+        R4 = pClose + ((pHigh-pLow) * 1.5)
+        return [round(num, 2) for num in [pp, R1, R2, R3, R4, S1, S2, S3, S4]]
     # Woodie's
+    if pivotType is 'Woodie':
+        pp = (pHigh + pLow + 2*pClose) / 4
+
+        R1 = 2*pp - pLow
+        R2 = pp + pHigh - pLow
+
+        S1 = 2*pp - pHigh
+        S2 = pp - pHigh - pLow
+        return [round(num, 2) for num in [pp, R1, R2, S1, S2]]
     # DeMark's
+    if pivotType is 'DeMark':
+        if pClose > pOpen:
+            X = 2*pHigh + pLow + pClose
+        elif pClose < pOpen:
+            X = pHigh + 2*pLow + pClose
+        else:
+            X = pHigh + pLow + 2*pClose
+        pp = X/4
+        R1 = X/2 - pLow
+        S1 = X/2 - pHigh
+        return [round(num, 2) for num in [pp, R1, S1]]
+    # print(pivotpointcalculator('DeMark', df.iloc[-1:, 1:5].values.tolist()[0]))
+
+
+# speedup download process
+# loop with each filename, get its own starttime then
+# download additional data
+def download_ornot(file):
+    # check file exist or not
+    file_src = Path(file)
+    if file_src.is_file():
+        print(f'{file} exist')
+    else:
+        print(f'{file} not found, please download first')
+    df = pd.read_csv(file)
+    df.set_index('Date', inplace=True)
+    # update time not re download all
+    lastline = df[-1:].index.tolist()[0]
+    if lastline == date.today().strftime('%Y-%m-%d'):
+        return True, _
+    else:
+        starttime_ = lastline
+        dayRe = re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)')
+        mo = dayRe.search(starttime_)
+        starttime = mo.group(3) + "/" + mo.group(2) + "/" + mo.group(1)
+        return False, starttime_
+
+
+# download_ornot('investpy/currenciesdata/EURCHF_Daily.csv')
+
+
+def test():
+    # # get_commodities('Crude Oil WTI', 'Daily', 'us')
+    # df = pd.read_csv('investpy/commoditiesdata/Crude Oil WTI_Daily.csv')
+    # print(df.tail())
     pass
+
+
+test()
 
 
 # financial-calendars
@@ -426,12 +562,22 @@ def pivotpointcalculator(pivottype, ohlc):
 def markethours():
     # Overlaps time: Overlapping trading hours contain
     # the highest volume of traders.
+
+    # Phiên Á thì sao?? AUD, NZD
+
+    # Phiên London
+
+    # Phiên Mỹ
+
     pass
 
 
 # ----------------------------------
 # https://www.investing.com/economic-calendar/
 def economiccalendar():
+    # https://www.investing.com/central-banks/fed-rate-monitor
+    # iv.news.economic_calendar()
+
     pass
 
 
