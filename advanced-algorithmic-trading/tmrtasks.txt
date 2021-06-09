@@ -1,0 +1,17 @@
+https://theano-pymc.readthedocs.io/en/latest/tutorial/using_gpu.html
+
+https://www.codeproject.com/Articles/1158306/Theano-Machine-Learning-on-a-GPU-on-Windows
+
+https://www.google.com/search?q=Using+Python%2BTheano+with+nvidia+gpu+window&sxsrf=ALeKk03x-3umSB9IZ10ORZ0iDSh3_3n6ig%3A1622893384992&ei=SGO7YL7-O7WVr7wPtqiw4AI&oq=Using+Python%2BTheano+with+nvidia+gpu+window&gs_lcp=Cgdnd3Mtd2l6EAMyBQghEKABMgUIIRCgATIFCCEQoAE6BwgAEEcQsAM6BwgjEK4CECdQz8mFA1jSzoUDYPDPhQNoAHABeACAAcMDiAGFC5IBBTEuNC0zmAEAoAEBqgEHZ3dzLXdpesgBCMABAQ&sclient=gws-wiz&ved=0ahUKEwi-wuH9tIDxAhW1yosBHTYUDCwQ4dUDCA4&uact=5
+
+https://www.google.com/search?q=WARNING+(theano.tensor.blas)%3A+Using+NumPy+C-API+based+implementation+for+BLAS+functions.&oq=WARNING+(theano.tensor.blas)%3A+Using+NumPy+C-API+based+implementation+for+BLAS+functions.&aqs=chrome..69i57.223j0j4&sourceid=chrome&ie=UTF-8
+
+https://docs.scipy.org/doc/numpy-1.17.0/reference/random/generated/numpy.random.mtrand.RandomState.choice.html
+
+https://stats.stackexchange.com/questions/169223/how-to-generate-the-posterior-predictive-distribution-for-hierarchal-model-in-py
+
+https://docs.pymc.io/notebooks/sampler-stats.html
+
+https://www.quantstart.com/articles/k-means-clustering-of-daily-ohlc-bar-data/
+
+https://www.investopedia.com/terms/g/garch.asp

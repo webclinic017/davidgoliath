@@ -1,4 +1,3 @@
-from __future__ import print_function
 import os
 import quandl
 import pandas as pd
@@ -12,6 +11,11 @@ import datetime
 import pandas_ta
 import re
 from pathlib import Path
+import matplotlib.pyplot as plt
+from matplotlib import style
+import yfinance as yf
+
+style.use('fivethirtyeight')
 
 quandl.ApiConfig.api_key = 'isu4pbfFzpfUnowC-k-R'
 fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
@@ -19,28 +23,52 @@ fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
 # ---------- investpy items -----------
 markets = ['indices', 'currencies', 'commodities',
            'rates-bonds', 'equities', 'etfs', 'crypto']
+PCT_TYPES = ['COO', 'HLL', 'HCC', 'OLL', 'HOL', 'CLO', 'COL', 'HLO']
 # global starttime
 starttime = '01/01/2010'
 today = date.today().strftime("%d/%m/%Y")
 
 # --------- investpy market folder path
-index_path = f'investpy/{markets[0]}data/'
-currency_path = f'investpy/{markets[1]}data/'
-commodity_path = f'investpy/{markets[2]}data/'
-bond_path = f'investpy/{markets[3]}data/'
-equity_path = f'investpy/{markets[4]}data/'
-etf_path = f'investpy/{markets[5]}data/'
-crypto_path = f'investpy/{markets[6]}data/'
+index_path = f'investpy/{markets[0]}data'
+currency_path = f'investpy/{markets[1]}data'
+commodity_path = f'investpy/{markets[2]}data'
+bond_path = f'investpy/{markets[3]}data'
+equity_path = f'investpy/{markets[4]}data'
+etf_path = f'investpy/{markets[5]}data'
+crypto_path = f'investpy/{markets[6]}data'
 combine_path = 'investpy/combinedata/'
 # --------- end investpy market folder path
-# ---------- end investpy items -------
 # ----------------------------------------------------------
-# common function
+# common function: for RAW DATA
 # ----------------------------------------------------------
+
+
+def analysis_currency(filename):
+    # folder : currenciesdata and combinedata
+    pass
+
+
+def analysis_bond(filename):
+    # processing data: bond spread
+    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
+    # https://pypi.org/project/yield-curve-dynamics/
+    pass
+
+
+def analysis_index(filename):
+    pass
+
+
+def analysis_commodity(filename):
+    pass
+
+
+def analysis_intermarket(filename):
+    pass
 
 
 def combine_params(filename, params, interval):
-    check_folder(combine_path)
+    check_data(combine_path, f'{filename}_{interval}.csv')
     main_df = pd.DataFrame()
     for ticker, info in params.items():
         ticker = replace_specchar(ticker, '/', '')
@@ -75,12 +103,35 @@ def make_market(params, isReload=True):
 
 
 def norm_data():
+    # numpy processing
     pass
 
 
-def check_folder(part):
-    if not os.path.exists(part):
-        os.makedirs(part)
+def append_preparing(path):
+    df = pd.read_csv(path)
+    cur_date = df[-1:]['Date'].tolist()[0]
+    df = df[:-1]
+    df.set_index('Date', inplace=True)
+    df.to_csv(path)
+    if cur_date == date.today().strftime('%Y-%m-%d'):
+        return None
+    else:
+        dayRe = re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)')
+        mo = dayRe.search(cur_date)
+        starttime = mo.group(3) + "/" + mo.group(2) + "/" + mo.group(1)
+        return starttime
+
+
+def check_data(folder_part, filename):
+    if os.path.exists(folder_part+filename):
+        print(f'{folder_part+filename} already exist!')
+        return True
+    else:
+        if os.path.exists(folder_part):
+            print(f'{folder_part} already exist!')
+        else:
+            os.makedirs(folder_part)
+        return False
 
 
 def replace_specchar(obj, char, newchar):
@@ -90,10 +141,13 @@ def replace_specchar(obj, char, newchar):
     return tmp
 
 
+# ----------------------------------------------------------
+# common function: for RAW DATA
+# ----------------------------------------------------------
 # Fred part --------------------------------
 def get_economic_fred(currency, item):
     economic_path = f'fred/{currency}/'
-    check_folder(economic_path)
+    # check_data(economic_path)
     df = fred.get_series(item,
                          observation_start=starttime, observation_end=today)
     print(df.tail())
@@ -103,7 +157,7 @@ def get_economic_fred(currency, item):
 # quandl part --------------------------------
 def get_economic_quandl(currency, field, item):
     economic_path = f'quandl/{currency}/'
-    check_folder(economic_path)
+    check_data(economic_path, f'{item}.csv')
     df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
     print(df.tail())
     # df.to_csv(economic_path + f'{item}.csv')
@@ -113,7 +167,7 @@ def get_quandl_data(market, field, currency, item):
     # need optimize folder name
     quandl_part = f'quandl/{market}data/{currency}/'
     # create folder
-    check_folder(quandl_part)
+    check_data(quandl_part, f'{item}.csv')
     # request data then save to file, start_date, end_date
     df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
     print(df.tail())
@@ -121,11 +175,17 @@ def get_quandl_data(market, field, currency, item):
     # return quandl_part + f'{item}.csv'
 
 
-def get_investing_data():
+def get_yahoofinance_data():
     # Data Model: [date, open, high, low, close, volume, currency]
     # check types
     # use true get historical data function
+    gold = yf.download('GC=F', start="2021-01-01", end="2021-06-08")
+    # print(type(gold))
+    gold.to_csv('yahoofinance/gold.csv')
     pass
+
+
+# get_yahoofinance_data()
 
 
 def read_data(file):
@@ -135,14 +195,20 @@ def read_data(file):
 
 # --------------------- indices ----------------------------------
 def get_indices(index, interval, country):
-    check_folder(index_path)
-    # check latest data
-    df = iv.indices.get_index_historical_data(
-        index=index, country=country, from_date=starttime, to_date=today,
-        order='ascending', interval=interval)
-    index = replace_specchar(index, '/', '_')
-    # print(df.tail())
-    df.to_csv(index_path + f'/{index}_{interval}.csv')
+    index_ = replace_specchar(index, '/', '_')
+    path = index_path + f'/{index_}_{interval}.csv'
+    if not check_data(index_path, f'/{index_}_{interval}.csv'):
+        df = iv.indices.get_index_historical_data(
+            index=index, country=country, from_date=starttime, to_date=today,
+            order='ascending', interval=interval)
+        df.to_csv(path)
+    else:
+        new_start = append_preparing(path)
+        if new_start is not None:
+            df = iv.indices.get_index_historical_data(
+                index=index, country=country, from_date=new_start,
+                to_date=today, order='ascending', interval=interval)
+            df.to_csv(path, mode='a', header=False)
 
 
 def get_currency_indices(isReload=True):
@@ -157,14 +223,19 @@ def get_currency_indices(isReload=True):
 
 # ------------------- bonds -----------------------------
 def get_bonds(bond, interval, country):
-    check_folder(bond_path)
-    # check latest data
-    # ---------- historical_data ------------
-    df = iv.bonds.get_bond_historical_data(
-        bond=bond, from_date=starttime, to_date=today,
-        order='ascending', interval=interval)
-    # print(df.tail())
-    df.to_csv(bond_path + f'/{bond}_{interval}.csv')
+    path = bond_path + f'/{bond}_{interval}.csv'
+    if not check_data(bond_path, f'/{bond}_{interval}.csv'):
+        df = iv.bonds.get_bond_historical_data(
+            bond=bond, from_date=starttime, to_date=today,
+            order='ascending', interval=interval)
+        df.to_csv(path)
+    else:
+        new_start = append_preparing(path)
+        if new_start is not None:
+            df = iv.bonds.get_bond_historical_data(
+                bond=bond, from_date=new_start, to_date=today,
+                order='ascending', interval=interval)
+            df.to_csv(path, mode='a', header=False)
 
 
 def cor_bond(isReload=True):
@@ -178,18 +249,26 @@ def cor_bond(isReload=True):
 
 # ----------- get_currency_cross_historical_data ---------
 def get_forex(quote, interval, country):
-    check_folder(currency_path)
-    # check latest data
-    df = iv.currency_crosses.get_currency_cross_historical_data(
-        currency_cross=quote, from_date=starttime, to_date=today,
-        order='ascending', interval=interval)
-    df = df.iloc[:, :-1]
-    quote = replace_specchar(quote, '/', '')
-    # print(df.tail())
-    df.to_csv(currency_path + f'/{quote}_{interval}.csv')
+    quote_ = replace_specchar(quote, '/', '')
+    path = currency_path + f'/{quote_}_{interval}.csv'
+    if not check_data(currency_path, f'/{quote_}_{interval}.csv'):
+        # check latest data
+        df = iv.currency_crosses.get_currency_cross_historical_data(
+            currency_cross=quote, from_date=starttime, to_date=today,
+            order='ascending', interval=interval)
+        df = df.iloc[:, :-1]
+        df.to_csv(path)
+    else:
+        new_start = append_preparing(path)
+        if new_start is not None:
+            df = iv.currency_crosses.get_currency_cross_historical_data(
+                currency_cross=quote, from_date=new_start, to_date=today,
+                order='ascending', interval=interval)
+            df = df.iloc[:, :-1]
+            df.to_csv(path, mode='a', header=False)
 
 
-def compare_gold():
+def compare_gold(isReload=True):
     data = ['XAU/USD', 'XAU/EUR', 'XAU/GBP', 'XAU/CAD',
             'XAU/CHF', 'XAU/JPY', 'XAU/AUD', 'XAU/NZD']
     info = [[markets[1], 'united states', get_forex]]*len(data)
@@ -197,7 +276,7 @@ def compare_gold():
     make_market(params, isReload)
 
 
-def compare_silver():
+def compare_silver(isReload=True):
     data = ['XAG/USD', 'XAG/EUR', 'XAG/GBP', 'XAG/CAD', 'XAG/CHF', 'XAG/AUD']
     info = [[markets[1], 'united states', get_forex]]*len(data)
     params = ['xagpair', data, info, analysis_currency]
@@ -207,13 +286,19 @@ def compare_silver():
 # ----------------------------IMPORTANT- commondity---
 # ------------- get_commodity_historical_data ---------------
 def get_commodities(commodity, interval, country):
-    check_folder(commodity_path)
-    # check latest data
-    df = iv.commodities.get_commodity_historical_data(
-        commodity=commodity, from_date=starttime, to_date=today,
-        order='ascending', interval=interval)
-    # print(df.tail())
-    df.to_csv(commodity_path + f'/{commodity}_{interval}.csv')
+    path = commodity_path + f'/{commodity}_{interval}.csv'
+    if not check_data(commodity_path, f'/{commodity}_{interval}.csv'):
+        df = iv.commodities.get_commodity_historical_data(
+            commodity=commodity, from_date=starttime, to_date=today,
+            order='ascending', interval=interval)
+        df.to_csv(path)
+    else:
+        new_start = append_preparing(path)
+        if new_start is not None:
+            df = iv.commodities.get_commodity_historical_data(
+                commodity=commodity, from_date=new_start, to_date=today,
+                order='ascending', interval=interval)
+            df.to_csv(path, mode='a', header=False)
 
 
 def calculate_grains(isReload=True):
@@ -515,44 +600,62 @@ def pivotpointcalculator(pivotType, ohlc):
         R1 = X/2 - pLow
         S1 = X/2 - pHigh
         return [round(num, 2) for num in [pp, R1, S1]]
-    # print(pivotpointcalculator('DeMark', df.iloc[-1:, 1:5].values.tolist()[0]))
+    # print(pivotpointcalculator('DeMark', df.iloc[-1:, 1:5].
+    # values.tolist()[0]))
 
 
-# speedup download process
-# loop with each filename, get its own starttime then
-# download additional data
-def download_ornot(file):
-    # check file exist or not
-    file_src = Path(file)
-    if file_src.is_file():
-        print(f'{file} exist')
-    else:
-        print(f'{file} not found, please download first')
-    df = pd.read_csv(file)
-    df.set_index('Date', inplace=True)
-    # update time not re download all
-    lastline = df[-1:].index.tolist()[0]
-    if lastline == date.today().strftime('%Y-%m-%d'):
-        return True, _
-    else:
-        starttime_ = lastline
-        dayRe = re.compile(r'(\d\d\d\d)-(\d\d)-(\d\d)')
-        mo = dayRe.search(starttime_)
-        starttime = mo.group(3) + "/" + mo.group(2) + "/" + mo.group(1)
-        return False, starttime_
-
-
-# download_ornot('investpy/currenciesdata/EURCHF_Daily.csv')
+def calculate_ohcl(ohlc):
+    pctValues = {}
+    pOpen, pHigh, pLow, pClose = ohlc
+    # pct change
+    pctValues['COO'] = round((pClose-pOpen)*100/pOpen, 5)
+    # entire lenght
+    pctValues['HLL'] = round((pHigh-pLow)*100/pLow, 5)
+    # short edge
+    pctValues['HCC'] = round((pHigh-pClose)*100/pClose, 5)
+    # long edge
+    pctValues['CLL'] = round((pClose-pLow)*100/pLow, 5)
+    # bull/ bear domination all around
+    pctValues['HOL'] = round((pHigh-pOpen)*100/pLow, 5)
+    # bull/ bear Adj domination
+    pctValues['CLO'] = round((pClose-pLow)*100/pOpen, 5)
+    # real body
+    pctValues['COL'] = round((pClose-pOpen)*100/pLow, 5)
+    # strength volitality
+    pctValues['HLO'] = round((pHigh-pLow)*100/pOpen, 5)
+    return pctValues
 
 
 def test():
-    # # get_commodities('Crude Oil WTI', 'Daily', 'us')
-    # df = pd.read_csv('investpy/commoditiesdata/Crude Oil WTI_Daily.csv')
-    # print(df.tail())
-    pass
+    df = pd.read_csv('investpy/currenciesdata/XAUUSD_Daily.csv')
+    # pct change
+    df['COO'] = (df['Close']-df['Open'])/df['Open']*100
+    # entire lenght
+    df['HLL'] = (df['High']-df['Low'])/df['Low']*100
+    # short edge
+    df['HCC'] = (df['High']-df['Close'])/df['Close']*100
+    # long edge
+    df['CLL'] = (df['Close']-df['Low'])/df['Low']*100
+    # bull/ bear domination all around
+    df['HOL'] = (df['High']-df['Open'])/df['Low']*100
+    # bull/ bear Adj domination
+    df['CLO'] = (df['Close']-df['Low'])/df['Open']*100
+    # real body
+    df['COL'] = (df['Close']-df['Open'])/df['Low']*100
+    # strength volitality
+    df['HLO'] = (df['High']-df['Low'])/df['Open']*100
+    # pct chage day previous close
+    df['PCT'] = (df['Close']-df.shift()['Close'])/df['Close']*100
+    df.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)
+    df.set_index('Date', inplace=True)
+    print(df.tail())
+    # ohlc = df[-1:].values.tolist()[0][1:5]
 
 
-test()
+# test()
+# 1. check file exist or not
+# 2. download new
+# -------------------------------------------------------------------
 
 
 # financial-calendars
@@ -578,27 +681,4 @@ def economiccalendar():
     # https://www.investing.com/central-banks/fed-rate-monitor
     # iv.news.economic_calendar()
 
-    pass
-
-
-def analysis_currency(filename):
-    pass
-
-
-def analysis_bond(filename):
-    # processing data: bond spread
-    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-    # https://pypi.org/project/yield-curve-dynamics/
-    pass
-
-
-def analysis_index(filename):
-    pass
-
-
-def analysis_commodity(filename):
-    pass
-
-
-def analysis_intermarket(filename):
     pass
