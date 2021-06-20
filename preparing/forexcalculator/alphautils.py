@@ -14,6 +14,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 from matplotlib import style
 import yfinance as yf
+import seaborn as sns
 
 style.use('fivethirtyeight')
 
@@ -29,29 +30,31 @@ starttime = '01/01/2010'
 today = date.today().strftime("%d/%m/%Y")
 
 # --------- investpy market folder path
-index_path = f'investpy/{markets[0]}data'
-currency_path = f'investpy/{markets[1]}data'
-commodity_path = f'investpy/{markets[2]}data'
-bond_path = f'investpy/{markets[3]}data'
-equity_path = f'investpy/{markets[4]}data'
-etf_path = f'investpy/{markets[5]}data'
-crypto_path = f'investpy/{markets[6]}data'
+index_path = f'investpy/{markets[0]}data/'
+currency_path = f'investpy/{markets[1]}data/'
+commodity_path = f'investpy/{markets[2]}data/'
+bond_path = f'investpy/{markets[3]}data/'
+equity_path = f'investpy/{markets[4]}data/'
+etf_path = f'investpy/{markets[5]}data/'
+crypto_path = f'investpy/{markets[6]}data/'
 combine_path = 'investpy/combinedata/'
+analysis_path = 'investpy/analysisdata/'
 # --------- end investpy market folder path
 # ----------------------------------------------------------
 # common function: for RAW DATA
 # ----------------------------------------------------------
+# if __name__ == "__main__":
+
+
+def analysis_bond(filename):
+    '''
+    # https://stackoverflow.com/questions/32237769/defining-a-white-noise-process-in-python
+    '''
+    pass
 
 
 def analysis_currency(filename):
     # folder : currenciesdata and combinedata
-    pass
-
-
-def analysis_bond(filename):
-    # processing data: bond spread
-    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
-    # https://pypi.org/project/yield-curve-dynamics/
     pass
 
 
@@ -67,6 +70,67 @@ def analysis_intermarket(filename):
     pass
 
 
+def calculate_stats(source=combine_path, periods=13,
+                    quotes='cor_bond', interval='Daily'):
+    df = pd.read_csv(source+f'{quotes}_{interval}.csv')
+    df = df.iloc[-periods-1:]
+
+    df['Mean'] = df.iloc[:, 1:5].mean(axis=1)
+    df['Std'] = df.iloc[:, 1:5].std(axis=1)
+    df['Skew'] = df.iloc[:, 1:5].skew(axis=1)
+    df['Kurt'] = df.iloc[:, 1:5].kurtosis(axis=1)
+    df['Change%'] = df['Close'].pct_change()*100
+    df['Mchange%'] = df['Mean'].pct_change()*100
+
+    # # consider drop or not
+    # df.drop(columns=['Open', 'High', 'Low'], inplace=True)
+    df.set_index('Date', inplace=True)
+    df = df[-periods:]
+    df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_stats.csv')
+
+# calculate_stats(source=currency_path, periods=13,
+#                 quotes='GBPUSD', interval='Daily')
+
+
+def correlation_one(source=combine_path, periods=13,
+                    quotes='cor_bond', interval='Daily'):
+    # read data
+    df = pd.read_csv(source+f'{quotes}_{interval}.csv')
+    df = df.iloc[-periods-1:]
+    df = df.corr()
+    print(df)
+    # print(df.corr())  # method='kendall' / 'spearman'
+    # df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_corr.csv')
+    # return None
+
+
+# correlation_one(periods=12, quotes='cor_usmain', interval='Monthly')
+# correlation_one(periods=6, quotes='cor_usmain', interval='Weekly')
+# correlation_one(periods=42, quotes='cor_usmain', interval='Daily')
+
+
+def residuals_formula():
+    pass
+
+
+def correlation_two(periods=4, interval='Daily',
+                    dicts={'currenciesdata': 'XAUUSD',
+                           'rates-bondsdata': 'U.S. 10Y'}):
+    sources = list(dicts.keys())
+    quotes = list(dicts.values())
+    df = pd.read_csv(
+        f'investpy/{sources[0]}/{quotes[0]}_{interval}.csv')
+    df = df.iloc[-periods-1:]
+    df.reset_index(inplace=True)
+    df1 = pd.read_csv(
+        f'investpy/{sources[1]}/{quotes[1]}_{interval}.csv')
+    df1 = df1.iloc[-periods-1:]
+    df1.reset_index(inplace=True)
+    df_ = list(df.corrwith(df1))
+    df1_ = list(df.corrwith(df1, axis=1))
+    return df_[-len(df_)+1:], df1_[-len(df1_)+1:]
+
+
 def combine_params(filename, params, interval):
     check_data(combine_path, f'{filename}_{interval}.csv')
     main_df = pd.DataFrame()
@@ -80,8 +144,9 @@ def combine_params(filename, params, interval):
         # fillna or dropna
     main_df.to_csv(combine_path + f'{filename}_{interval}.csv')
 
-
 # dump same thing in an list
+
+
 def dump_things(filename, things, intervals):
     for thing, info in things.items():
         market, country, infunc = info
@@ -140,25 +205,28 @@ def replace_specchar(obj, char, newchar):
         tmp = obj.replace(char, newchar)
     return tmp
 
-
 # ----------------------------------------------------------
 # common function: for RAW DATA
 # ----------------------------------------------------------
 # Fred part --------------------------------
+
+
 def get_economic_fred(currency, item):
     economic_path = f'fred/{currency}/'
     # check_data(economic_path)
-    df = fred.get_series(item,
-                         observation_start=starttime, observation_end=today)
+    df = fred.get_series(item, observation_start=starttime,
+                         observation_end=today)
     print(df.tail())
     pass
 
-
 # quandl part --------------------------------
+
+
 def get_economic_quandl(currency, field, item):
     economic_path = f'quandl/{currency}/'
     check_data(economic_path, f'{item}.csv')
-    df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
+    df = quandl.get(f'{field}/{item}',
+                    start_date=starttime, end_date=today)
     print(df.tail())
     # df.to_csv(economic_path + f'{item}.csv')
 
@@ -169,7 +237,8 @@ def get_quandl_data(market, field, currency, item):
     # create folder
     check_data(quandl_part, f'{item}.csv')
     # request data then save to file, start_date, end_date
-    df = quandl.get(f'{field}/{item}', start_date=starttime, end_date=today)
+    df = quandl.get(f'{field}/{item}',
+                    start_date=starttime, end_date=today)
     print(df.tail())
     # df.to_csv(quandl_part + f'{item}.csv')
     # return quandl_part + f'{item}.csv'
@@ -184,7 +253,6 @@ def get_yahoofinance_data():
     gold.to_csv('yahoofinance/gold.csv')
     pass
 
-
 # get_yahoofinance_data()
 
 
@@ -192,15 +260,16 @@ def read_data(file):
     df = pd.read_csv(file)
     # return None
 
-
 # --------------------- indices ----------------------------------
+
+
 def get_indices(index, interval, country):
     index_ = replace_specchar(index, '/', '_')
-    path = index_path + f'/{index_}_{interval}.csv'
-    if not check_data(index_path, f'/{index_}_{interval}.csv'):
+    path = index_path + f'{index_}_{interval}.csv'
+    if not check_data(index_path, f'{index_}_{interval}.csv'):
         df = iv.indices.get_index_historical_data(
-            index=index, country=country, from_date=starttime, to_date=today,
-            order='ascending', interval=interval)
+            index=index, country=country, from_date=starttime,
+            to_date=today, order='ascending', interval=interval)
         df.to_csv(path)
     else:
         new_start = append_preparing(path)
@@ -220,11 +289,12 @@ def get_currency_indices(isReload=True):
     params = ['currencyindex', data, info, analysis_index]
     make_market(params, isReload)
 
-
 # ------------------- bonds -----------------------------
+
+
 def get_bonds(bond, interval, country):
-    path = bond_path + f'/{bond}_{interval}.csv'
-    if not check_data(bond_path, f'/{bond}_{interval}.csv'):
+    path = bond_path + f'{bond}_{interval}.csv'
+    if not check_data(bond_path, f'{bond}_{interval}.csv'):
         df = iv.bonds.get_bond_historical_data(
             bond=bond, from_date=starttime, to_date=today,
             order='ascending', interval=interval)
@@ -239,19 +309,71 @@ def get_bonds(bond, interval, country):
 
 
 def cor_bond(isReload=True):
-    data = ['Japan 10Y', 'Switzerland 10Y', 'Australia 10Y',
-            'Canada 10Y', 'U.S. 10Y', 'Germany 10Y',
-            'New Zealand 10Y', 'U.K. 10Y']
+    data = ['U.S. 10Y', 'Canada 10Y',
+            'Japan 10Y', 'Switzerland 10Y',
+            'Australia 10Y', 'New Zealand 10Y',
+            'Germany 10Y', 'U.K. 10Y']
     info = [[markets[3], 'united states', get_bonds]]*len(data)
     params = ['cor_bond', data, info, analysis_bond]
     make_market(params, isReload)
 
 
+def bond_spread(periods=6, name='cor_bond',
+                interval='Monthly', base='U.S. 10Y'):
+    # https://pypi.org/project/nelson-siegel-svensson/0.1.0/
+    # https://pypi.org/project/yield-curve-dynamics/
+
+    # read data
+    df = pd.read_csv(combine_path + f'{name}_{interval}.csv')
+
+    # get a range value
+    df = df.iloc[-periods-1:]
+
+    # move base to the first columns
+    first_column = df.pop(base)
+    df.insert(1, base, first_column)
+
+    # list(df)[1:] mean quotes list
+    df.dropna(subset=list(df)[1:], how='any', inplace=True)
+
+    # calculate spread by subtract to the base
+    df.iloc[:, 1:9] = df.iloc[:, 1:9].sub(df[base], axis=0).pct_change()*100
+
+    # drop zero base column
+    df.drop(base, axis=1, inplace=True)
+
+    # remove first empty row
+    df = df[-len(df)+1:]
+
+    # set Date as index
+    df.set_index('Date', inplace=True)
+
+    # write to file
+    df.to_csv(analysis_path + f'{base}_spread_{periods}_{interval}.csv')
+
+
+# bond_spread(base='Canada 10Y')
+
+'''
+# T.B.D
+def bond_stats():
+    # call function
+    quotes = ['Japan 10Y', 'Switzerland 10Y', 'Australia 10Y',
+              'Canada 10Y', 'U.S. 10Y', 'Germany 10Y',
+              'New Zealand 10Y', 'U.K. 10Y']
+    # quotes = ['New Zealand 10Y', 'U.S. 10Y']
+    for quote in quotes:
+        print(f'\nCheck_bonds: {quote} in {periods} {interval}')
+        calculate_stats(periods=periods, quotes=quote, interval=interval)
+    pass
+'''
 # ----------- get_currency_cross_historical_data ---------
+
+
 def get_forex(quote, interval, country):
     quote_ = replace_specchar(quote, '/', '')
-    path = currency_path + f'/{quote_}_{interval}.csv'
-    if not check_data(currency_path, f'/{quote_}_{interval}.csv'):
+    path = currency_path + f'{quote_}_{interval}.csv'
+    if not check_data(currency_path, f'{quote_}_{interval}.csv'):
         # check latest data
         df = iv.currency_crosses.get_currency_cross_historical_data(
             currency_cross=quote, from_date=starttime, to_date=today,
@@ -277,17 +399,19 @@ def compare_gold(isReload=True):
 
 
 def compare_silver(isReload=True):
-    data = ['XAG/USD', 'XAG/EUR', 'XAG/GBP', 'XAG/CAD', 'XAG/CHF', 'XAG/AUD']
+    data = ['XAG/USD', 'XAG/EUR', 'XAG/GBP',
+            'XAG/CAD', 'XAG/CHF', 'XAG/AUD']
     info = [[markets[1], 'united states', get_forex]]*len(data)
     params = ['xagpair', data, info, analysis_currency]
     make_market(params, isReload)
 
-
 # ----------------------------IMPORTANT- commondity---
 # ------------- get_commodity_historical_data ---------------
+
+
 def get_commodities(commodity, interval, country):
-    path = commodity_path + f'/{commodity}_{interval}.csv'
-    if not check_data(commodity_path, f'/{commodity}_{interval}.csv'):
+    path = commodity_path + f'{commodity}_{interval}.csv'
+    if not check_data(commodity_path, f'{commodity}_{interval}.csv'):
         df = iv.commodities.get_commodity_historical_data(
             commodity=commodity, from_date=starttime, to_date=today,
             order='ascending', interval=interval)
@@ -321,8 +445,9 @@ def calculate_softs(isReload=True):
     params = ['soft', data, info, analysis_commodity]
     make_market(params, isReload)
 
-
 # shortcut: filename + dataset
+
+
 def calculate_meats(isReload=True):
     # https://www.investing.com/commodities/meats
     data = ['Live Cattle', 'Lean Hogs', 'Feeder Cattle']
@@ -350,16 +475,50 @@ def calculate_energies(isReload=True):
     params = ['energy', data, info, analysis_commodity]
     make_market(params, isReload)
 
-
 # ----------------Commondity index-------------------------
 # https://www.investing.com/indices/thomson-reuters---jefferies-crb
+
+
 def get_crb(isReload=True):
+    # # test purpose
+    # df = iv.indices.get_index_historical_data(
+    #     index='TR/CC CRB', country='world', from_date=starttime,
+    #     to_date=today, order='ascending', interval='Daily')
+    # df.to_csv(index_path+'cbr_commondity.csv')
+
+    # # test purpose 2
+    # df = pd.read_csv(index_path+'cbr_commondity.csv')
+    # close_ = df[-21:].Close
+    # open_ = df[-21:].Open
+
+    # fig = plt.figure(figsize=(8, 6))
+    # ax = fig.add_subplot(111)
+    # ax.plot(close_)
+
+    # bx = fig.add_subplot(111)
+    # bx.plot(open_)
+
+    # plt.show()
+
     get_indices('TR/CC CRB', 'world')
 
 
+# get_crb()
+
+
+# ---------------- ETF -------------------------
+def etf_percent():
+    pass
+
+
+def get_etf():
+    # https://www.investing.com/etfs/major-etfs
+    pass
 # ----------------Correlation-------------------------
 # -------------------------------------
 # AUD vs NZD (correlation)
+
+
 def cor_aunz(isReload=True):
     data = ['PHLX Australian Dollar', 'PHLX New Zealand Dollar',
             'Australia 10Y', 'New Zealand 10Y']
@@ -368,9 +527,10 @@ def cor_aunz(isReload=True):
     params = ['cor_aunz', data, info, analysis_intermarket]
     make_market(params, isReload)
 
-
 # -------------------------------------
 # USD vs CAD (correlation)
+
+
 def cor_usca(isReload=True):
     data = ['US Dollar Index', 'PHLX Canadian Dollar',
             'U.S. 10Y', 'Canada 10Y']
@@ -379,9 +539,10 @@ def cor_usca(isReload=True):
     params = ['cor_usca', data, info, analysis_intermarket]
     make_market(params, isReload)
 
-
 # -------------------------------------
 # JPY vs CHF (correlation)
+
+
 def cor_jpsw(isReload=True):
     data = ['PHLX Yen', 'PHLX Swiss Franc', 'Japan 10Y', 'Switzerland 10Y']
     info = [[markets[0], 'united states', get_indices]] * \
@@ -389,9 +550,10 @@ def cor_jpsw(isReload=True):
     params = ['cor_jpsw', data, info, analysis_intermarket]
     make_market(params, isReload)
 
-
 # -------------------------------------
 # GBP vs EUR (correlation)
+
+
 def cor_ukeu(isReload=True):
     data = ['PHLX British Pound', 'PHLX Euro', 'U.K. 10Y', 'Germany 10Y']
     info = [[markets[0], 'united states', get_indices]] * \
@@ -438,17 +600,19 @@ def analysis_bond_quandl(params):
 
     # ----------------------
 
-
 # Currencies Heat Map
 # https://www.investing.com/tools/currency-heatmap
+
+
 def currenciesheatmap():
     # use Xy or smt???
     # output or ... bổ trợ cho cái khác ???
     pass
 
-
 # Forex Volatility: -> calculte expected pips and most suitable pair
 # https://www.investing.com/tools/forex-volatility-calculator
+
+
 def forexvolatility(numofweeks, timeframe):
     # timeframe: x months after today time
     # numofweeks: slice of time in last timeframe
@@ -470,7 +634,8 @@ def forexvolatility(numofweeks, timeframe):
     # khác biệt cố hữu trong các động lực kinh tế của mỗi quốc gia
     # -> xu hướng biến động nhiều hơn
     # get_commodities / services (majors)
-    # Most agricultural and commodities such as oil are priced in U.S. dollars
+    # Most agricultural and commodities such as oil are priced
+    # in U.S. dollars
     # Try to draw a chart like this for 8 currencies
     # anti-U.S. dollar or pro-U.S. dollar (kháng/ hỗ Dollar)
     # https://www.babypips.com/learn/forex/crosses-present-more-trading-opportunities
@@ -497,61 +662,90 @@ def forexvolatility(numofweeks, timeframe):
 
     pass
 
-
 # Fibonacci Calculator:
 # https://www.investing.com/tools/fibonacci-calculator
-def fibocalculator(start, end):
-    # lack of interval
-    start = datetime.datetime.strptime(start, "%d/%m/%Y")
-    end = datetime.datetime.strptime(end, "%d/%m/%Y")
+
+
+def fibocalculator(source=currency_path, quotes='USDCHF',
+                   interval='Monthly', periods=15):
     # read data
-    df = pd.read_csv('investpy/currenciesdata/EURGBP_Daily.csv')
-    # convert date
-    df['Date'] = pd.to_datetime(df['Date'])
+    df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
     # get data range
-    df = df[(df['Date'] >= start) & (df['Date'] <= end)]
-    # define High/ Low/ Custom
+    df = df.iloc[-periods-1:]
+    # get min/ max in data range
     low = df['Low'].min()
     high = df['High'].max()
-    isUptrend = True if (df.loc[df['High'] == high].index -
-                         df.loc[df['Low'] == low].index > 0) else False
-    inner_start = df.loc[df['High'] == high]['Date'].tolist()[0]
-    inner_df = df[(df['Date'] > inner_start) & (df['Date'] <= end)]
-    custom = inner_df['Low'].min()
-    # print(low, high, custom)
+    # get index
+    last_pos = df.index.tolist()[len(df)-1]
+    low_index, high_index = df.loc[df['Low'] ==
+                                   low].index, df.loc[df['High'] == high].index
+    # consider trend
+    isUptrend = True if (high_index - low_index > 0) else False
+    # fibo level
     fiboret_level = (0.236, 0.382, 0.5,
                      0.618, 0.707, 0.786, 0.887)
-    # T.B.D
     fiboexp_level = (-0.382, -0.236, 0, 0.236, 0.5,
                      0.618, 0.786, 1, 1.272, 1.618)
+    # process uptrend price level
+    print(isUptrend)
     if isUptrend:
+        high_pos = high_index.tolist()[0]
+        retrace = df[high_pos-last_pos-1:]['Low'].min()
+        # Fibonnaci path
         price_ret = [round((1-level)*(high-low) + low, 4)
                      for level in fiboret_level]
         price_ret.reverse()
+        price_ret.append(high)
+        price_ret.insert(0, low)
+
+        # Fibonacci Expansion:
+        price_exp = [round(level*(high-low) + retrace, 4)
+                     for level in fiboexp_level]
+    # downtrend
     else:
-        price_ret = [round(level*(high-low) + low, 4)
+        low_pos = low_index.tolist()[0]
+        retrace = df[low_pos-last_pos-1:]['High'].max()
+        # Fibonnaci path
+        price_ret = [round(low + level*(high-low), 4)
                      for level in fiboret_level]
-    price_ret.append(high)
-    price_ret.insert(0, low)
-    return (price_ret, isUptrend)
+        price_ret.reverse()
+        price_ret.append(low)
+        price_ret.insert(0, high)
 
-
-# fibocalculator('07/05/2021', '12/05/2021')
-# fibocalculator('05/04/2021', '14/04/2021')
-
+        # Fibonacci Expansion:
+        price_exp = [round(retrace - level*(high-low), 4)
+                     for level in fiboexp_level]
+    return (price_ret, price_exp, isUptrend)
 
 # Pivot Point Calculator
 # https://www.investing.com/tools/pivot-point-calculator
-def pivotpointcalculator(pivotType, ohlc):
-    pOpen, pHigh, pLow, pClose = ohlc
+
+
+def round_nums(arr):
+    res = []
+    for num in arr:
+        res.append(round(num, 4))
+    return res
+
+
+def pivotpointcalculator(pivotType='Fibonacci', source=currency_path,
+                         quotes='USDCHF', interval='Monthly'):
+    ret = []
+    df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
+    pOpen, pHigh, pLow, pClose = df.iloc[-1:, 1:5].values.tolist()[0]
     # Classic
     if pivotType is 'Classic':
         pp = (pHigh + pLow + pClose) / 3
         S1 = pp*2 - pHigh
         S2 = pp - (pHigh-pLow)
+        S3 = pp - 2*(pHigh-pLow)
+
         R1 = pp*2 - pLow
         R2 = pp + (pHigh-pLow)
-        return [round(num, 2) for num in [pp, R1, R2, S1, S2]]
+        R3 = pp + 2*(pHigh-pLow)
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
     # Fibonacci
     if pivotType is 'Fibonacci':
         pp = (pHigh + pLow + pClose) / 3
@@ -563,7 +757,9 @@ def pivotpointcalculator(pivotType, ohlc):
         S1 = pp - ((pHigh-pLow)*0.382)
         S2 = pp - ((pHigh-pLow)*0.618)
         S3 = pp - ((pHigh-pLow)*1)
-        return [round(num, 2) for num in [pp, R1, R2, R3, S1, S2, S3]]
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
     # Camarilla
     if pivotType is 'Camarilla':
         pp = (pHigh + pLow + pClose) / 3
@@ -577,17 +773,23 @@ def pivotpointcalculator(pivotType, ohlc):
         R2 = pClose + ((pHigh-pLow) * 1.1666)
         R3 = pClose + ((pHigh-pLow) * 1.25)
         R4 = pClose + ((pHigh-pLow) * 1.5)
-        return [round(num, 2) for num in [pp, R1, R2, R3, R4, S1, S2, S3, S4]]
+
+        ret = round_nums([R4, R3, R2, R1, pp, S1, S2, S3, S4])
+        print(ret)
     # Woodie's
     if pivotType is 'Woodie':
         pp = (pHigh + pLow + 2*pClose) / 4
 
         R1 = 2*pp - pLow
         R2 = pp + pHigh - pLow
+        R3 = (pHigh + 2 * (pp - pLow))
 
         S1 = 2*pp - pHigh
-        S2 = pp - pHigh - pLow
-        return [round(num, 2) for num in [pp, R1, R2, S1, S2]]
+        S2 = pp - pHigh + pLow
+        S3 = (pLow - 2 * (pHigh - pp))
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
     # DeMark's
     if pivotType is 'DeMark':
         if pClose > pOpen:
@@ -599,35 +801,20 @@ def pivotpointcalculator(pivotType, ohlc):
         pp = X/4
         R1 = X/2 - pLow
         S1 = X/2 - pHigh
-        return [round(num, 2) for num in [pp, R1, S1]]
-    # print(pivotpointcalculator('DeMark', df.iloc[-1:, 1:5].
-    # values.tolist()[0]))
+
+        ret = round_nums([R1, pp, S1])
+        print(ret)
+    return ret
 
 
-def calculate_ohcl(ohlc):
-    pctValues = {}
-    pOpen, pHigh, pLow, pClose = ohlc
-    # pct change
-    pctValues['COO'] = round((pClose-pOpen)*100/pOpen, 5)
-    # entire lenght
-    pctValues['HLL'] = round((pHigh-pLow)*100/pLow, 5)
-    # short edge
-    pctValues['HCC'] = round((pHigh-pClose)*100/pClose, 5)
-    # long edge
-    pctValues['CLL'] = round((pClose-pLow)*100/pLow, 5)
-    # bull/ bear domination all around
-    pctValues['HOL'] = round((pHigh-pOpen)*100/pLow, 5)
-    # bull/ bear Adj domination
-    pctValues['CLO'] = round((pClose-pLow)*100/pOpen, 5)
-    # real body
-    pctValues['COL'] = round((pClose-pOpen)*100/pLow, 5)
-    # strength volitality
-    pctValues['HLO'] = round((pHigh-pLow)*100/pOpen, 5)
-    return pctValues
+# pivotpointcalculator(pivotType='Classic', source=currency_path,
+#                      quotes='XAUUSD', interval='Daily')
 
+def inner_volatility(source=currency_path, quotes='USDCHF',
+                     interval='Monthly', periods=6):
 
-def test():
-    df = pd.read_csv('investpy/currenciesdata/XAUUSD_Daily.csv')
+    df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
+    df = df.iloc[-periods-1:]
     # pct change
     df['COO'] = (df['Close']-df['Open'])/df['Open']*100
     # entire lenght
@@ -645,23 +832,22 @@ def test():
     # strength volitality
     df['HLO'] = (df['High']-df['Low'])/df['Open']*100
     # pct chage day previous close
-    df['PCT'] = (df['Close']-df.shift()['Close'])/df['Close']*100
+    df['PCT'] = df['Close'].pct_change()*100
+    df = df[-periods:]
     df.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)
     df.set_index('Date', inplace=True)
-    print(df.tail())
-    # ohlc = df[-1:].values.tolist()[0][1:5]
+    df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_vols.csv')
 
 
-# test()
-# 1. check file exist or not
-# 2. download new
+# inner_volatility()
 # -------------------------------------------------------------------
-
 
 # financial-calendars
 # https://www.investing.com/tools/financial-calendars
 # ----------------------------------
 # https://www.investing.com/tools/market-hours
+
+
 def markethours():
     # Overlaps time: Overlapping trading hours contain
     # the highest volume of traders.
@@ -674,11 +860,45 @@ def markethours():
 
     pass
 
-
 # ----------------------------------
 # https://www.investing.com/economic-calendar/
+
+
 def economiccalendar():
     # https://www.investing.com/central-banks/fed-rate-monitor
     # iv.news.economic_calendar()
 
+    pass
+
+
+def cal_mm():
+    '''Sharpe Ratio'''
+    # https://quant.stackexchange.com/questions/39839/how-to-calculate-sharpe-ratio-from-returns
+    # https://www.linkedin.com/pulse/calculating-portfolio-sharpe-ratio-python-f%C3%A1bio-neves/
+
+    '''Kelly's Criterion'''
+    # https://www.researchgate.net/publication/320180198_Kelly's_Criterion_in_Portfolio_Optimization_A_Decoupled_Problem
+
+    '''rebalance portfolio'''
+    # https://www.youtube.com/watch?v=vuZpIkTPATE&ab_channel=Darwinex
+    # https://python-bloggers.com/2020/02/rebalancing-really-2/
+    # https://www.quantstart.com/articles/monthly-rebalancing-of-etfs-with-fixed-initial-weights-in-qstrader/
+    # https://stackoverflow.com/questions/30745160/portfolio-rebalancing-with-bandwidth-method-in-python
+    pass
+
+
+def preprocessing():
+    '''
+    fillna by mode or mean value
+    '''
+    # # show columns params
+    # print(data['train_class'].describe())
+
+    # # fillna with mode
+    # data['train_class'] = data['train_class'].fillna(
+    #     data['train_class'].mode().iloc[0])
+
+    # # fillna with mean
+    # data['price'] = data.groupby('fare').transform(
+    # lambda x: x.fillna(x.mean()))
     pass

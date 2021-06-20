@@ -26,6 +26,8 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 '''
+# -----------------------------------------------
+'''
 # Start gpu_test.py
 # From http://deeplearning.net/software/theano/tutorial/using_gpu.html#using-gpu
 from theano import function, config, shared, sandbox
@@ -51,3 +53,5 @@ if numpy.any([isinstance(x.op, T.Elemwise) for x in f.maker.fgraph.toposort()]):
 else:
     print('Used the gpu')
 # End gpu_test.py
+'''
+# -----------------------------------------------

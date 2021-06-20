@@ -34,10 +34,14 @@ def glm_mcmc_inference(df, iteration=5000):
     with basic_model:
         # use a Normal distribution for the likelihood
         pm.glm.GLM.from_formula("y ~ x", df, family=pm.glm.families.Normal())
+
         # initial value for MCMC, use Maximum A Posteriori (MAP) optimisation
         start = pm.find_MAP()
+
         # Use the No-U-Turn Sampler
         step = pm.NUTS()
+        # step = pm.Metropolis()
+
         # Calculate the trace
         trace = pm.sample(iteration, step, start,
                           random_seed=42, progressbar=True)
@@ -45,15 +49,15 @@ def glm_mcmc_inference(df, iteration=5000):
 
 
 if __name__ == "__main__":
-    # dims = (8, 6)
-    # fig, ax = pyplot.subplots(figsize=dims)
     beta_0 = 1.0
     beta_1 = 2.0
     # Simulate 100 data points, with a variance of 0.5
     N = 100
     eps_sigma_sq = 0.5
+
     # Simulate the "linear" data
     df = simulate_ln_data(N, beta_0, beta_1, eps_sigma_sq)
+
     # Plot the data, and a frequentist linear regression
     sns.lmplot(x='x', y='y', data=df, height=6)
     plt.xlim(0.0, 1.0)
@@ -61,12 +65,15 @@ if __name__ == "__main__":
     trace = glm_mcmc_inference(df, iteration=5000)
     pm.traceplot(trace[500:])
     plt.show()
+
     # Plot a sample of posterior regression lines
     sns.lmplot(x='x', y='y', data=df, height=6, fit_reg=False)
     plt.xlim(0.0, 1.0)
     plt.ylim(0.0, 4.0)
+
     # now change to this: https://docs.pymc.io/notebooks/GLM-linear.html
     pp.plot_posterior_predictive_glm(trace, samples=100)
+
     x = np.linspace(0, 1, N)
     y = beta_0 + beta_1*x
     plt.plot(x, y, label='True Regression Line', lw=3, c='green')

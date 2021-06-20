@@ -51,6 +51,8 @@ def compare_usmajor(isReload=True):
 # dùng trong carry trade và stock predict
 # < 20 -> ít sợ, > 40 -> sợ nhiều + các mô hình giá
 # COMMON--------------------------------
+
+
 def cor_usmain(isReload=True):
     data = ['S&P 500 VIX', 'US Dollar Index',
             'U.S. 10Y', 'Gold', 'Crude Oil WTI']
@@ -62,6 +64,8 @@ def cor_usmain(isReload=True):
 
 
 # Oil corr --------------------------------
+
+
 def corr_usoil(isReload=True):
     data = ['AUD/USD', 'NZD/USD', 'GBP/USD', 'USD/CAD', 'Crude Oil WTI']
     info = [[markets[1], 'united states', get_forex]] * \
@@ -69,9 +73,10 @@ def corr_usoil(isReload=True):
     params = ['corr_usoil', data, info, analysis_intermarket]
     make_market(params, isReload)
 
-
 # ---------------- Important gold index -------------------------
 # ---- arca-gold-bugs: https://en.wikipedia.org/wiki/HUI_Gold_Index ------
+
+
 def get_hui(isReload=True):
     if isReload:
         get_indices('ARCA Gold BUGS', country)

@@ -17,3 +17,13 @@
 # printPicnic(picnicItems, 20, 6)
 
 # # setdefault
+
+# # # # # ---------------------------------------------------
+
+# Sum over an axis
+# print(a)
+# print(np.einsum('ij->i', a))
+
+# Generator sample to test strategy
+
+# skewness in a range

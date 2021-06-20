@@ -3,25 +3,33 @@
 # seasonal variation, structure of correlations
 
 # Expectation, Variance and Covariance, confidence-interval
-# Expectation: mean average value
+
+# Expectation: mean
+
 # variance: the "spread" of a random variable
 # or expectation of the squared deviations of the variable from the mean
+
 # Standard Deviation (std): of a random variable
 # square root of the variance
-# Covariance: between two random variables: how two variables move together
+
+# Covariance: between two random variables:
+# how two variables move together
+
 # Correlation
 # "expectation, variance, standard deviation, covariance and correlation"
 
 # Stationarity in Time Series:
-# Mean
 # stationary (constant) Mean
 # stationary Variance
 
 # Serial Correlation and lag
 # Second Order Stationary
+
 # Autocovariance of a Time Series (tự Phương sai)
 # Autocorrelation of a Time Series (Tự tương quan)
-# mối quan hệ giữa một biến và phiên bản trễ của nó trong các khoảng thời gian khác nhau
+# mối quan hệ giữa một biến và phiên bản trễ của nó trong các
+# khoảng thời gian khác nhau
+
 # correlogram: plot of the autocorrelation function
 
 # linear models/ non-linear models and forecasting
@@ -41,8 +49,8 @@
 # 6. loop (1:5) to optimize accuracy
 # 7. create trading strategies
 
-# Backward Shift (BSO) / Lag and Difference Operators: to code time series models
-# and make comparisons
+# Backward Shift (BSO) / Lag and Difference Operators:
+# to code time series models and make comparisons
 
 # non-stationary time series models: changable mean and variance
 # non stationary series to stationary
@@ -54,7 +62,7 @@
 
 # Discrete White Noise(DWN): independent elements in a time series
 # standard normal distribution vs Gaussian White Noise
-# thay vì a historical time series, có thể tạo ra many histories
+# instead of a historical time series, create many histories
 # rồi thống kê -> refine models, increase forecast accuracy
 
 # second order properties(mean = 0, no autocorrelation) and correlogram

@@ -33,3 +33,35 @@
 
 # synthetic series
 # https://www.google.com/search?q=synthetic+series+numpy&sxsrf=ALeKk02AinSbU_WbeZU4RXhU1xwypDWgtQ%3A1623039381068&ei=lZ29YKW-A_iRr7wPqt2LkAo&oq=synthetic+series+numpy&gs_lcp=Cgdnd3Mtd2l6EAM6BwgAEEcQsAM6AggAOgYIABAWEB46BQghEKABOgQIIRAVOgcIIRAKEKABULT7UljmjFNgko5TaAFwAngAgAGTAYgBqwiSAQMxLjeYAQCgAQKgAQGqAQdnd3Mtd2l6yAEIwAEB&sclient=gws-wiz&ved=0ahUKEwjl3I7u1ITxAhX4yIsBHaruAqIQ4dUDCA4&uact=5
+
+'''
+    df3['Japan 10Y'] = round(df3['Japan 10Y']-df3[base], 3)
+        df3['J10Y Change%'] = df3['Japan 10Y'].pct_change()*100
+
+        df3['Switzerland 10Y'] = round(df3['Switzerland 10Y']-df3[base], 3)
+        df3['S10Y Change%'] = df3['Switzerland 10Y'].pct_change()*100
+
+        df3['Australia 10Y'] = round(df3['Australia 10Y']-df3[base], 3)
+        df3['A10Y Change%'] = df3['Australia 10Y'].pct_change()*100
+
+        df3['Canada 10Y'] = round(df3['Canada 10Y']-df3[base], 3)
+        df3['C10Y Change%'] = df3['Canada 10Y'].pct_change()*100
+
+        df3['Germany 10Y'] = round(df3['Germany 10Y']-df3[base], 3)
+        df3['G10Y Change%'] = df3['Germany 10Y'].pct_change()*100
+
+        df3['New Zealand 10Y'] = round(df3['New Zealand 10Y']-df3[base], 3)
+        df3['N10Y Change%'] = df3['New Zealand 10Y'].pct_change()*100
+
+        df3['U.K. 10Y'] = round(df3['U.K. 10Y']-df3[base], 3)
+        df3['U.K10Y Change%'] = df3['U.K. 10Y'].pct_change()*100
+
+        df3.drop(base, axis=1, inplace=True)
+        df3 = df3[['Date', 'Japan 10Y', 'J10Y Change%',
+                  'Switzerland 10Y', 'S10Y Change%',
+                   'Australia 10Y', 'A10Y Change%',
+                   'Canada 10Y', 'C10Y Change%',
+                   'Germany 10Y', 'G10Y Change%',
+                   'New Zealand 10Y', 'N10Y Change%',
+                   'U.K. 10Y', 'U.K10Y Change%']]
+'''

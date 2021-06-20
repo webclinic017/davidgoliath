@@ -124,12 +124,15 @@ def configure_sample_stoch_vol_model(log_returns, samples):
     opacity = 0.03
     # why transpose : 'b' -> blue
     plt.plot(trace[s][::k].T, 'b', alpha=opacity)
+
     plt.xlabel('Time')
     plt.ylabel('Log Volatility')
     plt.show()
+
     print("Plotting the absolute returns overlaid with vol...")
     plt.plot(np.abs(np.exp(log_returns))-1.0, linewidth=0.5)
     plt.plot(np.exp(trace[s][::k].T), 'r', alpha=opacity)
+
     plt.xlabel("Trading Days")
     plt.ylabel("Absolute Returns/Volatility")
     plt.show()

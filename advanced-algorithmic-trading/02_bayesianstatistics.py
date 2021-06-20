@@ -116,6 +116,7 @@ if __name__ == "__main__":
 
     # what the fuck?? [-1]
     # print(number_of_trial[-1])
+    # Generate random variates
     data = stats.bernoulli.rvs(0.5, size=number_of_trial[-1])
 
     # <class 'numpy.ndarray'>
@@ -126,7 +127,6 @@ if __name__ == "__main__":
 
     for i, N in enumerate(number_of_trial):
         # print(str(i) + " " + str(N))
-
         # sum all element
         heads = data[:N].sum()
 
