@@ -147,3 +147,26 @@ def get_retailsales(isReload=True):
 # ----------------------------
 # GDT
 # -------------------------------------------------------
+
+
+def get_all():
+    calculate_bond()
+    get_nzx()
+    compare_minor()
+    corr_nzvolatility()
+    cor_nzagri()
+    cor_nzoil()
+
+    '''
+    # combine economic params
+    '''
+    get_cashrate()
+    get_gdp()
+    get_unemploymentrate()
+    get_cpi()
+    get_inflation()
+    get_employmentchange()
+    get_retailsales()
+
+
+# get_all()

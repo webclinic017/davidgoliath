@@ -282,11 +282,91 @@ if __name__ == "__main__":
     # # print(az.r2_score(data.price.values, ppc['fare_like']))
 
     # ########### ############### Part 4 ############### ###############
-''' # animal observations
-# https://towardsdatascience.com/estimating-probabilities-with-bayesian-modeling-in-python-7144be007815
-'''
-#     # -------------------------------------------------------
+    ''' # animal observations
+    # https://towardsdatascience.com/estimating-probabilities-with-bayesian-modeling-in-python-7144be007815
+    '''
+    # ---------- Some concepts ----------
+    '''
+    -------- model of the problem ----------
+    # 1. independent trial, initial (prior) belief
+    # 2. discrete choices and multinomial distribution
+    # 3. Probability Mass Function, Dirichlet Distribution
+    # 4. Hyperparameters, "vector" of probabilities, parameter of the prior
+    # 5. hyperprior, hyperyhyperparameters
+    # 6. Dirichlet parameter vector: pseudocounts capture prior 'belief'
+    example is alpha = [1, 1, 1] -> prevalence of each animal is the same
+    # 7. posterior distribution / observations(data) / 'hyperparameters' and
+    # multinomial
 
+    -------- Inference process ----------
+    # 1. estimating unknown parameters: 'prevalence of each species'
+    # 2. data: 'single set of observations' -> probability distribution
+    # 3. find posterior distribution: probability of seeing each species
+    # 4. MCMC to approximate the posterior
+    '''
+    # # -------- Code ----------
+    # species = ['lions', 'tigers', 'bears']
+    # # Observations
+    # c = np.array([3, 2, 1])
+    # # Pseudocounts/ hyperparameters
+    # '''
+    # more confident in our belief -> increase hyperparameters
+    # more weight data -> reduce pseudocounts/ hyperparameters
+    # # [0.1, 0.1, 0.1] or [15, 15, 15]
+    # '''
+    # alphas = np.array([1, 1, 1])
+    # # print(species, c, alphas)
+    # expected = (alphas+c)/(c.sum()+alphas.sum())
+    # # print(expected)
+
+    # # ---------- ---------- PyMC3 ---------- ----------
+    # alphas = np.array([1, 1, 1])
+    # c = np.array([3, 2, 1])
+    # # --------------- Create model
+    # with pm.Model() as model:
+    #     # Parameters of the Multinomial from Dirichlet
+    #     params = pm.Dirichlet('params', a=alphas, shape=alphas.shape[0])
+    #     # Observed data from Multinomial dist
+    #     observed_data = pm.Multinomial(
+    #         'observed_data', n=6, p=params, shape=c.shape[0], observed=c)
+    # # --------------- sample from the posterior
+    # with model:
+    #     # sampling 1 -----------
+    #     '''
+    #     trace = pm.sample(draws=1000, chains=2, tune=500,
+    #                       discard_tuned_samples=True)
+    #     with open('data/02_dirichlet.pickle', 'wb') as f:
+    #         pickle.dump(trace, f, protocol=pickle.HIGHEST_PROTOCOL)
+    #     '''
+    #     with open('data/02_dirichlet.pickle', 'rb') as f:
+    #         trace = pickle.load(f)
+    #     '''
+    #     left of graph: contains KDE (PDF of the event probabilities)
+    #     right of graph: samples drawn
+    #     '''
+    #     # pm.traceplot(trace)
+    #     '''
+    #     1. histograms: number of times each probability was
+    #     sampled from the posterior
+    #     2. point estimate???
+    #     '''
+    #     # az.plot_posterior(trace)
+    #     # plt.show()
+    #     '''
+    #     # quantify the level of uncertainty
+    #     '''
+    #     # print(az.summary(trace))
+
+    #     # sampling 2 -----------
+    #     '''
+    #     samples = pm.sample_posterior_predictive(trace, samples=1000)
+    #     with open('data/02_dirichlet_ppc.pickle', 'wb') as f:
+    #         pickle.dump(samples, f, protocol=pickle.HIGHEST_PROTOCOL)
+    #     '''
+    #     with open('data/02_dirichlet_ppc.pickle', 'rb') as f:
+    #         samples = pickle.load(f)
+
+#     # -------------------------------------------------------
 '''
 # https://statsthinking21.github.io/statsthinking21-python/10-BayesianStatistics.html
 

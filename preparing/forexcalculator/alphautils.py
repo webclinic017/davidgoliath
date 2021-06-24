@@ -2,7 +2,7 @@ import os
 import quandl
 import pandas as pd
 import investpy as iv
-import datamine as cme
+# import datamine as cme
 from fredapi import Fred
 from datetime import date
 from forexflag import *
@@ -13,8 +13,9 @@ import re
 from pathlib import Path
 import matplotlib.pyplot as plt
 from matplotlib import style
-import yfinance as yf
-import seaborn as sns
+# import yfinance as yf
+# import seaborn as sns
+# from inspect import getmembers
 
 style.use('fivethirtyeight')
 
@@ -24,7 +25,6 @@ fred = Fred(api_key='fc9753be1dab36c5773160e0fdf05ba7')
 # ---------- investpy items -----------
 markets = ['indices', 'currencies', 'commodities',
            'rates-bonds', 'equities', 'etfs', 'crypto']
-PCT_TYPES = ['COO', 'HLL', 'HCC', 'OLL', 'HOL', 'CLO', 'COL', 'HLO']
 # global starttime
 starttime = '01/01/2010'
 today = date.today().strftime("%d/%m/%Y")
@@ -67,6 +67,10 @@ def analysis_commodity(filename):
 
 
 def analysis_intermarket(filename):
+    pass
+
+
+def analysis_etf(filename):
     pass
 
 
@@ -135,7 +139,9 @@ def combine_params(filename, params, interval):
     check_data(combine_path, f'{filename}_{interval}.csv')
     main_df = pd.DataFrame()
     for ticker, info in params.items():
-        ticker = replace_specchar(ticker, '/', '')
+        if '/' in ticker:
+            print(f'{ticker} have special /')
+            ticker = replace_specchar(ticker, '/', '')
         df = pd.read_csv(f'investpy/{info[0]}data/{ticker}_{interval}.csv')
         df.set_index('Date', inplace=True)
         df.rename(columns={'Close': ticker}, inplace=True)
@@ -212,11 +218,12 @@ def replace_specchar(obj, char, newchar):
 
 
 def get_economic_fred(currency, item):
-    economic_path = f'fred/{currency}/'
+    # economic_path = f'fred/{currency}/'
+    economic_path = f'quandl/{currency}/'
     # check_data(economic_path)
     df = fred.get_series(item, observation_start=starttime,
                          observation_end=today)
-    print(df.tail())
+    df.to_csv(economic_path + f'{item}.csv')
     pass
 
 # quandl part --------------------------------
@@ -227,8 +234,8 @@ def get_economic_quandl(currency, field, item):
     check_data(economic_path, f'{item}.csv')
     df = quandl.get(f'{field}/{item}',
                     start_date=starttime, end_date=today)
-    print(df.tail())
-    # df.to_csv(economic_path + f'{item}.csv')
+    # print(df.tail())
+    df.to_csv(economic_path + f'{item}.csv')
 
 
 def get_quandl_data(market, field, currency, item):
@@ -264,7 +271,7 @@ def read_data(file):
 
 
 def get_indices(index, interval, country):
-    index_ = replace_specchar(index, '/', '_')
+    index_ = replace_specchar(index, '/', '')
     path = index_path + f'{index_}_{interval}.csv'
     if not check_data(index_path, f'{index_}_{interval}.csv'):
         df = iv.indices.get_index_historical_data(
@@ -499,11 +506,9 @@ def get_crb(isReload=True):
     # bx.plot(open_)
 
     # plt.show()
-
-    get_indices('TR/CC CRB', 'world')
-
-
-# get_crb()
+    intervals = ['Daily', 'Weekly', 'Monthly']
+    for interval in intervals:
+        get_indices('TR/CC CRB', interval, 'world')
 
 
 # ---------------- ETF -------------------------
@@ -511,9 +516,78 @@ def etf_percent():
     pass
 
 
-def get_etf():
+def get_etf(etf, interval, country):
+    '''
     # https://www.investing.com/etfs/major-etfs
+    # df = iv.etfs.get_etf_countries()
+    # df = iv.etfs.get_etfs('united states')
+    # df.to_csv(etf_path + 'us_etfslist.csv')
+    # df = iv.etfs.get_etfs_overview('united states')
+    # df.to_csv(etf_path + 'us_etfsoverview.csv')
+    # ------------------------------------------------
+    # df = iv.etfs.get_etf_information('SPDR S&P 500', 'united states')
+    # df = iv.etfs.get_etf_recent_data('SPDR S&P 500', 'united states')
+    '''
+    # print(f'ETF: {etf} - country: {country}')
+    path = etf_path + f'{etf}_{interval}.csv'
+    if not check_data(etf_path, f'{etf}_{interval}.csv'):
+        df = iv.etfs.get_etf_historical_data(
+            etf=etf, country=country, from_date=starttime,
+            to_date=today, order='ascending', interval=interval)
+        df.to_csv(path)
+    else:
+        new_start = append_preparing(path)
+        if new_start is not None:
+            df = iv.etfs.get_etf_historical_data(
+                etf=etf, country=country, from_date=new_start,
+                to_date=today,
+                order='ascending', interval=interval)
+            df.to_csv(path, mode='a', header=False)
     pass
+
+
+def get_bondetfs(isReload=True):
+    data = ['iShares Core US Aggregate Bond',
+            'Vanguard Total Bond Market',
+            'Vanguard Intermediate-Term Corporate Bond',
+            'Vanguard Total International Bond',
+            'Vanguard Short-Term Corporate Bond']
+    info = [[markets[5], 'united states', get_etf]]*len(data)
+    params = ['bondetfs', data, info, analysis_etf]
+    make_market(params, isReload)
+    pass
+
+
+def get_stocketfs(isReload=True):
+    data = ['SPDR S&P 500', 'ishares S&P 500',
+            'Vanguard Total Stock Market',
+            'Vanguard S&P 500',
+            'Invesco QQQ Trust Series 1']
+    info = [[markets[5], 'united states', get_etf]]*len(data)
+    params = ['stocketfs', data, info, analysis_etf]
+    make_market(params, isReload)
+    pass
+
+
+def get_goldetfs(isReload=True):
+    data = ['SPDR Gold Shares', 'iShares Gold',
+            'SPDR Gold MiniShares',
+            'ETFS Physical Swiss Gold Shares',
+            'GraniteShares Gold Trust']
+    info = [[markets[5], 'united states', get_etf]]*len(data)
+    params = ['goldetfs', data, info, analysis_etf]
+    make_market(params, isReload)
+
+
+def get_silveretfs(isReload=True):
+    # 'United States Copper' - not use
+    data = ['iShares Silver', 'ETFS Physical Silver Shares',
+            'ProShares Ultra Silver']
+    info = [[markets[5], 'united states', get_etf]]*len(data)
+    params = ['silveretfs', data, info, analysis_etf]
+    make_market(params, isReload)
+
+
 # ----------------Correlation-------------------------
 # -------------------------------------
 # AUD vs NZD (correlation)
@@ -832,7 +906,7 @@ def inner_volatility(source=currency_path, quotes='USDCHF',
     # strength volitality
     df['HLO'] = (df['High']-df['Low'])/df['Open']*100
     # pct chage day previous close
-    df['PCT'] = df['Close'].pct_change()*100
+    df['PCT'] = (df['Close']-df['Open'])/df['Close']*100
     df = df[-periods:]
     df.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)
     df.set_index('Date', inplace=True)
@@ -901,4 +975,37 @@ def preprocessing():
     # # fillna with mean
     # data['price'] = data.groupby('fare').transform(
     # lambda x: x.fillna(x.mean()))
+
+    # # Bear Bull identify idea:
+    # https://towardsdatascience.com/estimating-probabilities-with-bayesian-modeling-in-python-7144be007815
+    # https://docs.pymc.io/notebooks/posterior_predictive.html
+
+    # # consider: long/ short in a series of trial
+    # data = stats.bernoulli.rvs(0.5, size=number_of_trial[-1])
+    # print(data)
     pass
+
+
+def get_all():
+    # get_currency_indices()
+    # cor_bond()
+    # compare_gold()
+    # compare_silver()
+    # calculate_grains()
+    # calculate_softs()
+    # calculate_meats()
+    # calculate_metals()
+    # calculate_energies()
+    # get_crb()
+    # cor_aunz()
+    # cor_usca()
+    # cor_jpsw()
+    # cor_ukeu()
+    # get_goldetfs()
+    # get_silveretfs()
+    # get_stocketfs()
+    # get_bondetfs()
+    pass
+
+
+# get_all()

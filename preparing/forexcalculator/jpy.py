@@ -108,3 +108,20 @@ def get_inflation(isReload=True):
 # ----------------------------
 # PPI:
 # -------------------------------------------------------
+
+def get_all():
+    calculate_bond()
+    get_nikkei225()
+    compare_major()
+    corr_jpvolatility()
+    cor_ej_nasdaq()
+    cor_jpy_gold()
+    '''
+    # combine economic params
+    '''
+    get_gdp()
+    get_cpi()
+    get_inflation()
+
+
+# get_all()

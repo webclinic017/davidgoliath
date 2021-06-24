@@ -109,3 +109,22 @@ def get_unemploymentrate(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'ODA', 'GBR_LUR')
 # -------------------------------------------------------
+
+
+def get_all():
+    calculate_bond()
+    get_ftse()
+    compare_major()
+    corr_ukoil()
+    '''
+    # combine economic params
+    '''
+    get_boe_rate()
+    get_gdp()
+    get_cpi()
+    get_inflation()
+    get_ppi()
+    get_unemploymentrate()
+
+
+# get_all()

@@ -13,8 +13,6 @@ con = fy.fxcmpy(access_token=TOKEN, log_level='error',
 instruments = con.get_instruments()
 print(instruments[:5])
 '''
-
-
 # ----------------------
 '''
 # Time Series Analysis

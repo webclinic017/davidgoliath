@@ -1,3 +1,5 @@
+VP bank:
+	PIN: 1296
 fxcm:
 	D103432482
 	luh6L

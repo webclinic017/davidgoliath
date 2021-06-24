@@ -38,7 +38,7 @@ def cor_dxygo(isReload=True):
 # currencies:
 # ----------------------------
 # usd major cross
-def compare_usmajor(isReload=True):
+def compare_major(isReload=True):
     data = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
             'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD']
     info = [[markets[1], 'united states', get_forex]]*len(data)
@@ -184,3 +184,30 @@ def get_housing(isReload=True):
 def get_debt_percent(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'FRED', 'GFDEGDQ188S')
+
+
+def get_all():
+    calculate_bond()
+    get_stock_indices()
+    compare_major()
+    cor_usmain()
+    corr_usoil()
+    '''
+    # combine economic params
+    '''
+    get_ffr()
+    get_gdp()
+    get_nfp()
+    get_cpi()
+    get_inflation()
+    get_retailsales()
+    get_ppi()
+    get_pmi()
+    get_unemploymentrate()
+    get_tradebalance()
+    get_industrial()
+    get_housing()
+    get_debt_percent()
+
+
+# get_all()

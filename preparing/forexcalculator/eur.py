@@ -143,3 +143,27 @@ def get_ger_budgetdeficit(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'AMECO',
                             'DEU_1_0_0_0_UUTGE')
+
+
+def get_all():
+    calculate_bond()
+    get_estoxx()
+    compare_major()
+    compare_eugold()
+    '''
+    # combine economic params
+    '''
+    # get_ecb_bidrate()
+    # get_ger_rate()
+    # get_ger_debt()
+    # get_ger_gdp()
+    # get_ger_industrial()
+    # get_ger_cpi()
+    # get_ger_inflation()
+    # get_ger_unemploymentrate()
+    # get_eurm3()
+    # get_eurozone_hicp()
+    # get_ger_budgetdeficit()
+
+
+# get_all()

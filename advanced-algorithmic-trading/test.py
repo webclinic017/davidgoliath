@@ -2,10 +2,12 @@ from bs4 import BeautifulSoup
 import urllib3
 import requests
 import os.path as p
+import numpy as np
 # from os.path import basename
 
 
 def main():
+    '''
     try:
         baseurl = 'https://avmoo.casa/en/movie/'
         http = urllib3.PoolManager()
@@ -39,8 +41,11 @@ def main():
     except Exception as e:
         print('Failed in main loop')
         print(str(e))
+    '''
+    x = np.linspace(0, 10, 11)
+    print(x)
 
 
 if __name__ == "__main__":
-    # main()
+    main()
     pass

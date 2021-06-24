@@ -133,3 +133,24 @@ def get_export(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'ODA', 'CAN_TX_RPCH')
         get_economic_quandl(currency, 'ODA', 'CAN_TXG_RPCH')
+
+
+def get_all():
+    calculate_bond()
+    get_tsx()
+    compare_major()
+    corr_cavolatility()
+    cor_uc_xti()
+    '''
+    # combine economic params
+    '''
+    # get_cashrate()
+    # get_motor()
+    # get_gdp()
+    # get_unemploymentrate()
+    # get_cpi()
+    # get_inflation()
+    # get_export()
+
+
+# get_all()

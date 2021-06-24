@@ -26,7 +26,7 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # ASX 200 Futures: https://investing.com/indices/australia-200-futures
 def get_asx200(isReload=True):
-    data = ['S&P/ASX 200', 'S&P/ASX Midcap 50']
+    data = ['S&P/ASX 200', 'S&P/ASX 50', 'S&P/ASX 20']
     info = [[markets[0], 'australia', get_indices]]*len(data)
     params = ['auindex', data, info, analysis_index]
     make_market(params, isReload)
@@ -47,7 +47,7 @@ def compare_minor(isReload=True):
 # -------------------------------------------------------
 # (carry trade) JPY/CHF rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500
-def corr_nzvolatility(isReload=True):
+def corr_auvolatility(isReload=True):
     # more detail with rate diff
     data = ['AUD/JPY', 'AUD/CHF', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
@@ -59,9 +59,9 @@ def corr_nzvolatility(isReload=True):
 # -------------------------------------------------------
 # ----------------------------IMPORTANT
 def cor_audcomodity(isReload=True):
-    data = ['AUD/USD', 'USD/CNH', 'CNH/JPY', 'Crude Oil WTI', 'Gold', 'Copper']
+    data = ['AUD/USD', 'USD/CNH', 'Crude Oil WTI', 'Gold', 'Copper']
     info = [[markets[1], 'united states', get_forex]] * \
-        3 + [[markets[2], 'united states', get_commodities]] * 3
+        2 + [[markets[2], 'united states', get_commodities]] * 3
     params = ['cor_audcomodity', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -76,8 +76,17 @@ def get_cashrate(isReload=True):
     # get_ffr()
 
 
+def nlp_cashrate():
+    pass
+
+
 # -------------------------------------------------------
 # Economic calendar and predict index:
+def fx_factscraper():
+    # clipboard... (handy way)
+    pass
+
+
 # GDP:
 # https://www.quandl.com/data/ODA/AUS_NGDPD-Australia-GDP-at-Current-Prices-USD-Billions
 def get_gdp(isReload=True):
@@ -115,4 +124,27 @@ def get_inflation(isReload=True):
 def get_employmentchange(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'RBA', 'H05')
+
+
+# get_employmentchange()
 # -------------------------------------------------------
+
+
+def get_all():
+    calculate_bond()
+    get_asx200()
+    compare_minor()
+    corr_auvolatility()
+    cor_audcomodity()
+    '''
+    # combine economic params
+    '''
+    # get_cashrate()
+    # get_gdp()
+    # get_unemploymentrate()
+    # get_cpi()
+    # get_inflation()
+    # get_employmentchange()
+
+
+# get_all()
