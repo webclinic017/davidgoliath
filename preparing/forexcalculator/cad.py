@@ -6,7 +6,6 @@
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
 from alphautils import *
-import usd as king
 currency = 'cad'
 
 

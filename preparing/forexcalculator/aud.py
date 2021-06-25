@@ -6,7 +6,6 @@
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
 from alphautils import *
-import usd as king
 currency = 'aud'
 
 
@@ -147,4 +146,16 @@ def get_all():
     # get_employmentchange()
 
 
-# get_all()
+get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    quotes = {'aubond', 'auindex', 'audmajor', 'aupair_vix', 'cor_audcomodity'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+# return_stats()

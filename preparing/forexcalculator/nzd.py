@@ -6,7 +6,6 @@
 # Documentation of Fred api
 # https://pypi.org/project/fredapi/
 from alphautils import *
-import usd as king
 currency = 'nzd'
 
 
@@ -27,8 +26,11 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # NZX 50: https://www.investing.com/indices/nzx-50
 def get_nzx(isReload=True):
-    data = ['NZX 50', 'NZX MidCap']
-    info = [[markets[0], 'new zealand', get_indices]]*len(data)
+    data = ['NZX 50', 'NZX MidCap',
+            'PHLX New Zealand Dollar', 'New Zealand 10Y']
+    info = [[markets[0], 'new zealand', get_indices]] *\
+        2+[[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'new zealand', get_bonds]]
     params = ['nzindex', data, info, analysis_index]
     make_market(params, isReload)
 

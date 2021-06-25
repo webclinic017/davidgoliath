@@ -83,17 +83,24 @@ def calculate_stats(source=combine_path, periods=13,
     df['Std'] = df.iloc[:, 1:5].std(axis=1)
     df['Skew'] = df.iloc[:, 1:5].skew(axis=1)
     df['Kurt'] = df.iloc[:, 1:5].kurtosis(axis=1)
+    # error if not have Close columns
     df['Change%'] = df['Close'].pct_change()*100
     df['Mchange%'] = df['Mean'].pct_change()*100
 
-    # # consider drop or not
-    # df.drop(columns=['Open', 'High', 'Low'], inplace=True)
+    # consider drop or not
+    df.drop(columns=['Open', 'High', 'Low'], inplace=True)
     df.set_index('Date', inplace=True)
     df = df[-periods:]
-    df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_stats.csv')
+    print(quotes)
+    print(df)
+    # df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_stats.csv')
 
 # calculate_stats(source=currency_path, periods=13,
 #                 quotes='GBPUSD', interval='Daily')
+
+
+def calculate_one_stats():
+    pass
 
 
 def correlation_one(source=combine_path, periods=13,
@@ -102,15 +109,12 @@ def correlation_one(source=combine_path, periods=13,
     df = pd.read_csv(source+f'{quotes}_{interval}.csv')
     df = df.iloc[-periods-1:]
     df = df.corr()
+    print(quotes, periods, interval)
     print(df)
+    print()
     # print(df.corr())  # method='kendall' / 'spearman'
     # df.to_csv(analysis_path + f'{quotes}_{periods}_{interval}_corr.csv')
     # return None
-
-
-# correlation_one(periods=12, quotes='cor_usmain', interval='Monthly')
-# correlation_one(periods=6, quotes='cor_usmain', interval='Weekly')
-# correlation_one(periods=42, quotes='cor_usmain', interval='Daily')
 
 
 def residuals_formula():

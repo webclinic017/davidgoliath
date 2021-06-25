@@ -3,7 +3,6 @@
 # get params then calculate corr
 # muon lay param nao de so sanh cung dc
 from alphautils import *
-import usd as king
 currency = 'eur'
 country = 'euro zone'
 

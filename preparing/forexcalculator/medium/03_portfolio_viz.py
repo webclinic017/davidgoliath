@@ -31,7 +31,10 @@ if __name__ == "__main__":
     def randomList(hm, sum):
         arr = [0]*hm
         for i in range(sum):
+            '''
             # counting number in specific pos
+            # lack of probability to plus
+            '''
             arr[randint(0, sum) % hm] += 1
         return arr
 

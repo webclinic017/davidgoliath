@@ -1,7 +1,6 @@
 # #######################################################
 # -------------------------------------------------------
 from alphautils import *
-import usd as king
 currency = 'jpy'
 
 
@@ -22,16 +21,19 @@ def calculate_bond(isReload=True):
 # Nikkei 225: https://www.investing.com/indices/japan-ni225
 def get_nikkei225(isReload=True):
     # can get more indices
-    data = ['Nikkei 225', 'Nikkei Volatility']
-    info = [[markets[0], 'japan', get_indices]]*len(data)
+    data = ['Nikkei 225', 'Nikkei Volatility', 'PHLX Yen', 'Japan 10Y']
+    info = [[markets[0], 'japan', get_indices]] * \
+        2 + [[markets[0], 'united states', get_indices]] + \
+            [[markets[3], 'japan', get_bonds]]
     params = ['jpindex', data, info, analysis_index]
     make_market(params, isReload)
-
 
 # -------------------------------------------------------
 # currencies:
 # ----------------------------
 # jpy major cross
+
+
 def compare_major(isReload=True):
     data = ['XAU/JPY', 'EUR/JPY', 'USD/JPY', 'GBP/JPY',
             'AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'CHF/JPY']
@@ -43,11 +45,13 @@ def compare_major(isReload=True):
 # -------------------------------------------------------
 # (carry trade) AUD/NZD/CAD rate: already code vs Volatility Index
 # https://www.investing.com/indices/volatility-s-p-500
+
+
 def corr_jpvolatility(isReload=True):
     # more detail with rate diff
-    data = ['AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'S&P 500 VIX']
+    data = ['AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'PHLX Yen', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        3 + [[markets[0], 'united states', get_indices]]
+        3 + [[markets[0], 'united states', get_indices]] * 2
     params = ['jpypair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -55,10 +59,12 @@ def corr_jpvolatility(isReload=True):
 # -------------------------------------------------------
 # EURJPY and NASDAQ Composite correlation
 # https://www.investing.com/indices/nasdaq-composite
+
+
 def cor_ej_nasdaq(isReload=True):
-    data = ['EUR/JPY', 'Nasdaq']
-    info = [[markets[1], 'united states', get_forex],
-            [markets[0], 'united states', get_indices]]
+    data = ['EUR/JPY', 'PHLX Yen', 'Nasdaq']
+    info = [[markets[1], 'united states', get_forex]] + \
+        [[markets[0], 'united states', get_indices]]*2
     params = ['ej_nasdaq', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -67,6 +73,8 @@ def cor_ej_nasdaq(isReload=True):
 # COmpare with :
 # Gold price: https://www.investing.com/commodities/gold
 # Swiss Franc: https://www.investing.com/indices/phlx-yen
+
+
 def cor_jpy_gold(isReload=True):
     data = ['Gold', 'PHLX Yen']
     info = [[markets[2], 'united states', get_commodities],
@@ -78,6 +86,8 @@ def cor_jpy_gold(isReload=True):
 # -------------------------------------------------------
 # Economic calendar and predict index:
 # GDP:
+
+
 def get_gdp(isReload=True):
     if isReload:
         get_economic_quandl(currency, 'ODA', 'JPN_PPPPC')
@@ -119,9 +129,22 @@ def get_all():
     '''
     # combine economic params
     '''
-    get_gdp()
-    get_cpi()
-    get_inflation()
+    # get_gdp()
+    # get_cpi()
+    # get_inflation()
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    # jpbond
+    quotes = {'gold_jpy', 'ej_nasdaq', 'jpypair_vix', 'jpindex', 'jpymajor'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+return_stats()

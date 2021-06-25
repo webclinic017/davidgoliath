@@ -1,6 +1,5 @@
 # #######################################################
 from alphautils import *
-import usd as king
 currency = 'chf'
 
 

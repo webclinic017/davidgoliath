@@ -21,8 +21,9 @@ def calculate_bond(isReload=True):
 # ----------------------------
 def get_stock_indices(isReload=True):
     # f(o): priority number list -> 1 main index
-    data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq']
-    info = [[markets[0], 'united states', get_indices]]*len(data)
+    data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq', 'U.S. 10Y']
+    info = [[markets[0], 'united states', get_indices]] * \
+        4+[[markets[3], 'united states', get_bonds]]
     params = ['usindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -195,19 +196,31 @@ def get_all():
     '''
     # combine economic params
     '''
-    get_ffr()
-    get_gdp()
-    get_nfp()
-    get_cpi()
-    get_inflation()
-    get_retailsales()
-    get_ppi()
-    get_pmi()
-    get_unemploymentrate()
-    get_tradebalance()
-    get_industrial()
-    get_housing()
-    get_debt_percent()
+    # get_ffr()
+    # get_gdp()
+    # get_nfp()
+    # get_cpi()
+    # get_inflation()
+    # get_retailsales()
+    # get_ppi()
+    # get_pmi()
+    # get_unemploymentrate()
+    # get_tradebalance()
+    # get_industrial()
+    # get_housing()
+    # get_debt_percent()
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    quotes = {'usbond', 'usindex', 'usdmajor', 'cor_usmain', 'corr_usoil'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+return_stats()
