@@ -36,8 +36,11 @@ def get_nikkei225(isReload=True):
 
 def compare_major(isReload=True):
     data = ['XAU/JPY', 'EUR/JPY', 'USD/JPY', 'GBP/JPY',
-            'AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'CHF/JPY']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'CHF/JPY',
+            'PHLX Yen', 'Japan 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'japan', get_bonds]]
     params = ['jpymajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -140,11 +143,12 @@ def get_all():
 def return_stats():
     times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
     # jpbond
-    quotes = {'gold_jpy', 'ej_nasdaq', 'jpypair_vix', 'jpindex', 'jpymajor'}
+    quotes = {'jpbond', 'gold_jpy', 'ej_nasdaq',
+              'jpypair_vix', 'jpindex', 'jpymajor'}
     # improve by zip: T.B.D
     for quote in quotes:
         for k, v in times.items():
             correlation_one(periods=k, quotes=quote, interval=v)
 
 
-return_stats()
+# return_stats()

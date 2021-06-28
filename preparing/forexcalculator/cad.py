@@ -26,8 +26,10 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # CA60: https://www.investing.com/indices/s-p-tsx-60
 def get_tsx(isReload=True):
-    data = ['S&P/TSX 60', 'S&P/TSX MidCap', 'S&P/TSX Small Cap', 'S&P/TSX']
-    info = [[markets[0], 'canada', get_indices]]*len(data)
+    data = ['S&P/TSX 60', 'PHLX Canadian Dollar', 'Canada 10Y']
+    info = [[markets[0], 'canada', get_indices],
+            [markets[0], 'united states', get_indices],
+            [markets[3], 'canada', get_bonds]]
     params = ['caindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -38,8 +40,11 @@ def get_tsx(isReload=True):
 # cad major cross:
 def compare_major(isReload=True):
     data = ['XAU/CAD', 'EUR/CAD', 'USD/CAD', 'GBP/CAD',
-            'AUD/CAD', 'NZD/CAD', 'CAD/JPY', 'CAD/CHF']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'AUD/CAD', 'NZD/CAD', 'CAD/JPY', 'CAD/CHF',
+            'PHLX Canadian Dollar', 'Canada 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'canada', get_bonds]]
     params = ['camajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -49,9 +54,9 @@ def compare_major(isReload=True):
 # https://www.investing.com/indices/volatility-s-p-500
 def corr_cavolatility(isReload=True):
     # more detail with rate diff
-    data = ['CAD/JPY', 'CAD/CHF', 'S&P 500 VIX']
+    data = ['CAD/JPY', 'CAD/CHF', 'PHLX Canadian Dollar', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]]
+        2 + [[markets[0], 'united states', get_indices]] * 2
     params = ['capair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -60,8 +65,9 @@ def corr_cavolatility(isReload=True):
 # ----------------------------IMPORTANT
 # Oil corr : https://www.investing.com/commodities/crude-oil
 def cor_uc_xti(isReload=True):
-    data = ['USD/CAD', 'Crude Oil WTI']
+    data = ['USD/CAD', 'PHLX Canadian Dollar', 'Crude Oil WTI']
     info = [[markets[1], 'united states', get_forex],
+            [markets[0], 'united states', get_indices],
             [markets[2], 'united states', get_commodities]]
     params = ['corr_caoil', data, info, analysis_intermarket]
     make_market(params, isReload)
@@ -153,3 +159,15 @@ def get_all():
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    quotes = {'cabond', 'caindex', 'camajor', 'capair_vix', 'corr_caoil'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+return_stats()

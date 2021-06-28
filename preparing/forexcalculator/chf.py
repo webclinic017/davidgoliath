@@ -19,8 +19,10 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # Switzerland 20: https://www.investing.com/indices/switzerland-20
 def get_smi20(isReload=True):
-    data = ['SMI', 'FTSE Switzerland', 'Swiss Mid Price']
-    info = [[markets[0], 'switzerland', get_indices]]*len(data)
+    data = ['SMI', 'FTSE Switzerland', 'PHLX Swiss Franc', 'Switzerland 10Y']
+    info = [[markets[0], 'switzerland', get_indices]] *\
+        2 + [[markets[0], 'united states', get_indices]] + \
+            [[markets[3], 'switzerland', get_bonds]]
     params = ['swindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -31,8 +33,11 @@ def get_smi20(isReload=True):
 # chf major cross:
 def compare_major(isReload=True):
     data = ['XAU/CHF', 'EUR/CHF', 'USD/CHF', 'GBP/CHF',
-            'AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'CHF/JPY']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'CHF/JPY',
+            'PHLX Swiss Franc', 'Switzerland 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'switzerland', get_bonds]]
     params = ['chfmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -42,9 +47,9 @@ def compare_major(isReload=True):
 # https://www.investing.com/indices/volatility-s-p-500
 def corr_swvolatility(isReload=True):
     # more detail with rate diff
-    data = ['AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'S&P 500 VIX']
+    data = ['AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'PHLX Swiss Franc', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        3 + [[markets[0], 'united states', get_indices]]
+        3 + [[markets[0], 'united states', get_indices]]*2
     params = ['chfpair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -53,9 +58,9 @@ def corr_swvolatility(isReload=True):
 # EURCHF and NASDAQ Composite correlation
 # https://www.investing.com/indices/nasdaq-composite
 def cor_echf_nasdaq(isReload=True):
-    data = ['EUR/CHF', 'Nasdaq']
-    info = [[markets[1], 'united states', get_forex],
-            [markets[0], 'united states', get_indices]]
+    data = ['EUR/CHF', 'PHLX Swiss Franc', 'Nasdaq']
+    info = [[markets[1], 'united states', get_forex]] + \
+        [[markets[0], 'united states', get_indices]]*2
     params = ['echf_nasdaq', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -121,3 +126,17 @@ def get_all():
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    # jpbond
+    quotes = {'swbond', 'swindex', 'chfmajor',
+              'chfpair_vix', 'echf_nasdaq', 'gold_chf'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+# return_stats()

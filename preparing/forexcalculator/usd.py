@@ -21,9 +21,11 @@ def calculate_bond(isReload=True):
 # ----------------------------
 def get_stock_indices(isReload=True):
     # f(o): priority number list -> 1 main index
-    data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq', 'U.S. 10Y']
+    data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq',
+            'US Dollar Index', 'U.S. 10Y']
     info = [[markets[0], 'united states', get_indices]] * \
-        4+[[markets[3], 'united states', get_bonds]]
+        4+[[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'united states', get_bonds]]
     params = ['usindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -41,8 +43,11 @@ def cor_dxygo(isReload=True):
 # usd major cross
 def compare_major(isReload=True):
     data = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
-            'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD',
+            'US Dollar Index', 'U.S. 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'united states', get_bonds]]
     params = ['usdmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -223,4 +228,4 @@ def return_stats():
             correlation_one(periods=k, quotes=quote, interval=v)
 
 
-return_stats()
+# return_stats()

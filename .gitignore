@@ -1,10 +1,4 @@
-advanced-algorithmic-trading/.vscode
-maintainingcode/.vscode
-preparing/forexcalculator/.vscode
-preparing/forexcalculator/__pycache__
-/.vscode
 *.csv
-advanced-algorithmic-trading/__pycache__
 *.pickle
 *.pdf
 *.txt

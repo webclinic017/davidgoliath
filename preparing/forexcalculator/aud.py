@@ -25,8 +25,11 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # ASX 200 Futures: https://investing.com/indices/australia-200-futures
 def get_asx200(isReload=True):
-    data = ['S&P/ASX 200', 'S&P/ASX 50', 'S&P/ASX 20']
-    info = [[markets[0], 'australia', get_indices]]*len(data)
+    data = ['S&P/ASX 200', 'S&P/ASX 50', 'S&P/ASX 20',
+            'PHLX Australian Dollar', 'Australia 10Y']
+    info = [[markets[0], 'australia', get_indices]] *\
+        3+[[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'australia', get_bonds]]
     params = ['auindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -37,8 +40,11 @@ def get_asx200(isReload=True):
 # aud pair ------------------------------
 def compare_minor(isReload=True):
     data = ['XAU/AUD', 'EUR/AUD', 'GBP/AUD', 'AUD/NZD',
-            'AUD/JPY', 'AUD/CAD', 'AUD/USD', 'AUD/CHF']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'AUD/JPY', 'AUD/CAD', 'AUD/USD', 'AUD/CHF',
+            'PHLX Australian Dollar', 'Australia 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'australia', get_bonds]]
     params = ['audmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -48,9 +54,9 @@ def compare_minor(isReload=True):
 # https://www.investing.com/indices/volatility-s-p-500
 def corr_auvolatility(isReload=True):
     # more detail with rate diff
-    data = ['AUD/JPY', 'AUD/CHF', 'S&P 500 VIX']
+    data = ['AUD/JPY', 'AUD/CHF', 'PHLX Australian Dollar', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]]
+        2 + [[markets[0], 'united states', get_indices]]*2
     params = ['aupair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -58,9 +64,11 @@ def corr_auvolatility(isReload=True):
 # -------------------------------------------------------
 # ----------------------------IMPORTANT
 def cor_audcomodity(isReload=True):
-    data = ['AUD/USD', 'USD/CNH', 'Crude Oil WTI', 'Gold', 'Copper']
+    data = ['AUD/USD', 'USD/CNH', 'PHLX Australian Dollar',
+            'Crude Oil WTI', 'Gold', 'Copper']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[2], 'united states', get_commodities]] * 3
+        2 + [[markets[0], 'united states', get_indices]] + \
+        [[markets[2], 'united states', get_commodities]] * 3
     params = ['cor_audcomodity', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -146,7 +154,7 @@ def get_all():
     # get_employmentchange()
 
 
-get_all()
+# get_all()
 
 
 def return_stats():
@@ -159,3 +167,10 @@ def return_stats():
 
 
 # return_stats()
+'''
+Common correlations (automatic analysis - not human action)
+1. Copper, AUDUSD, Australian Dollar Index (all timeframe)
+2. USDCNH, Gold, Copper (Week, Month)
+3. Australian Dollar Index, S&P 500 VIX (in Short term)
+4. Australian Dollar Index, S&P ASX 200 ((Week, Month))
+'''

@@ -927,7 +927,16 @@ def inner_volatility(source=currency_path, quotes='USDCHF',
 
 
 def markethours():
+    '''
     # Overlaps time: Overlapping trading hours contain
+    # Volume increase in specific session
+    '''
+    sessions = ['AUS', 'ASIA', 'EU', 'US']
+    now = datetime.datetime.now()
+
+    # read api then check session time
+    # print(now.year, now.month, now.day, now.hour, now.minute, now.second)
+
     # the highest volume of traders.
 
     # Phiên Á thì sao?? AUD, NZD
@@ -937,6 +946,7 @@ def markethours():
     # Phiên Mỹ
 
     pass
+
 
 # ----------------------------------
 # https://www.investing.com/economic-calendar/

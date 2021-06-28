@@ -22,12 +22,14 @@ def calculate_bond(isReload=True):
 # stock indices
 # ----------------------------
 def get_estoxx(isReload=True):
-    data = ['Euro Stoxx 50', 'DAX', 'TecDAX',
-            'CAC 40', 'IBEX 35', 'Italy 40']
+    data = ['Euro Stoxx 50', 'DAX', 'TecDAX', 'CAC 40',
+            'IBEX 35', 'Italy 40', 'PHLX Euro', 'Germany 10Y']
     info = [[markets[0], 'germany', get_indices]]\
         * 3 + [[markets[0], 'france', get_indices]]\
         + [[markets[0], 'spain', get_indices]]\
-        + [[markets[0], 'italy', get_indices]]
+        + [[markets[0], 'italy', get_indices]]\
+        + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'germany', get_bonds]]
     params = ['euindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -44,9 +46,12 @@ def get_exy(isReload=True):
 # ----------------------------
 # eur major cross: (EURUSD vs Gold)
 def compare_major(isReload=True):
-    data = ['XAU/EUR', 'EUR/USD', 'EUR/JPY',
-            'EUR/CAD', 'EUR/GBP', 'EUR/AUD', 'EUR/NZD', 'EUR/CHF']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+    data = ['XAU/EUR', 'EUR/USD', 'EUR/JPY', 'EUR/CAD',
+            'EUR/GBP', 'EUR/AUD', 'EUR/NZD', 'EUR/CHF',
+            'PHLX Euro', 'Germany 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'germany', get_bonds]]
     params = ['eurmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -166,3 +171,22 @@ def get_all():
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    # jpbond
+    quotes = {'eubond', 'euindex', 'eurmajor', 'eugold'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+# return_stats()
+'''
+Common correlations (automatic analysis - not human action)
+1. Bonds in different period
+2. EURUSD, Gold (Week, Month)
+3. PHLX Euro, XAUEUR (Week, Month)
+'''

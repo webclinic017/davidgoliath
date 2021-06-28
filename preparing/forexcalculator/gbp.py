@@ -24,8 +24,11 @@ def calculate_bond(isReload=True):
 # ----------------------------
 # FTSE 100 : https://www.investing.com/indices/uk-100
 def get_ftse(isReload=True):
-    data = ['FTSE 100', 'FTSE 250', 'FTSE 350', 'UK 100']
-    info = [[markets[0], 'united kingdom', get_indices]]*len(data)
+    data = ['FTSE 100', 'FTSE 250', 'FTSE 350', 'UK 100',
+            'PHLX British Pound', 'U.K. 10Y']
+    info = [[markets[0], 'united kingdom', get_indices]] *\
+        4 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'united kingdom', get_bonds]]
     params = ['ukindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -36,8 +39,11 @@ def get_ftse(isReload=True):
 # gbp major cross
 def compare_major(isReload=True):
     data = ['XAU/GBP', 'EUR/GBP', 'GBP/JPY', 'GBP/CAD',
-            'GBP/USD', 'GBP/AUD', 'GBP/NZD', 'GBP/CHF']
-    info = [[markets[1], 'united states', get_forex]]*len(data)
+            'GBP/USD', 'GBP/AUD', 'GBP/NZD', 'GBP/CHF',
+            'PHLX British Pound', 'U.K. 10Y']
+    info = [[markets[1], 'united states', get_forex]] *\
+        8 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[3], 'united kingdom', get_bonds]]
     params = ['gbpmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -46,9 +52,11 @@ def compare_major(isReload=True):
 # Brent Oil corr ----- MOST IMPORTANT THINGS -----
 # https://www.investing.com/commodities/brent-oil
 def corr_ukoil(isReload=True):
-    data = ['GBP/USD', 'GBP/CHF', 'GBP/JPY', 'EUR/GBP', 'Brent Oil']
+    data = ['GBP/USD', 'GBP/CHF', 'GBP/JPY', 'EUR/GBP',
+            'PHLX British Pound', 'Brent Oil']
     info = [[markets[1], 'united states', get_forex]] * \
-        4 + [[markets[2], 'united kingdom', get_commodities]]
+        4 + [[markets[0], 'united states', get_indices]]\
+        + [[markets[2], 'united kingdom', get_commodities]]
     params = ['corr_ukoil', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -118,12 +126,24 @@ def get_all():
     '''
     # combine economic params
     '''
-    get_boe_rate()
-    get_gdp()
-    get_cpi()
-    get_inflation()
-    get_ppi()
-    get_unemploymentrate()
+    # get_boe_rate()
+    # get_gdp()
+    # get_cpi()
+    # get_inflation()
+    # get_ppi()
+    # get_unemploymentrate()
 
 
 # get_all()
+
+
+def return_stats():
+    times = {2: 'Monthly', 3: 'Weekly', 5: 'Daily'}
+    quotes = {'ukbond', 'ukindex', 'gbpmajor', 'corr_ukoil'}
+    # improve by zip: T.B.D
+    for quote in quotes:
+        for k, v in times.items():
+            correlation_one(periods=k, quotes=quote, interval=v)
+
+
+# return_stats()
