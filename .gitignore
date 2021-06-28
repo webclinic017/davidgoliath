@@ -1,11 +1,6 @@
-advanced-algorithmic-trading/trace.pickle
-advanced-algorithmic-trading/trace2.pickle
-advanced-algorithmic-trading/data/*
-advanced-algorithmic-trading/.vscode/*
-advanced-algorithmic-trading/01_intro/data/*
-maintainingcode/Data/*
-preparing/forexcalculator/fred/*
-preparing/forexcalculator/investpy/*
-preparing/forexcalculator/quandl/*
-preparing/forexcalculator/yahoofinance/*
-preparing/forexcalculator/medium/data/*
+.vscode
+*.csv
+__pycache__
+*.pickle
+*.pdf
+*.txt
