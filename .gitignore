@@ -4,8 +4,8 @@
 *.txt
 *.png
 .vscode/
-advanced-algorithmic-trading/.vscode/
+AdvancedAlgorithmicTrading/.vscode/
 preparing/forexcalculator/.vscode/
 preparing/forexcalculator/__pycache__/
-advanced-algorithmic-trading/__pycache__/
+AdvancedAlgorithmicTrading/__pycache__/
 maintainingcode/.vscode/
