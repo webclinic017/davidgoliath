@@ -33,75 +33,6 @@ from randintpr import *
 # ax.set_xlim([-4, 4])
 # ax.set_ylim([0, 0.5])
 # plt.show()
-# ------------------ Theorem --------------------------
-# Classical, or Frequentist vs Bayesian
-'''
-# Bayesian : applying probability to statistical problems
-# Bayesian : new data or evidence / hypothesis
-'''
-# Frequentist statistics assumes that probabilities are the
-# long-run frequency of random
-# events in repeated trials.
-
-# Coin flips (Frequentist) vs Election of a particular candidate
-#  for UK Prime Minister (Bayesian)
-'''
-# different opinions and  separate differing prior BELIEFS (Bayesian)
-# weighted (0-1) / no chance (0) / always occuring (1)
-'''
-
-# biases / impossible or merely very difficult: Black swan -
-# Barings Bank - Long-Term Capital Management - Lehman Brothers
-# -> very low probability vs zero("impossible" chances)
-
-# --------------------------
-'''
-# conditional probability: What is the probability of rain (A)
-# occuring given that there are clouds in the sky (B) -> P(A|B)
-'''
-
-# probability of A occuring given that B has occured =
-# probability that they have both occured / probability that B has occured
-
-# What is the probability of seeing clouds, given that it is raining? P(B|A)
-
-# P(A|B) = P(A^B)/P(B) and P(B|A) = P(B^A)/P(A)
-# P(A^B) = P(B^A) -> P(B)*P(A|B) = P(A)*P(B|A)
-# -> P(A|B) = (P(A)*P(B|A)) / P(B) = (P(A)*P(B|A)) / SUM sigma((P(A)*P(B|A)))
-
-# -------------------------- Bayesian IDEA
-'''
-# continually update our prior beliefs when new data/ evidence  occur
-# Bernoulli Trial: random experiment with only two outcomes: success vs failure
-'''
-
-# o : prior. strength in belief without considering the evidence(D)
-# Our prior view on the probability of how fair the coin is (1/2)
-
-# o|D : posterior. (refined) strength of our belief when evidence(D) occur
-# After seeing 4 heads out of 8 flips, say, this is our updated
-# view on the fairness of the coin (1/3)
-
-# D|o : likelihood. probability of seeing the data D. If we knew the coin
-# was fair (1/2), this tells us the "probability" of seeing
-# a number of "heads" ..(AFTER).. in a particular number of "flips.""
-
-# D : evidence. probability of the data. summing all possible values
-
-# P(o|D) = P(D|o)*P(o) / P(D)
-# -> update posterior from beliefs, evidence
-# -> repeatedly adjust beliefs under new data
-
-# -------------------------- Coin-Flipping Example
-# multiple coin-flips of a coin with unknown fairness.
-'''
-# uniform distribution: Phân phối đồng đều
-# khac vs Beta distribution: binomial model - mô hình nhị thức -
-'''
-# flexible in modelling beliefs.
-'''
-# probability density function: hàm mật độ xác suất
-'''
 # -------------------------- Coding beta_binomial
 '''
 
@@ -147,19 +78,6 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.show()
 '''
-# ------------------------------------------------------------------
-# remember:
-'''
-# Bayesian confidence intervals for the mean, var, and std
-# Input data Requires data points and Probability
-'''
-
-# mean, var, and std : mean, variance, and standard deviation
-'''
-# mean of pdf: Probability distribution function
-'''
-# mvsdist: mean, var, and std distribution
-
 # ------------------------------ Code
 data = generate_intlist(7, 20)
 mean, var, std = stats.bayes_mvs(data)

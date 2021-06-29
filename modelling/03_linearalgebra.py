@@ -70,6 +70,7 @@ im = np.outer(1j*np.linspace(2, -2, 5), np.ones((5, )))
 # grid for computing a Mandelbrot set
 # print(rl + im)
 
+# dtype
 x = np.array(['a', 'b', 'c'], dtype=object)
 # print(np.outer(x, [1, 2, 1]))
 

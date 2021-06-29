@@ -28,3 +28,9 @@ test if a process is stationary: Dickey-Fuller
 Modelling time series: MA, exponential smoothing, ARIMA
 '''
 # ---------------------------------------------
+'''
+# Time Series Analysis
+# https://medium.com/@marcopeixeiro
+# https://www.excelr.com/blog/data-science/forecasting/18-time-series-analysis-tactics-that-will-help-you-win-in-2020
+'''
+# ---------------------------------------------

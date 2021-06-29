@@ -1,21 +1,3 @@
-# Bayesian Stochastic Volatility Model (BSVM)
-# BSVM estimation of current and  historical volatility levels
-# BSVM: risk management -> risk filter
-# BSVM : posterior probability distribution (ppd) of volatility each time
-# BSVM : confidence intervals (khoảng tin cậy)
-# part 1: NUTS technique: highly efficient form of MCMC
-# part 2: PyMC3 MCMC library
-# PURPOSE: estimate volatility for daily equities returns
-# https://vietnambiz.vn/khoang-tin-cay-confidence-interval-la-gi-nhung-quan-niem-sai-lam-ve-khoang-tin-cay-20191106133822491.htm
-
-# time-varying variance (phương sai thay đổi theo thời gian)
-# heteroskedasticity (phương sai thay đổi.)
-# 2 SDE: differential equations (phương trình vi phân)
-# https://math.stackexchange.com/questions/234317/how-to-create-a-simple-differential-equation
-# Gaussian Random Walk
-# Student’s t-distribution
-# variance derived (phương sai)
-
 # Step by step:
 # 1. select priors for model parameters: std vs degrees of freedom
 '''
@@ -61,11 +43,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pandas_datareader as web
-# from pandas_datareader import data
 import pymc3 as pm
 from pymc3.distributions.timeseries import GaussianRandomWalk
 import seaborn as sns
 import pickle
+import warnings
+warnings.filterwarnings('ignore')
 
 
 # Obtaining the Price History ------------------------
@@ -102,7 +85,7 @@ def configure_sample_stoch_vol_model(log_returns, samples):
         s = GaussianRandomWalk('s', sigma=(sigma**-2), shape=len(log_returns))
         logrets = pm.StudentT(
             'logrets', nu, lam=pm.math.exp(-2.0*s), observed=log_returns)
-# Fitting the Model with NUTS
+    # Fitting the Model with NUTS
     print('Fitting the stochastic volatility model')
     with model:
         # trace = pm.sample(samples)

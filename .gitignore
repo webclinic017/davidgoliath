@@ -3,6 +3,7 @@
 *.pdf
 *.txt
 *.png
+*.jpg
 .vscode/
 AdvancedAlgorithmicTrading/.vscode/
 preparing/forexcalculator/.vscode/
