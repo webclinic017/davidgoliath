@@ -1,31 +1,3 @@
-'''
-# algorithms
-
-# Decision Tree (DT): learning decision rules
-# using in both regression and a classification
-
-# DT/ CART: Classification And Regression Trees
-# - adaptive basis function models
-# not linear in the parameters
-# a 'locally' optimal maximum likelihood estimate (MLE)
-# rather than global optimum
-
-# good if come with bagging, Random Forests or boosting
-# forecasting both future asset prices and liquidity
-
-# Mathematical
-
-# Decision Trees for Regression
-
-# Decision Trees for Classification
-
-# Advantages and Disadvantages
-
-# Ensemble Methods: bagging (Bootstrap), Random Forests, Boosting
-
-# Speedup compile process
-# https://www.geeksforgeeks.org/running-python-script-on-gpu/
-'''
 from numba import jit, cuda
 import code
 

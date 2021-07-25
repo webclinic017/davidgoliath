@@ -1,6 +1,7 @@
 import os
 import quandl
 import pandas as pd
+# from pandas.plotting import autocorrelation_plot
 import investpy as iv
 # import datamine as cme
 from fredapi import Fred
@@ -691,59 +692,6 @@ def currenciesheatmap():
 # https://www.investing.com/tools/forex-volatility-calculator
 
 
-def forexvolatility(numofweeks, timeframe):
-    # timeframe: x months after today time
-    # numofweeks: slice of time in last timeframe
-    # numofweeks càng nhỏ thì biến động càng lớn, ??? chọn bnhieu để
-    # hợp vs day trading
-
-    # definition:
-    # volatility of a pair: standard deviation from the mean
-    # higher volatility/ higher riskier
-    # optimize trading strategy
-    # which most volatile "pairs/ HOURS/ days/" week
-
-    # Economic/ markets events
-    markethours()
-    economiccalendar()
-
-    # rate
-
-    # khác biệt cố hữu trong các động lực kinh tế của mỗi quốc gia
-    # -> xu hướng biến động nhiều hơn
-    # get_commodities / services (majors)
-    # Most agricultural and commodities such as oil are priced
-    # in U.S. dollars
-    # Try to draw a chart like this for 8 currencies
-    # anti-U.S. dollar or pro-U.S. dollar (kháng/ hỗ Dollar)
-    # https://www.babypips.com/learn/forex/crosses-present-more-trading-opportunities
-    majors = ['GBP/USD', 'EUR/USD', 'USD/CHF', 'USD/JPY']
-    commodity_pairs = ['AUD/USD', 'USD/CAD', 'NZD/USD']
-
-    # cặp chéo
-    # https://www.babypips.com/learn/forex/cleaner-trends-and-ranges
-    # sometime it's more smoother, easier for trade
-    majorcrosses = ['EUR/CHF', 'EUR/GBP', 'EUR/JPY', 'GBP/JPY']
-    minorcrosses = ['AUD/CHF', 'AUD/JPY', 'CAD/CHF', 'CAD/JPY',
-                    'CHF/JPY', 'EUR/AUD', 'EUR/CAD', 'EUR/NZD',
-                    'GBP/AUD', 'GBP/CAD', 'GBP/CHF', 'GBP/NZD',
-                    'NZD/CHF', 'NZD/JPY']
-    # Hourly Volatility Pips/GMT Hours
-
-    # Daily Volatility In Pips
-
-    # Weekday Volatility In Pips
-
-    # Monthweek Volatility In Pips
-
-    # Yearmonth Volatility In Pips
-
-    pass
-
-# Fibonacci Calculator:
-# https://www.investing.com/tools/fibonacci-calculator
-
-
 def fibocalculator(source=currency_path, quotes='USDCHF',
                    interval='Monthly', periods=15):
     # read data
@@ -911,6 +859,7 @@ def inner_volatility(source=currency_path, quotes='USDCHF',
     df['HLO'] = (df['High']-df['Low'])/df['Open']*100
     # pct chage day previous close
     df['PCT'] = (df['Close']-df['Open'])/df['Close']*100
+
     df = df[-periods:]
     df.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)
     df.set_index('Date', inplace=True)

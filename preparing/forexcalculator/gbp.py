@@ -119,10 +119,10 @@ def get_unemploymentrate(isReload=True):
 
 
 def get_all():
-    calculate_bond()
-    get_ftse()
+    # calculate_bond()
+    # get_ftse()
+    # corr_ukoil()
     compare_major()
-    corr_ukoil()
     '''
     # combine economic params
     '''
@@ -134,7 +134,7 @@ def get_all():
     # get_unemploymentrate()
 
 
-# get_all()
+get_all()
 
 
 def return_stats():

@@ -20,35 +20,6 @@ import datetime as dt
 from scipy import stats
 
 if __name__ == "__main__":
-
-    # time series analysis techniques
-    # https://machinelearningmastery.com/introduction-to-time-series-forecasting-with-python/
-
-    # predict future values or infer relationships
-
-    # Time series analysis attempts to understand the past
-    # and predict the future
-
-    # series relationships / predict future values -> trading signals
-
-    # Time series contain: give inference or predictions
-    # 1. Trends. (eg: in commodities prices)
-    # 2. Seasonal Variation: growing seasons/ temperature/ commodities
-    # 3. Serial Dependence: serial correlation - Volatility clustering
-
-    # forecast 'prices'
-    # generate future "scenarios", estimate the 'number of trades',
-    # 'expected returns' ...
-    # spread with bid/ask volume and transaction costs???
-
-    # use R statistical libraries
-
-    # Bayesian statistics: time series and machine learning models
-
-    # modern models examining financial data across different assets
-
-    # Introduction
-
     # ARIMA Models: Autoregressive Integrated Moving Average --------
     # machinelearningmastery-------------
 
@@ -313,32 +284,3 @@ tests, and statistical data exploration
 # y = np.dot(X, beta) + e
 # results = sm.OLS(y, X).fit()
 # print(results.summary())
-
-# Citation: http://conference.scipy.org/proceedings/scipy2010/pdfs/seabold.pdf
-# end statsmodels intro ===========================================
-
-
-# discrete-time stochastic process (DTSP)
-# https://en.wikipedia.org/wiki/Stochastic_process#:~:text=When%20interpreted%20as%20time%2C%20if,to%20be%20in%20discrete%20time.
-# https://www.google.com/search?q=discrete-time+stochastic+process&sxsrf=ALeKk01uq0nw6IMmPcxP9EXoeljlRernyg:1623001428801&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiBooi9x4PxAhXiyIsBHV6sABQQ_AUoAXoECAEQAw&biw=958&bih=906#imgrc=74wzWPDWn3uyeM
-
-
-# Serial Correlation
-
-# Random Walks and White Noise
-
-# ARMA Models: Autoregressive Moving Average--------------------
-
-
-# Cointegration:
-# https://stackoverflow.com/questions/11362943/efficient-cointegration-test-in-python
-
-# State-Space Models: Kalman Filter, Hidden Markov Model
-
-# autocorrelation
-# https://www.youtube.com/watch?v=UFvDSX3jsYg&ab_channel=zedstatistics
-# https://stackoverflow.com/questions/643699/how-can-i-use-numpy-correlate-to-do-autocorrelation
-
-# convolution python
-
-# ARIMA and GARCH Models

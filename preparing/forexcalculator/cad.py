@@ -170,4 +170,4 @@ def return_stats():
             correlation_one(periods=k, quotes=quote, interval=v)
 
 
-return_stats()
+# return_stats()
