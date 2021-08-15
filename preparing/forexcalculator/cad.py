@@ -16,7 +16,7 @@ currency = 'cad'
 # ----------------------------
 def calculate_bond(isReload=True):
     data = ['Canada 2Y', 'Canada 5Y', 'Canada 10Y']
-    info = [[markets[3], 'canada', get_bonds]]*len(data)
+    info = [[markets[3], 'canada', get_bond]]*len(data)
     params = ['cabond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -27,9 +27,9 @@ def calculate_bond(isReload=True):
 # CA60: https://www.investing.com/indices/s-p-tsx-60
 def get_tsx(isReload=True):
     data = ['S&P/TSX 60', 'PHLX Canadian Dollar', 'Canada 10Y']
-    info = [[markets[0], 'canada', get_indices],
-            [markets[0], 'united states', get_indices],
-            [markets[3], 'canada', get_bonds]]
+    info = [[markets[0], 'canada', get_index],
+            [markets[0], 'united states', get_index],
+            [markets[3], 'canada', get_bond]]
     params = ['caindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -43,8 +43,8 @@ def compare_major(isReload=True):
             'AUD/CAD', 'NZD/CAD', 'CAD/JPY', 'CAD/CHF',
             'PHLX Canadian Dollar', 'Canada 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'canada', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'canada', get_bond]]
     params = ['camajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -56,7 +56,7 @@ def corr_cavolatility(isReload=True):
     # more detail with rate diff
     data = ['CAD/JPY', 'CAD/CHF', 'PHLX Canadian Dollar', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]] * 2
+        2 + [[markets[0], 'united states', get_index]] * 2
     params = ['capair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -67,7 +67,7 @@ def corr_cavolatility(isReload=True):
 def cor_uc_xti(isReload=True):
     data = ['USD/CAD', 'PHLX Canadian Dollar', 'Crude Oil WTI']
     info = [[markets[1], 'united states', get_forex],
-            [markets[0], 'united states', get_indices],
+            [markets[0], 'united states', get_index],
             [markets[2], 'united states', get_commodities]]
     params = ['corr_caoil', data, info, analysis_intermarket]
     make_market(params, isReload)

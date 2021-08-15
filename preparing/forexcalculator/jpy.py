@@ -10,7 +10,7 @@ currency = 'jpy'
 # https://www.investing.com/rates-bonds/japan-10-year-bond-yield
 def calculate_bond(isReload=True):
     data = ['Japan 2Y', 'Japan 5Y', 'Japan 10Y']
-    info = [[markets[3], 'japan', get_bonds]]*len(data)
+    info = [[markets[3], 'japan', get_bond]]*len(data)
     params = ['jpbond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -22,9 +22,9 @@ def calculate_bond(isReload=True):
 def get_nikkei225(isReload=True):
     # can get more indices
     data = ['Nikkei 225', 'Nikkei Volatility', 'PHLX Yen', 'Japan 10Y']
-    info = [[markets[0], 'japan', get_indices]] * \
-        2 + [[markets[0], 'united states', get_indices]] + \
-            [[markets[3], 'japan', get_bonds]]
+    info = [[markets[0], 'japan', get_index]] * \
+        2 + [[markets[0], 'united states', get_index]] + \
+            [[markets[3], 'japan', get_bond]]
     params = ['jpindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -39,8 +39,8 @@ def compare_major(isReload=True):
             'AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'CHF/JPY',
             'PHLX Yen', 'Japan 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'japan', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'japan', get_bond]]
     params = ['jpymajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -54,7 +54,7 @@ def corr_jpvolatility(isReload=True):
     # more detail with rate diff
     data = ['AUD/JPY', 'NZD/JPY', 'CAD/JPY', 'PHLX Yen', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        3 + [[markets[0], 'united states', get_indices]] * 2
+        3 + [[markets[0], 'united states', get_index]] * 2
     params = ['jpypair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -67,7 +67,7 @@ def corr_jpvolatility(isReload=True):
 def cor_ej_nasdaq(isReload=True):
     data = ['EUR/JPY', 'PHLX Yen', 'Nasdaq']
     info = [[markets[1], 'united states', get_forex]] + \
-        [[markets[0], 'united states', get_indices]]*2
+        [[markets[0], 'united states', get_index]]*2
     params = ['ej_nasdaq', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -81,7 +81,7 @@ def cor_ej_nasdaq(isReload=True):
 def cor_jpy_gold(isReload=True):
     data = ['Gold', 'PHLX Yen']
     info = [[markets[2], 'united states', get_commodities],
-            [markets[0], 'united states', get_indices]]
+            [markets[0], 'united states', get_index]]
     params = ['gold_jpy', data, info, analysis_intermarket]
     make_market(params, isReload)
 

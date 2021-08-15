@@ -16,7 +16,7 @@ currency = 'nzd'
 def calculate_bond(isReload=True):
     # for investpy
     data = ['New Zealand 2Y', 'New Zealand 5Y', 'New Zealand 10Y']
-    info = [[markets[3], 'new zealand', get_bonds]]*len(data)
+    info = [[markets[3], 'new zealand', get_bond]]*len(data)
     params = ['nzbond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -28,9 +28,9 @@ def calculate_bond(isReload=True):
 def get_nzx(isReload=True):
     data = ['NZX 50', 'NZX MidCap',
             'PHLX New Zealand Dollar', 'New Zealand 10Y']
-    info = [[markets[0], 'new zealand', get_indices]] *\
-        2+[[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'new zealand', get_bonds]]
+    info = [[markets[0], 'new zealand', get_index]] *\
+        2+[[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'new zealand', get_bond]]
     params = ['nzindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -44,8 +44,8 @@ def compare_minor(isReload=True):
             'NZD/JPY', 'NZD/CAD', 'NZD/USD', 'NZD/CHF',
             'PHLX New Zealand Dollar', 'New Zealand 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'new zealand', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'new zealand', get_bond]]
     params = ['nzdmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -57,7 +57,7 @@ def corr_nzvolatility(isReload=True):
     # more detail with rate diff
     data = ['NZD/JPY', 'NZD/CHF', 'PHLX New Zealand Dollar', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]]*2
+        2 + [[markets[0], 'united states', get_index]]*2
     params = ['nzpair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -83,7 +83,7 @@ def cor_nzagri(isReload=True):
     '''
     # --------------------------------------
     info = [[markets[2], 'united states', get_commodities]] *\
-        20 + [[markets[0], 'united states', get_indices]] \
+        20 + [[markets[0], 'united states', get_index]] \
         + [[markets[1], 'united states', get_forex]]
     params = ['cor_nzagri', data, info, analysis_commodity]
     make_market(params, isReload)
@@ -95,7 +95,7 @@ def cor_nzoil(isReload=True):
     data = ['NZD/CHF', 'NZD/USD', 'NZD/JPY', 'EUR/NZD',
             'PHLX New Zealand Dollar', 'Crude Oil WTI']
     info = [[markets[1], 'united states', get_forex]] * \
-        4 + [[markets[0], 'united states', get_indices]] \
+        4 + [[markets[0], 'united states', get_index]] \
         + [[markets[2], 'united states', get_commodities]]
     params = ['cor_nzoil', data, info, analysis_intermarket]
     make_market(params, isReload)

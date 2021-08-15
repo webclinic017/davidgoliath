@@ -11,6 +11,7 @@ def parser(x):
 df = pd.read_csv('data/shampoo.csv', header=0,
                  parse_dates=[0], index_col=0,
                  squeeze=True, date_parser=parser)
+print(df.tail())
 '''
 fig = plt.figure(figsize=(12, 7))
 layout = (2, 2)
@@ -39,6 +40,7 @@ quarterly_mean.plot()
 plt.show()
 '''
 # ----------------------------
+'''
 resample = df.resample('A')
 yearly_mean = resample.sum()
 # resample = df.resample('Y')
@@ -46,3 +48,4 @@ yearly_mean = resample.sum()
 print(yearly_mean)
 yearly_mean.plot()
 plt.show()
+'''

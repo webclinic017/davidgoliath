@@ -15,7 +15,7 @@ currency = 'aud'
 def calculate_bond(isReload=True):
     # for investpy
     data = ['Australia 2Y', 'Australia 5Y', 'Australia 10Y']
-    info = [[markets[3], 'australia', get_bonds]]*len(data)
+    info = [[markets[3], 'australia', get_bond]]*len(data)
     params = ['aubond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -27,9 +27,9 @@ def calculate_bond(isReload=True):
 def get_asx200(isReload=True):
     data = ['S&P/ASX 200', 'S&P/ASX 50', 'S&P/ASX 20',
             'PHLX Australian Dollar', 'Australia 10Y']
-    info = [[markets[0], 'australia', get_indices]] *\
-        3+[[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'australia', get_bonds]]
+    info = [[markets[0], 'australia', get_index]] *\
+        3+[[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'australia', get_bond]]
     params = ['auindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -43,8 +43,8 @@ def compare_minor(isReload=True):
             'AUD/JPY', 'AUD/CAD', 'AUD/USD', 'AUD/CHF',
             'PHLX Australian Dollar', 'Australia 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'australia', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'australia', get_bond]]
     params = ['audmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -56,7 +56,7 @@ def corr_auvolatility(isReload=True):
     # more detail with rate diff
     data = ['AUD/JPY', 'AUD/CHF', 'PHLX Australian Dollar', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]]*2
+        2 + [[markets[0], 'united states', get_index]]*2
     params = ['aupair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -67,7 +67,7 @@ def cor_audcomodity(isReload=True):
     data = ['AUD/USD', 'USD/CNH', 'PHLX Australian Dollar',
             'Crude Oil WTI', 'Gold', 'Copper']
     info = [[markets[1], 'united states', get_forex]] * \
-        2 + [[markets[0], 'united states', get_indices]] + \
+        2 + [[markets[0], 'united states', get_index]] + \
         [[markets[2], 'united states', get_commodities]] * 3
     params = ['cor_audcomodity', data, info, analysis_intermarket]
     make_market(params, isReload)

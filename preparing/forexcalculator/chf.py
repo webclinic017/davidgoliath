@@ -9,7 +9,7 @@ currency = 'chf'
 # https://www.investing.com/rates-bonds/switzerland-10-year-bond-yield
 def calculate_bond(isReload=True):
     data = ['Switzerland 2Y', 'Switzerland 5Y', 'Switzerland 10Y']
-    info = [[markets[3], 'switzerland', get_bonds]]*len(data)
+    info = [[markets[3], 'switzerland', get_bond]]*len(data)
     params = ['swbond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -20,9 +20,9 @@ def calculate_bond(isReload=True):
 # Switzerland 20: https://www.investing.com/indices/switzerland-20
 def get_smi20(isReload=True):
     data = ['SMI', 'FTSE Switzerland', 'PHLX Swiss Franc', 'Switzerland 10Y']
-    info = [[markets[0], 'switzerland', get_indices]] *\
-        2 + [[markets[0], 'united states', get_indices]] + \
-            [[markets[3], 'switzerland', get_bonds]]
+    info = [[markets[0], 'switzerland', get_index]] *\
+        2 + [[markets[0], 'united states', get_index]] + \
+            [[markets[3], 'switzerland', get_bond]]
     params = ['swindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -36,8 +36,8 @@ def compare_major(isReload=True):
             'AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'CHF/JPY',
             'PHLX Swiss Franc', 'Switzerland 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'switzerland', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'switzerland', get_bond]]
     params = ['chfmajor', data, info, analysis_currency]
     make_market(params, isReload)
 
@@ -49,7 +49,7 @@ def corr_swvolatility(isReload=True):
     # more detail with rate diff
     data = ['AUD/CHF', 'NZD/CHF', 'CAD/CHF', 'PHLX Swiss Franc', 'S&P 500 VIX']
     info = [[markets[1], 'united states', get_forex]] * \
-        3 + [[markets[0], 'united states', get_indices]]*2
+        3 + [[markets[0], 'united states', get_index]]*2
     params = ['chfpair_vix', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -60,7 +60,7 @@ def corr_swvolatility(isReload=True):
 def cor_echf_nasdaq(isReload=True):
     data = ['EUR/CHF', 'PHLX Swiss Franc', 'Nasdaq']
     info = [[markets[1], 'united states', get_forex]] + \
-        [[markets[0], 'united states', get_indices]]*2
+        [[markets[0], 'united states', get_index]]*2
     params = ['echf_nasdaq', data, info, analysis_intermarket]
     make_market(params, isReload)
 
@@ -72,7 +72,7 @@ def cor_echf_nasdaq(isReload=True):
 def cor_chf_gold(isReload=True):
     data = ['Gold', 'PHLX Swiss Franc']
     info = [[markets[2], 'united states', get_commodities],
-            [markets[0], 'united states', get_indices]]
+            [markets[0], 'united states', get_index]]
     params = ['gold_chf', data, info, analysis_intermarket]
     make_market(params, isReload)
 

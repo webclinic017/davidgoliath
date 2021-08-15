@@ -1,36 +1,141 @@
-USER_AGENTS_LIST = [
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; AcooBrowser; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
-    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0; Acoo Browser; SLCC1; .NET CLR 2.0.50727; Media Center PC 5.0; .NET CLR 3.0.04506)",
-    "Mozilla/4.0 (compatible; MSIE 7.0; AOL 9.5; AOLBuild 4337.35; Windows NT 5.1; .NET CLR 1.1.4322; .NET CLR 2.0.50727)",
-    "Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)",
-    "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Win64; x64; Trident/5.0; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 2.0.50727; Media Center PC 6.0)",
-    "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.0; Trident/4.0; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET CLR 1.0.3705; .NET CLR 1.1.4322)",
-    "Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 5.2; .NET CLR 1.1.4322; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 3.0.04506.30)",
-    "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN) AppleWebKit/523.15 (KHTML, like Gecko, Safari/419.3) Arora/0.3 (Change: 287 c9dfb30)",
-    "Mozilla/5.0 (X11; U; Linux; en-US) AppleWebKit/527+ (KHTML, like Gecko, Safari/419.3) Arora/0.6",
-    "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2pre) Gecko/20070215 K-Ninja/2.1.1",
-    "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9) Gecko/20080705 Firefox/3.0 Kapiko/3.0",
-    "Mozilla/5.0 (X11; Linux i686; U;) Gecko/20070322 Kazehakase/0.4.5",
-    "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.8) Gecko Fedora/1.9.0.8-1.fc10 Kazehakase/0.5.6",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.20 (KHTML, like Gecko) Chrome/19.0.1036.7 Safari/535.20",
-    "Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; fr) Presto/2.9.168 Version/11.52",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/536.11 (KHTML, like Gecko) Chrome/20.0.1132.11 TaoBrowser/2.0 Safari/536.11",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.71 Safari/537.1 LBBROWSER",
-    "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; LBBROWSER)",
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 732; .NET4.0C; .NET4.0E; LBBROWSER)",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.84 Safari/535.11 LBBROWSER",
-    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)",
-    "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; QQBrowser/7.0.3698.400)",
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 732; .NET4.0C; .NET4.0E)",
-    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; SV1; QQDownload 732; .NET4.0C; .NET4.0E; 360SE)",
-    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; QQDownload 732; .NET4.0C; .NET4.0E)",
-    "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/5.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)",
-    "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1",
-    "Mozilla/5.0 (iPad; U; CPU OS 4_2_1 like Mac OS X; zh-cn) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148 Safari/6533.18.5",
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0b13pre) Gecko/20110307 Firefox/4.0b13pre",
-    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0",
-    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11",
-    "Mozilla/5.0 (X11; U; Linux x86_64; zh-CN; rv:1.9.2.10) Gecko/20100922 Ubuntu/10.10 (maverick) Firefox/3.6.10"
-]
+markets = ['indices', 'currencies', 'commodities',
+           'rates-bonds', 'equities', 'etfs', 'crypto']
+combine_path = 'investpy/combinedata/'
+# global starttime
+starttime = '01/01/2010'
+analysis_path = 'investpy/analysisdata/'
+
+
+def round_nums(arr):
+    res = []
+    for num in arr:
+        res.append(round(num, 4))
+    return res
+
+
+# improve 1 candle vs multicandle (2 or more)
+def fibocalculator(source="investpy/currenciesdata/", quotes='USDCHF',
+                   interval='Monthly', periods=15):
+    df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
+    df = df.iloc[-periods-1:]
+    low = df['Low'].min()
+    high = df['High'].max()
+    # get index
+    last_pos = df.index.tolist()[len(df)-1]
+    low_index, high_index = df.loc[df['Low'] ==
+                                   low].index, df.loc[df['High'] == high].index
+    isUptrend = True if (high_index - low_index > 0) else False
+    fiboret_level = (0.236, 0.382, 0.5,
+                     0.618, 0.707, 0.786, 0.887)
+    fiboexp_level = (-0.382, -0.236, 0, 0.236, 0.5,
+                     0.618, 0.786, 1, 1.272, 1.618)
+    # process uptrend price level
+    print(isUptrend)
+    if isUptrend:
+        high_pos = high_index.tolist()[0]
+        retrace = df[high_pos-last_pos-1:]['Low'].min()
+        # Fibonnaci path
+        price_ret = [round((1-level)*(high-low) + low, 4)
+                     for level in fiboret_level]
+        price_ret.reverse()
+        price_ret.append(high)
+        price_ret.insert(0, low)
+
+        # Fibonacci Expansion:
+        price_exp = [round(level*(high-low) + retrace, 4)
+                     for level in fiboexp_level]
+    # downtrend
+    else:
+        low_pos = low_index.tolist()[0]
+        retrace = df[low_pos-last_pos-1:]['High'].max()
+        # Fibonnaci path
+        price_ret = [round(low + level*(high-low), 4)
+                     for level in fiboret_level]
+        price_ret.reverse()
+        price_ret.append(low)
+        price_ret.insert(0, high)
+
+        # Fibonacci Expansion:
+        price_exp = [round(retrace - level*(high-low), 4)
+                     for level in fiboexp_level]
+    return (price_ret, price_exp, isUptrend)
+
+
+def pivotpointcalculator(pivotType='Fibonacci',
+                         source='investpy/currenciesdata/',
+                         quotes='USDCHF', interval='Monthly'):
+    ret = []
+    df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
+    pOpen, pHigh, pLow, pClose = df.iloc[-1:, 1:5].values.tolist()[0]
+    # Classic
+    if pivotType is 'Classic':
+        pp = (pHigh + pLow + pClose) / 3
+        S1 = pp*2 - pHigh
+        S2 = pp - (pHigh-pLow)
+        S3 = pp - 2*(pHigh-pLow)
+
+        R1 = pp*2 - pLow
+        R2 = pp + (pHigh-pLow)
+        R3 = pp + 2*(pHigh-pLow)
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
+    # Fibonacci
+    if pivotType is 'Fibonacci':
+        pp = (pHigh + pLow + pClose) / 3
+
+        R1 = pp + ((pHigh-pLow)*0.382)
+        R2 = pp + ((pHigh-pLow)*0.618)
+        R3 = pp + ((pHigh-pLow)*1)
+
+        S1 = pp - ((pHigh-pLow)*0.382)
+        S2 = pp - ((pHigh-pLow)*0.618)
+        S3 = pp - ((pHigh-pLow)*1)
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
+    # Camarilla
+    if pivotType is 'Camarilla':
+        pp = (pHigh + pLow + pClose) / 3
+
+        S1 = pClose - ((pHigh-pLow) * 1.0833)
+        S2 = pClose - ((pHigh-pLow) * 1.1666)
+        S3 = pClose - ((pHigh-pLow) * 1.25)
+        S4 = pClose - ((pHigh-pLow) * 1.5)
+
+        R1 = pClose + ((pHigh-pLow) * 1.0833)
+        R2 = pClose + ((pHigh-pLow) * 1.1666)
+        R3 = pClose + ((pHigh-pLow) * 1.25)
+        R4 = pClose + ((pHigh-pLow) * 1.5)
+
+        ret = round_nums([R4, R3, R2, R1, pp, S1, S2, S3, S4])
+        print(ret)
+    # Woodie's
+    if pivotType is 'Woodie':
+        pp = (pHigh + pLow + 2*pClose) / 4
+
+        R1 = 2*pp - pLow
+        R2 = pp + pHigh - pLow
+        R3 = (pHigh + 2 * (pp - pLow))
+
+        S1 = 2*pp - pHigh
+        S2 = pp - pHigh + pLow
+        S3 = (pLow - 2 * (pHigh - pp))
+
+        ret = round_nums([R3, R2, R1, pp, S1, S2, S3])
+        print(ret)
+    # DeMark's
+    if pivotType is 'DeMark':
+        if pClose > pOpen:
+            X = 2*pHigh + pLow + pClose
+        elif pClose < pOpen:
+            X = pHigh + 2*pLow + pClose
+        else:
+            X = pHigh + pLow + 2*pClose
+        pp = X/4
+        R1 = X/2 - pLow
+        S1 = X/2 - pHigh
+
+        ret = round_nums([R1, pp, S1])
+        print(ret)
+    return ret

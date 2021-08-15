@@ -13,7 +13,7 @@ country = 'euro zone'
 def calculate_bond(isReload=True):
     # for investpy
     data = ['Germany 2Y', 'Germany 5Y', 'Germany 10Y']
-    info = [[markets[3], 'germany', get_bonds]]*len(data)
+    info = [[markets[3], 'germany', get_bond]]*len(data)
     params = ['eubond', data, info, analysis_bond]
     make_market(params, isReload)
 
@@ -24,12 +24,12 @@ def calculate_bond(isReload=True):
 def get_estoxx(isReload=True):
     data = ['Euro Stoxx 50', 'DAX', 'TecDAX', 'CAC 40',
             'IBEX 35', 'Italy 40', 'PHLX Euro', 'Germany 10Y']
-    info = [[markets[0], 'germany', get_indices]]\
-        * 3 + [[markets[0], 'france', get_indices]]\
-        + [[markets[0], 'spain', get_indices]]\
-        + [[markets[0], 'italy', get_indices]]\
-        + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'germany', get_bonds]]
+    info = [[markets[0], 'germany', get_index]]\
+        * 3 + [[markets[0], 'france', get_index]]\
+        + [[markets[0], 'spain', get_index]]\
+        + [[markets[0], 'italy', get_index]]\
+        + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'germany', get_bond]]
     params = ['euindex', data, info, analysis_index]
     make_market(params, isReload)
 
@@ -50,8 +50,8 @@ def compare_major(isReload=True):
             'EUR/GBP', 'EUR/AUD', 'EUR/NZD', 'EUR/CHF',
             'PHLX Euro', 'Germany 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'germany', get_bonds]]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'germany', get_bond]]
     params = ['eurmajor', data, info, analysis_currency]
     make_market(params, isReload)
 

@@ -1,5 +1,6 @@
 # ------------- import part ------------------------------
 from alphautils import *
+from getdata import *
 currency = 'usd'
 country = 'united states'
 # ------------------------------
@@ -8,31 +9,32 @@ country = 'united states'
 # -------------------------------------------------------
 # bonds:
 # ----------------------------
-def calculate_bond(isReload=True):
+def get_usbonds(isReload=True):
     # for investpy
     data = ['U.S. 2Y', 'U.S. 5Y', 'U.S. 10Y']
-    info = [[markets[3], 'united states', get_bonds]]*len(data)
-    params = ['usbond', data, info, analysis_bond]
+    info = [[markets[3], 'united states', get_bond]]*len(data)
+    # params = ['usbond', data, info, analysis_bond]
+    params = ['usbond', data, info]
     make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # stock indices
 # ----------------------------
-def get_stock_indices(isReload=True):
-    # f(o): priority number list -> 1 main index
+def get_usindices(isReload=True):
     data = ['SmallCap 2000', 'Dow 30', 'S&P 500', 'Nasdaq',
             'US Dollar Index', 'U.S. 10Y']
-    info = [[markets[0], 'united states', get_indices]] * \
-        4+[[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'united states', get_bonds]]
-    params = ['usindex', data, info, analysis_index]
+    info = [[markets[0], 'united states', get_index]] * \
+        4+[[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'united states', get_bond]]
+    # params = ['usindices', data, info, analysis_index]
+    params = ['usindices', data, info]
     make_market(params, isReload)
 
 
 # -------------------------------------------------------
 # Dxy: update tick data for this
-def cor_dxygo(isReload=True):
+def get_dxy_tickdata(isReload=True):
     # update real time from DXY_M1 ICmarkets
     pass
 
@@ -41,14 +43,15 @@ def cor_dxygo(isReload=True):
 # currencies:
 # ----------------------------
 # usd major cross
-def compare_major(isReload=True):
+def get_uspairs(isReload=True):
     data = ['XAU/USD', 'EUR/USD', 'GBP/USD', 'AUD/USD',
             'NZD/USD', 'USD/CHF', 'USD/JPY', 'USD/CAD',
             'US Dollar Index', 'U.S. 10Y']
     info = [[markets[1], 'united states', get_forex]] *\
-        8 + [[markets[0], 'united states', get_indices]]\
-        + [[markets[3], 'united states', get_bonds]]
-    params = ['usdmajor', data, info, analysis_currency]
+        8 + [[markets[0], 'united states', get_index]]\
+        + [[markets[3], 'united states', get_bond]]
+    # params = ['uspairs', data, info, analysis_currency]
+    params = ['uspairs', data, info]
     make_market(params, isReload)
 
 
@@ -59,24 +62,26 @@ def compare_major(isReload=True):
 # COMMON--------------------------------
 
 
-def cor_usmain(isReload=True):
+def get_usmain(isReload=True):
     data = ['S&P 500 VIX', 'US Dollar Index',
             'U.S. 10Y', 'Gold', 'Crude Oil WTI']
-    info = [[markets[0], 'united states', get_indices]] \
-        * 2 + [[markets[3], 'united states', get_bonds]] \
+    info = [[markets[0], 'united states', get_index]] \
+        * 2 + [[markets[3], 'united states', get_bond]] \
             + [[markets[2], 'united states', get_commodities]] * 2
-    params = ['cor_usmain', data, info, analysis_intermarket]
+    # params = ['usmain', data, info, analysis_intermarket]
+    params = ['usmain', data, info]
     make_market(params, isReload)
 
 
 # Oil corr --------------------------------
 
 
-def corr_usoil(isReload=True):
+def get_usoil(isReload=True):
     data = ['AUD/USD', 'NZD/USD', 'GBP/USD', 'USD/CAD', 'Crude Oil WTI']
     info = [[markets[1], 'united states', get_forex]] * \
         4 + [[markets[2], 'united states', get_commodities]]
-    params = ['corr_usoil', data, info, analysis_intermarket]
+    # params = ['usoil', data, info, analysis_intermarket]
+    params = ['usoil', data, info]
     make_market(params, isReload)
 
 # ---------------- Important gold index -------------------------
@@ -85,14 +90,14 @@ def corr_usoil(isReload=True):
 
 def get_hui(isReload=True):
     if isReload:
-        get_indices('ARCA Gold BUGS', country)
+        get_index('ARCA Gold BUGS', country)
 
 
 # ------- settle phlx-gold-silver -------
 # https://en.wikipedia.org/wiki/Philadelphia_Gold_and_Silver_Index
 def get_gss(isReload=True):
     if isReload:
-        get_indices('PHLX Gold Silver Settlement', country)
+        get_index('PHLX Gold Silver Settlement', country)
 # https://www.cmegroup.com/trading/why-futures/welcome-to-cme-fx-futures.html#
 # cme_calling()
 
@@ -193,11 +198,11 @@ def get_debt_percent(isReload=True):
 
 
 def get_all():
-    calculate_bond()
-    get_stock_indices()
-    compare_major()
-    cor_usmain()
-    corr_usoil()
+    get_usbonds()
+    get_usindices()
+    get_uspairs()
+    get_usmain()
+    get_usoil()
     '''
     # combine economic params
     '''

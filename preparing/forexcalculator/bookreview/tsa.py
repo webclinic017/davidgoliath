@@ -55,7 +55,7 @@ df.drop(df['2016-12'].tail(1).index, inplace=True)
 
 # temp = df.Close['2015': '2016']
 temp = df.Close['2015']
-
+print(temp)
 # ----------- Common api
 # print(temp.describe())
 # print(temp.size)

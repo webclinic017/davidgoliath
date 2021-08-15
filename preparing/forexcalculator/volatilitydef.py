@@ -1,7 +1,7 @@
 import alphautils as al
 import pandas as pd
-from operator import itemgetter
 import math
+from operator import itemgetter
 
 
 def vol_sort(volume, order):
@@ -30,7 +30,8 @@ def forexvolatility(pairs, timeframe='Daily', periods=10):
     WEEK_DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
     MONTH_WEEKS = ['1st', '2nd', '3rd', '4th', '5th']
     YEAR_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May',
-                   'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                   'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+                   'Nov', 'Dec']
     for quote in pairs:
         df = pd.read_csv(f'investpy/currenciesdata/{quote}_{timeframe}.csv')
         df = df.iloc[-periods:]
@@ -96,47 +97,34 @@ def forexvolatility(pairs, timeframe='Daily', periods=10):
     return df, vol_sort(vols, 1), timeframe_vol
 
 
-'''
+def convert_base(pairs):
+    return set(pair[:-3] for pair in pairs)
+
+
 pairs = ['EURUSD', 'EURJPY', 'EURCAD', 'EURGBP', 'EURAUD', 'EURNZD',
          'EURCHF', 'GBPUSD', 'GBPJPY', 'GBPCAD', 'GBPAUD', 'GBPNZD',
-         'GBPCHF', 'AUDUSD', 'AUDNZD', 'AUDJPY', 'AUDCAD', 'AUDUSD',
-         'AUDCHF', 'NZDUSD', 'NZDJPY', 'NZDCAD', 'NZDUSD', 'NZDCHF',
-         'CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD', 'XAUUSD', 'XAGUSD']
-periods_list = [12, 18, 24, 36]
-timeframe = ['Daily', 'Weekly', 'Monthly']
-'''
-# pairs = ['GBPUSD', 'GBPJPY', 'GBPCAD', 'GBPAUD', 'GBPNZD', 'GBPCHF']
-# pairs = ['EURUSD', 'EURJPY', 'EURCAD', 'EURCHF',
-#          'EURAUD', 'EURNZD', 'EURGBP']
-# pairs = ['AUDUSD', 'AUDNZD', 'AUDJPY', 'AUDCAD', 'AUDUSD', 'AUDCHF']
-# pairs = ['NZDUSD', 'NZDJPY', 'NZDCAD', 'NZDUSD', 'NZDCHF']
-pairs = ['CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD', 'XAUUSD', 'XAGUSD']
+         'GBPCHF', 'AUDUSD', 'AUDNZD', 'AUDJPY', 'AUDCAD', 'XAUUSD',
+         'AUDCHF', 'NZDUSD', 'NZDJPY', 'NZDCAD', 'XAGUSD', 'NZDCHF',
+         'CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD']
 
-# periods_list = [20, 50, 100, 200]
-# timeframes = ['Daily']
+periods = {'Daily': [20, 50, 100, 200], 'Weekly': [20, 25, 35, 50],
+           'Monthly': [12, 18, 24, 36]}
 
-# periods_list = [20, 25, 35, 50]
-# timeframes = ['Weekly']
-
-periods_list = [12, 18, 24, 36]
-timeframes = ['Monthly']
-
-for time_ in timeframes:
-    filename = f'data/quant_res/Others_{time_}.txt'
-    with open(filename, 'w'):
-        pass
-    for period in periods_list:
-        df, daily_vol, time_vols = forexvolatility(
-            pairs=pairs, timeframe=time_, periods=period)
-        for quote, vol in daily_vol.items():
-            mes = f"{quote}-{period}-{time_}: mean={int(vol[0])} pips | std="
-            mes += f"{int(vol[1])} | cv={(vol[1]/vol[0]*100):.2f}\n"
-            mes += "-------\n"
-            if time_vols:
-                intraday_vols = vol_sort(time_vols[quote], 1)
-                for day, vol_ in intraday_vols.items():
-                    tmp = 0 if math.isnan(vol_) else int(vol_)
-                    mes += f"{day}: {tmp} pips\n"
-            mes += "--------------\n"
-            with open(filename, 'a') as f:
-                f.write(mes)
+for item in convert_base(pairs):
+    pairs_ = [pair for pair in pairs if pair[:-3] == item]
+    for period in periods:
+        for day_ in periods[period]:
+            df, daily_vol, time_vols = forexvolatility(
+                pairs=pairs_, timeframe=period, periods=day_)
+            for quote, vol in daily_vol.items():
+                mes = f"{quote}-{day_}-{period}: mean={int(vol[0])} pips "
+                mes += f"| std={int(vol[1])} | cv={(vol[1]/vol[0]*100):.2f}\n"
+                mes += "-------\n"
+                if time_vols:
+                    intraday_vols = vol_sort(time_vols[quote], 1)
+                    for day, vol_ in intraday_vols.items():
+                        tmp = 0 if math.isnan(vol_) else int(vol_)
+                        mes += f"{day}: {tmp} pips\n"
+                mes += "--------------\n"
+                with open(f'data/quant_res/{item}_{period}.txt', 'a') as f:
+                    f.write(mes)
