@@ -14,7 +14,7 @@ def calculate_bond(isReload=True):
     # for investpy
     data = ['Germany 2Y', 'Germany 5Y', 'Germany 10Y']
     info = [[markets[3], 'germany', get_bond]]*len(data)
-    params = ['eubond', data, info, analysis_bond]
+    params = ['eubond', data, info]
     make_market(params, isReload)
 
 
@@ -30,7 +30,7 @@ def get_estoxx(isReload=True):
         + [[markets[0], 'italy', get_index]]\
         + [[markets[0], 'united states', get_index]]\
         + [[markets[3], 'germany', get_bond]]
-    params = ['euindex', data, info, analysis_index]
+    params = ['euindex', data, info]
     make_market(params, isReload)
 
 
@@ -52,7 +52,7 @@ def compare_major(isReload=True):
     info = [[markets[1], 'united states', get_forex]] *\
         8 + [[markets[0], 'united states', get_index]]\
         + [[markets[3], 'germany', get_bond]]
-    params = ['eurmajor', data, info, analysis_currency]
+    params = ['eurmajor', data, info]
     make_market(params, isReload)
 
 
@@ -60,7 +60,7 @@ def compare_eugold(isReload=True):
     data = ['EUR/USD', 'Gold']
     info = [[markets[1], 'united states', get_forex],
             [markets[2], 'united states', get_commodities]]
-    params = ['eugold', data, info, analysis_intermarket]
+    params = ['eugold', data, info]
     make_market(params, isReload)
 
 
@@ -151,9 +151,9 @@ def get_ger_budgetdeficit(isReload=True):
 
 def get_all():
     calculate_bond()
-    get_estoxx()
     compare_major()
     compare_eugold()
+    get_estoxx()
     '''
     # combine economic params
     '''
@@ -170,7 +170,7 @@ def get_all():
     # get_ger_budgetdeficit()
 
 
-# get_all()
+get_all()
 
 
 def return_stats():

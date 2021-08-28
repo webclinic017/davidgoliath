@@ -101,7 +101,97 @@ def fibocalculator(source="investpy/currenciesdata/", quotes='GBPUSD',
     # '''
 
 
+def account_linking():
+    '''linking to get mt4 infomation'''
+    pass
+
+
+def process_monte_carlo():
+    '''Monte Carlo'''
+    pass
+
+
+def process_markov_chain():
+    '''Markov Chain'''
+    pass
+
+
+def pp_statistics():
+    '''pivot point statistics'''
+    pass
+
+
+def simulate_models():
+    # 8-sided dice
+
+    # Binominal Model
+    pass
+
+
+def changed_corr():
+    '''get 2 most pos/neg correlation dataset and ...'''
+    pass
+
+
+def bullbear_classifier():
+    pass
+
+
+def price_pattern():
+    # normal price
+
+    # mean price
+
+    # median price
+
+    # std
+
+    # skew
+
+    # outliner
+
+    # residual
+
+    pass
+
+
+def volume_pattern():
+    # normal price
+
+    # mean price
+
+    # median price
+
+    # std
+
+    # skew
+
+    # outliner
+
+    # residual
+
+    pass
+
+
+def custom_pivottbl():
+    '''experiment pivot table'''
+    pass
+
+
+def custom_window():
+    '''how window data improve traning result'''
+    pass
+
+
+def ds_script():
+    '''dataset script'''
+    pass
+
+
 # fibocalculator()
+def volume_fill():
+    '''fill empty volume data based on month and week volume data'''
+    pass
 
 
 # get data --------------------------
@@ -116,6 +206,9 @@ def get_data():
     # df.set_index('Date', inplace=True)
 
     # https://www.geeksforgeeks.org/python-pandas-dataframe-where/
+
+    # volume_fill
+    # T.B.D
 
     rd_period = 200
     zero_df = df.loc[df['Volume'] == 0]
@@ -321,6 +414,14 @@ def super_ma():
     '''
     df[-62:].plot()
     plt.show()
+    pass
+
+
+def fibo_cluster():
+    pass
+
+
+def custom_rsquared():
     pass
 
 

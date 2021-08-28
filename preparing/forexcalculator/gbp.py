@@ -15,7 +15,7 @@ currency = 'gbp'
 def calculate_bond(isReload=True):
     data = ['U.K. 2Y', 'U.K. 5Y', 'U.K. 10Y']
     info = [[markets[3], 'united kingdom', get_bond]]*len(data)
-    params = ['ukbond', data, info, analysis_bond]
+    params = ['ukbond', data, info]
     make_market(params, isReload)
 
 
@@ -29,7 +29,7 @@ def get_ftse(isReload=True):
     info = [[markets[0], 'united kingdom', get_index]] *\
         4 + [[markets[0], 'united states', get_index]]\
         + [[markets[3], 'united kingdom', get_bond]]
-    params = ['ukindex', data, info, analysis_index]
+    params = ['ukindex', data, info]
     make_market(params, isReload)
 
 
@@ -44,7 +44,7 @@ def compare_major(isReload=True):
     info = [[markets[1], 'united states', get_forex]] *\
         8 + [[markets[0], 'united states', get_index]]\
         + [[markets[3], 'united kingdom', get_bond]]
-    params = ['gbpmajor', data, info, analysis_currency]
+    params = ['gbpmajor', data, info]
     make_market(params, isReload)
 
 
@@ -57,7 +57,7 @@ def corr_ukoil(isReload=True):
     info = [[markets[1], 'united states', get_forex]] * \
         4 + [[markets[0], 'united states', get_index]]\
         + [[markets[2], 'united kingdom', get_commodities]]
-    params = ['corr_ukoil', data, info, analysis_intermarket]
+    params = ['corr_ukoil', data, info]
     make_market(params, isReload)
 
 
@@ -119,9 +119,9 @@ def get_unemploymentrate(isReload=True):
 
 
 def get_all():
-    # calculate_bond()
-    # get_ftse()
-    # corr_ukoil()
+    calculate_bond()
+    get_ftse()
+    corr_ukoil()
     compare_major()
     '''
     # combine economic params

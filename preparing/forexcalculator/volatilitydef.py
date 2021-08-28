@@ -101,14 +101,15 @@ def convert_base(pairs):
     return set(pair[:-3] for pair in pairs)
 
 
-pairs = ['EURUSD', 'EURJPY', 'EURCAD', 'EURGBP', 'EURAUD', 'EURNZD',
-         'EURCHF', 'GBPUSD', 'GBPJPY', 'GBPCAD', 'GBPAUD', 'GBPNZD',
-         'GBPCHF', 'AUDUSD', 'AUDNZD', 'AUDJPY', 'AUDCAD', 'XAUUSD',
-         'AUDCHF', 'NZDUSD', 'NZDJPY', 'NZDCAD', 'XAGUSD', 'NZDCHF',
-         'CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD']
+# pairs = ['EURUSD', 'EURJPY', 'EURCAD', 'EURGBP', 'EURAUD', 'EURNZD',
+#          'EURCHF', 'GBPUSD', 'GBPJPY', 'GBPCAD', 'GBPAUD', 'GBPNZD',
+#          'GBPCHF', 'AUDUSD', 'AUDNZD', 'AUDJPY', 'AUDCAD', 'XAUUSD',
+#          'AUDCHF', 'NZDUSD', 'NZDJPY', 'NZDCAD', 'XAGUSD', 'NZDCHF',
+#          'CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD']
 
-periods = {'Daily': [20, 50, 100, 200], 'Weekly': [20, 25, 35, 50],
-           'Monthly': [12, 18, 24, 36]}
+pairs = ['GBPUSD', 'USDCAD', 'EURUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'NZDUSD']
+periods = {'Daily': [13, 21, 34, 55, 89], 'Weekly': [5, 8, 13, 21, 34],
+           'Monthly': [3, 5, 8, 13, 21]}
 
 for item in convert_base(pairs):
     pairs_ = [pair for pair in pairs if pair[:-3] == item]

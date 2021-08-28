@@ -15,12 +15,14 @@ import datetime
 import re
 from settings import *
 from functools import reduce
+from pprint import pprint
 '''
 # --------- investpy market folder path
 equity_path = 'investpy/equitiesdata/'
 crypto_path = 'investpy/cryptodata/'
 '''
-today = datetime.date.today().strftime("%d/%m/%Y")
+# today = datetime.date.today().strftime("%d/%m/%Y")
+today = '19/08/2021'
 
 
 def convert_date(date):
@@ -151,14 +153,15 @@ def append_preparing(path):
 
 
 def check_data(folder_part, filename):
-    if os.path.exists(folder_part+filename):
-        print(f'{folder_part+filename} already exist!')
-        return True
-    else:
-        if os.path.exists(folder_part):
-            print(f'{folder_part} already exist!')
+    if os.path.exists(folder_part):
+        print(f'{folder_part} already exist!')
+        if os.path.exists(folder_part+filename):
+            print(f'{folder_part+filename} already exist!')
+            return False
         else:
-            os.makedirs(folder_part)
+            return True
+    else:
+        os.makedirs(folder_part)
         return False
 
 
@@ -215,6 +218,7 @@ def get_index(index, interval, country):
         df.to_csv(path)
     else:
         new_start = append_preparing(path)
+        print(new_start, today)
         if new_start is not None:
             df = iv.indices.get_index_historical_data(
                 index=index, country=country, from_date=new_start,
@@ -308,6 +312,7 @@ def get_forex(quote, interval, country):
         df.to_csv(path)
     else:
         new_start = append_preparing(path)
+        print(new_start, today)
         if new_start is not None:
             df = iv.currency_crosses.get_currency_cross_historical_data(
                 currency_cross=quote, from_date=new_start, to_date=today,
@@ -611,18 +616,19 @@ def get_all():
 def correlation_new(path, periods):
     df = pd.read_csv(path)
     name, interval = os.path.basename(path).split('.')[0].rsplit('_', 1)
-    if 'Weekly' in path:
-        periods = periods[:len(periods)-1]
-    elif 'Monthly' in path:
-        periods = periods[:len(periods)-2]
-    for period in periods:
-        df = df.iloc[-period-1:]
-        df = df.corr()
-        # print(df.corr())  # method='kendall' / 'spearman'
-        # df.to_csv(analysis_path + f'{name}_{period}_{interval}.csv')
-        print(f'{name}_{period}_{interval}')
-        print(df)
-        # return None
+    # if 'Weekly' in path:
+    #     periods = periods[:len(periods)-1]
+    # elif 'Monthly' in path:
+    #     periods = periods[:len(periods)-2]
+    if 'Daily' in path:
+        for period in periods:
+            df = df.iloc[-period-1:]
+            df = df.corr()
+            # print(df.corr())  # method='kendall' / 'spearman'
+            # df.to_csv(analysis_path + f'{name}_{period}_{interval}.csv')
+            print(f'{name}_{period}_{interval}')
+            print(df)
+            # return None
 
 
 def calculate_stats_new(source=combine_path, periods=13,
@@ -648,10 +654,14 @@ def calculate_stats_new(source=combine_path, periods=13,
 
 
 def corr_():
+    compare = ['usmain', 'usbond', 'usindices', 'uspairs', 'usoil']
+    # compare = ['eubond', 'eurmajor', 'eugold', 'euindex']
+    # compare = ['corr_ukoil', 'ukindex', 'ukbond', 'gbpmajor']
     for item in csv_finder("investpy/combinedata"):
-        if 'xau' in item:
-            correlation_new(item, [10, 20, 50, 100, 200])
-        pass
+        for tmp in compare:
+            if tmp in item:
+                correlation_new(item, [13, 21, 34, 55, 89])
+            pass
 
 
 def label_data():
@@ -675,7 +685,35 @@ def label_data():
     pass
 
 
-# read_data_vol()
-# corr_()
+def data_to_corr(isReload=True):
+    data = ['Gold', 'PHLX Canadian Dollar', 'PHLX Australian Dollar',
+            'PHLX New Zealand Dollar', 'PHLX Yen', 'PHLX Swiss Franc',
+            'PHLX Euro', 'PHLX British Pound']
+    # info = [[markets[0], 'world', get_index]] + \
+    #     [[markets[0], 'united states', get_index]] +\
+    #     [[markets[3], 'united states', get_bond]] +\
+    #     [[markets[2], 'united states', get_commodities]]*2
+    # params = ['cbrcor_us', data, info]
+
+    info = [[markets[2], 'united states', get_commodities]] +\
+        [[markets[0], 'united states', get_index]]*7
+    params = ['goldanother_xy', data, info]
+
+    make_market(params, isReload)
+    pass
+
+
+def trick():
+    values = {'vegetable': 'chard', 'fruit': 'nectarine'}
+    print('I love %(vegetable)s and I love %(fruit)s.' % values)
+
+
 # get_all()
-label_data()
+# label_data()
+vols, non_vols = read_data_vol()
+with open('data/volAll.txt', 'w', encoding='utf-8') as f:
+    f.write(str(vols))
+# get_indices()
+# data_to_corr()
+# corr_()
+# calculate_stats_new()

@@ -198,11 +198,12 @@ def get_debt_percent(isReload=True):
 
 
 def get_all():
-    get_usbonds()
     get_usindices()
+    get_usbonds()
     get_uspairs()
-    get_usmain()
     get_usoil()
+    get_usmain()
+
     '''
     # combine economic params
     '''
@@ -221,7 +222,7 @@ def get_all():
     # get_debt_percent()
 
 
-# get_all()
+get_all()
 
 
 def return_stats():
