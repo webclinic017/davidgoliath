@@ -1,5 +1,4 @@
-<h1 align="center">Algorithmic trading with pytho and pandas</h1>
-- 🔭 I’m currently working on [Time Series Forecasting](https://github.com/spideynolove/davidgoliath/tree/main/Time%20Series%20Forecasting)
+<h1 align="center">Algorithmic trading with python and pandas</h1>
 
 - Algorithmic Trading Reference [https://www.quantstart.com/articles/](https://www.quantstart.com/articles/)
 
