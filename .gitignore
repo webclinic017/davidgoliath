@@ -6,10 +6,10 @@
 *.jpg
 .vscode/
 AdvancedAlgorithmicTrading/.vscode/
-preparing/forexcalculator/.vscode/
-preparing/forexcalculator/__pycache__/
-preparing/forexcalculator/data/
-preparing/livechart/Data/
+Project/preparing/forexcalculator/.vscode/
+Project//forexcalculator/__pycache__/
+Project/preparing/forexcalculator/data/
+Project/preparing/livechart/Data/
 AdvancedAlgorithmicTrading/__pycache__/
-maintainingcode/.vscode/
+Project/maintainingcode/.vscode/
 Time Series Forecasting/data/
