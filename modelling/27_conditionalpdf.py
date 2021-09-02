@@ -1,2 +1,0 @@
-# conditional probability density function python
-# https://www.google.com/search?q=conditional+probability+density+function+python&sxsrf=ALeKk01hnlyDVUrgQH2JuGrK7fkCeVELvQ%3A1621257267286&ei=M2yiYKD4ENPemAWJ9ICoCQ&oq=conditional+probability+density+function+python&gs_lcp=Cgdnd3Mtd2l6EAMyBggAEBYQHjoHCCMQsAMQJzoHCAAQRxCwAzoHCAAQsAMQQzoCCABQ0w1Yqhdg2BhoAXACeACAAd8BiAHHCZIBBTAuNS4ymAEAoAEBqgEHZ3dzLXdpesgBCsABAQ&sclient=gws-wiz&ved=0ahUKEwjg3YX85dDwAhVTL6YKHQk6AJUQ4dUDCA4&uact=5

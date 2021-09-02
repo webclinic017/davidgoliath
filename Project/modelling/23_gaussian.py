@@ -1,0 +1,5 @@
+# gaussian distribution python
+# https://www.google.com/search?q=gaussian+distribution+python&sxsrf=ALeKk01vFeqlOKEbjFLjNJOzCVVesEiCvw%3A1621252119387&ei=F1iiYN3qFu24mAW_9KHgBA&oq=gaussian+distribution+python&gs_lcp=Cgdnd3Mtd2l6EAMyBAgAEEMyAggAMgIIADICCAAyAggAMgIIADIGCAAQFhAeMgYIABAWEB4yBggAEBYQHjIGCAAQFhAeOgcIABBHELADOgQIIxAnOgUIABCRAjoKCAAQsQMQgwEQQzoECC4QQzoKCC4QxwEQowIQQzoICC4QsQMQgwE6BQgAELEDOgIILjoFCAAQywE6BwgAEIcCEBRQ5ZkBWOu1AWD_tgFoBnACeAOAAdwBiAGhE5IBBjEuMTIuMpgBAKABAaoBB2d3cy13aXrIAQjAAQE&sclient=gws-wiz&ved=0ahUKEwid0qrl0tDwAhVtHKYKHT96CEwQ4dUDCA4&uact=5
+''' Normal (Gaussian) Distribution: Continuous distributions
+
+'''
