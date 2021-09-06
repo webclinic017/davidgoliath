@@ -3,7 +3,7 @@
 import random
 from statistics import mean
 
-total_risk, days, periods, total, base = 20, 20, 1, 1, 0.016
+total_risk, days, periods, total, base = 20, 20, 3, 1, 0.016
 
 if __name__ == '__main__':
     def calc_return(winrange=(0.7, 0.8), percent=0.02):
