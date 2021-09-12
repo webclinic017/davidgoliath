@@ -15,7 +15,7 @@ def get_usbonds(isReload=True):
     info = [[markets[3], 'united states', get_bond]]*len(data)
     # params = ['usbond', data, info, analysis_bond]
     params = ['usbond', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -29,7 +29,7 @@ def get_usindices(isReload=True):
         + [[markets[3], 'united states', get_bond]]
     # params = ['usindices', data, info, analysis_index]
     params = ['usindices', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 # -------------------------------------------------------
@@ -70,7 +70,7 @@ def get_usmain(isReload=True):
             + [[markets[2], 'united states', get_commodities]] * 2
     # params = ['usmain', data, info, analysis_intermarket]
     params = ['usmain', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 # Oil corr --------------------------------
@@ -82,7 +82,7 @@ def get_usoil(isReload=True):
         4 + [[markets[2], 'united states', get_commodities]]
     # params = ['usoil', data, info, analysis_intermarket]
     params = ['usoil', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 # ---------------- Important gold index -------------------------
 # ---- arca-gold-bugs: https://en.wikipedia.org/wiki/HUI_Gold_Index ------
@@ -198,11 +198,11 @@ def get_debt_percent(isReload=True):
 
 
 def get_all():
-    get_usindices()
-    get_usbonds()
     get_uspairs()
-    get_usoil()
-    get_usmain()
+    # get_usindices()
+    # get_usbonds()
+    # get_usoil()
+    # get_usmain()
 
     '''
     # combine economic params

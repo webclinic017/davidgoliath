@@ -86,7 +86,6 @@ def resample(option=1):
         # inputs = ("Gold", "Daily", 100)
         inputs = ("Gold", "Weekly", 21)
         get_data(*inputs)
-        pass
     elif option == 2:
         ''' load_data '''
         quote, interval = "Gold", "Weekly"

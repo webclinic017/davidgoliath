@@ -307,23 +307,18 @@ def inner_volatility(source='investpy/currenciesdata/', quotes='USDCHF',
     df = pd.read_csv(source + f'/{quotes}_{interval}.csv')
     df = df.iloc[-periods-1:]
     # pct change
+    df['HLL'] = (df['High']-df['Open'])/df['Open']*100
+    df['HOL'] = (df['High']-df['Open'])/df['Low']*100
     df['COO'] = (df['Close']-df['Open'])/df['Open']*100
+    df['COL'] = (df['Close']-df['Open'])/df['Low']*100
     # entire lenght
     df['HLL'] = (df['High']-df['Low'])/df['Low']*100
-    # short edge
-    df['HCC'] = (df['High']-df['Close'])/df['Close']*100
-    # long edge
-    df['CLL'] = (df['Close']-df['Low'])/df['Low']*100
-    # bull/ bear domination all around
-    df['HOL'] = (df['High']-df['Open'])/df['Low']*100
-    # bull/ bear Adj domination
-    df['CLO'] = (df['Close']-df['Low'])/df['Open']*100
-    # real body
-    df['COL'] = (df['Close']-df['Open'])/df['Low']*100
-    # strength volitality
     df['HLO'] = (df['High']-df['Low'])/df['Open']*100
-    # pct chage day previous close
-    df['PCT'] = (df['Close']-df['Open'])/df['Close']*100
+    df['CLL'] = (df['Close']-df['Low'])/df['Low']*100
+    df['CLO'] = (df['Close']-df['Low'])/df['Open']*100
+    # # bull/ bear domination all around
+    # df['HCC'] = (df['High']-df['Close'])/df['Close']*100
+    # df['PCT'] = (df['Close']-df['Open'])/df['Close']*100
 
     df = df[-periods:]
     df.drop(['Open', 'High', 'Low', 'Close'], axis=1, inplace=True)

@@ -112,6 +112,7 @@ def dump_things(filename, things, intervals):
     for thing, info in things.items():
         market, country, infunc = info
         for interval in intervals:
+            print(interval)
             infunc(thing, interval, country)
     for interval in intervals:
         combine_params(filename, things, interval)
@@ -153,16 +154,17 @@ def append_preparing(path):
 
 
 def check_data(folder_part, filename):
-    if os.path.exists(folder_part):
-        print(f'{folder_part} already exist!')
-        if os.path.exists(folder_part+filename):
-            print(f'{folder_part+filename} already exist!')
-            return False
-        else:
-            return True
-    else:
-        os.makedirs(folder_part)
-        return False
+    # if os.path.exists(folder_part):
+    #     # print(f'{folder_part} already exist!')
+    #     if os.path.exists(folder_part+filename):
+    #         print(f'{folder_part+filename} already exist!')
+    #         return False
+    #     else:
+    #         return True
+    # else:
+    #     os.makedirs(folder_part)
+    #     return False
+    return False
 
 
 def replace_specchar(obj, char, newchar):
@@ -216,14 +218,14 @@ def get_index(index, interval, country):
             index=index, country=country, from_date=starttime,
             to_date=today, order='ascending', interval=interval)
         df.to_csv(path)
-    else:
-        new_start = append_preparing(path)
-        print(new_start, today)
-        if new_start is not None:
-            df = iv.indices.get_index_historical_data(
-                index=index, country=country, from_date=new_start,
-                to_date=today, order='ascending', interval=interval)
-            df.to_csv(path, mode='a', header=False)
+    # else:
+    #     new_start = append_preparing(path)
+    #     print(new_start, today)
+    #     if new_start is not None:
+    #         df = iv.indices.get_index_historical_data(
+    #             index=index, country=country, from_date=new_start,
+    #             to_date=today, order='ascending', interval=interval)
+    #         df.to_csv(path, mode='a', header=False)
 
 
 def get_indices(isReload=True):
@@ -234,7 +236,7 @@ def get_indices(isReload=True):
     info = [[markets[0], 'united states', get_index]]*len(data)
     # params = ['currencyindex', data, info, analysis_index]
     params = ['currencyindex', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 # ------------------- bonds -----------------------------
@@ -245,13 +247,13 @@ def get_bond(bond, interval, country):
             bond=bond, from_date=starttime, to_date=today,
             order='ascending', interval=interval)
         df.to_csv(path)
-    else:
-        new_start = append_preparing(path)
-        if new_start is not None:
-            df = iv.bonds.get_bond_historical_data(
-                bond=bond, from_date=new_start, to_date=today,
-                order='ascending', interval=interval)
-            df.to_csv(path, mode='a', header=False)
+    # else:
+    #     new_start = append_preparing(path)
+    #     if new_start is not None:
+    #         df = iv.bonds.get_bond_historical_data(
+    #             bond=bond, from_date=new_start, to_date=today,
+    #             order='ascending', interval=interval)
+    #         df.to_csv(path, mode='a', header=False)
 
 
 def get_bonds(isReload=True):
@@ -262,7 +264,7 @@ def get_bonds(isReload=True):
     info = [[markets[3], 'united states', get_bond]]*len(data)
     # params = ['cor_bond', data, info, analysis_bond]
     params = ['cor_bond', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_bond_spread(periods=6, name='cor_bond',
@@ -305,12 +307,14 @@ def get_forex(quote, interval, country):
     path = f'investpy/currenciesdata/{quote_}_{interval}.csv'
     if not check_data('investpy/currenciesdata/', f'{quote_}_{interval}.csv'):
         # check latest data
+        print("check_data True")
         df = iv.currency_crosses.get_currency_cross_historical_data(
             currency_cross=quote, from_date=starttime, to_date=today,
             order='ascending', interval=interval)
         df = df.iloc[:, :-1]
         df.to_csv(path)
     else:
+        print("check_data False")
         new_start = append_preparing(path)
         print(new_start, today)
         if new_start is not None:
@@ -327,7 +331,7 @@ def get_goldpairs(isReload=True):
     info = [[markets[1], 'united states', get_forex]]*len(data)
     # params = ['xaupair', data, info, analysis_currency]
     params = ['xaupair', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_silverpairs(isReload=True):
@@ -336,7 +340,7 @@ def get_silverpairs(isReload=True):
     info = [[markets[1], 'united states', get_forex]]*len(data)
     # params = ['xagpair', data, info, analysis_currency]
     params = ['xagpair', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 # ----------------------------IMPORTANT- commondity---
 # ------------- get_commodity_historical_data ---------------
 
@@ -366,7 +370,7 @@ def get_grains(isReload=True):
     info = [[markets[2], 'united states', get_commodities]]*len(data)
     # params = ['grain', data, info, analysis_commodity]
     params = ['grain', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_softs(isReload=True):
@@ -378,7 +382,7 @@ def get_softs(isReload=True):
     info = [[markets[2], 'united states', get_commodities]]*len(data)
     # params = ['soft', data, info, analysis_commodity]
     params = ['soft', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 # shortcut: filename + dataset
 
@@ -389,7 +393,7 @@ def get_meats(isReload=True):
     info = [[markets[2], 'united states', get_commodities]]*len(data)
     # params = ['meat', data, info, analysis_commodity]
     params = ['meat', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_metals(isReload=True):
@@ -399,7 +403,7 @@ def get_metals(isReload=True):
     info = [[markets[2], 'united states', get_commodities]]*len(data)
     # params = ['metal', data, info, analysis_commodity]
     params = ['metal', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_energies(isReload=True):
@@ -411,7 +415,7 @@ def get_energies(isReload=True):
     info = [[markets[2], 'united states', get_commodities]]*len(data)
     # params = ['energy', data, info, analysis_commodity]
     params = ['energy', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 # ----------------Commondity index-------------------------
 # https://www.investing.com/indices/thomson-reuters---jefferies-crb
@@ -435,15 +439,15 @@ def get_etf(etf, interval, country):
             etf=etf, country=country, from_date=starttime,
             to_date=today, order='ascending', interval=interval)
         df.to_csv(path)
-    else:
-        new_start = append_preparing(path)
-        if new_start is not None:
-            df = iv.etfs.get_etf_historical_data(
-                etf=etf, country=country, from_date=new_start,
-                to_date=today,
-                order='ascending', interval=interval)
-            df.to_csv(path, mode='a', header=False)
-    pass
+    # else:
+    #     new_start = append_preparing(path)
+    #     if new_start is not None:
+    #         df = iv.etfs.get_etf_historical_data(
+    #             etf=etf, country=country, from_date=new_start,
+    #             to_date=today,
+    #             order='ascending', interval=interval)
+    #         df.to_csv(path, mode='a', header=False)
+    # pass
 
 
 def get_bondetfs(isReload=True):
@@ -455,7 +459,7 @@ def get_bondetfs(isReload=True):
     info = [[markets[5], 'united states', get_etf]]*len(data)
     # params = ['bondetfs', data, info, analysis_etf]
     params = ['bondetfs', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
     pass
 
 
@@ -467,7 +471,7 @@ def get_stocketfs(isReload=True):
     info = [[markets[5], 'united states', get_etf]]*len(data)
     # params = ['stocketfs', data, info, analysis_etf]
     params = ['stocketfs', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
     pass
 
 
@@ -479,7 +483,7 @@ def get_goldetfs(isReload=True):
     info = [[markets[5], 'united states', get_etf]]*len(data)
     # params = ['goldetfs', data, info, analysis_etf]
     params = ['goldetfs', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 
 
 def get_silveretfs(isReload=True):
@@ -489,7 +493,7 @@ def get_silveretfs(isReload=True):
     info = [[markets[5], 'united states', get_etf]]*len(data)
     # params = ['silveretfs', data, info, analysis_etf]
     params = ['silveretfs', data, info]
-    make_market(params, isReload)
+    # make_market(params, isReload)
 # ----------------Correlation-------------------------
 # -------------------------------------
 # AUD vs NZD (correlation)
@@ -710,10 +714,12 @@ def trick():
 
 # get_all()
 # label_data()
-vols, non_vols = read_data_vol()
-with open('data/volAll.txt', 'w', encoding='utf-8') as f:
-    f.write(str(vols))
+
 # get_indices()
 # data_to_corr()
 # corr_()
 # calculate_stats_new()
+
+# vols, non_vols = read_data_vol()
+# with open('../data/volAll.txt', 'w', encoding='utf-8') as f:
+#     f.write(str(vols))

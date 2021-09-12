@@ -1,4 +1,4 @@
-import alphautils as al
+# import alphautils as al
 import pandas as pd
 import math
 from operator import itemgetter
@@ -108,6 +108,7 @@ def convert_base(pairs):
 #          'CHFJPY', 'USDJPY', 'USDCHF', 'USDCAD']
 
 pairs = ['GBPUSD', 'USDCAD', 'EURUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'NZDUSD']
+
 periods = {'Daily': [13, 21, 34, 55, 89], 'Weekly': [5, 8, 13, 21, 34],
            'Monthly': [3, 5, 8, 13, 21]}
 
@@ -127,5 +128,6 @@ for item in convert_base(pairs):
                         tmp = 0 if math.isnan(vol_) else int(vol_)
                         mes += f"{day}: {tmp} pips\n"
                 mes += "--------------\n"
-                with open(f'data/quant_res/{item}_{period}.txt', 'a') as f:
+                # print(mes)
+                with open(f'data/{item}_{period}.txt', 'a') as f:
                     f.write(mes)

@@ -3,7 +3,7 @@
 import random
 from statistics import mean
 
-total_risk, days, periods, total, base = 20, 20, 3, 1, 0.016
+total_risk, days, periods, total, base = 60, 20, 1, 1, 0.001    # 0.016
 
 if __name__ == '__main__':
     def calc_return(winrange=(0.7, 0.8), percent=0.02):
@@ -14,7 +14,6 @@ if __name__ == '__main__':
                       for _ in range(days)]
             windays = status.count(1)
             risk_rewards = [choice_rr() for _ in range(windays)]
-            # print(windays, winrate, risk_rewards)
             multiply = 1
             for rr in risk_rewards:
                 win_ = 1 + percent*rr
@@ -22,12 +21,13 @@ if __name__ == '__main__':
             for _ in range(days-windays):
                 lose_ = 1 - percent
                 multiply *= lose_
-            # print(f'Month {month}: {round(multiply, 2)}')
+            print(month, windays, round(winrate*100, 2),
+                  risk_rewards, round(multiply, 2), sep=" === ")
             total_return *= multiply
         print(f'Yearly return: {round(total_return, 2)}')
         return total_return
 
-    def choice_rr(args=[2, 2.5, 3], weight=[0.85, 0.1, 0.05]):
+    def choice_rr(args=[1.5, 2, 2.5, 3], weight=[0.2, 0.65, 0.1, 0.05]):
         rr = random.choices(args, weights=weight)
         return rr[0]
 
